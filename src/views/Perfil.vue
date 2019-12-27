@@ -7,7 +7,7 @@
                 <v-form ref="form" v-model="valid" lazy-validation>
                     <v-container>
                         <v-row justify="center">
-                            <v-col class="no-padding" sm="8" md="8">
+                            <v-col class="no-padding" cols="8"  sm="8" md="8">
                                 <v-text-field label="Nombre de usuario" v-model="username" :rules="nameRules" required>
                                 </v-text-field>
                             </v-col>
