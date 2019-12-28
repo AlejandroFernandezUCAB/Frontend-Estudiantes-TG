@@ -1,41 +1,57 @@
 <template>
   <v-container>
     <v-row no-gutters>
-        <v-col md="12">
-            <h1 class="display-2 text-center">Perfil</h1>
+        <v-col md="4" sm="12" xs="12">
+            <section class="py-2">
+                <h1 class="display-2 text-center">Perfil</h1>
+                <v-row no-gutters align="center" justify="center">
+                    <v-col md="12" sm="12" xs="12" class="py-10">
+                        <v-img src="https://picsum.photos/id/11/500/300" alt="Foto de perfil">
+                        </v-img>
+                    </v-col>
+                    <v-col md="12" sm="12" xs="12">
+                          <v-file-input
+                            label="Foto de perfil"
+                            prepend-icon="mdi-camera"
+                        ></v-file-input>
+                    </v-col>
+                </v-row>
+            </section>
+        </v-col>
+        <v-col md="8" sm="12" xs="12">
             <section>
                 <v-form ref="form" v-model="valid" lazy-validation>
                     <v-container>
                         <v-row justify="center">
-                            <v-col class="no-padding" cols="8"  sm="8" md="8">
-                                <v-text-field label="Nombre de usuario" v-model="username" :rules="nameRules" required>
+                            <v-col class="no-padding" cols="8" sm="8" md="8" xs="12">
+                                <v-text-field label="Nombre de usuario" v-model="username" :rules="campoRequerido" required>
                                 </v-text-field>
                             </v-col>
-                            <v-col class="no-padding" cols="8" sm="8" md="8">
-                                <v-text-field label="Nombre" v-model="nombre" :rules="nameRules" required>
+                            <v-col class="no-padding" cols="8" sm="8" md="8" xs="12" >
+                                <v-text-field label="Nombre" v-model="nombre" :rules="campoRequerido" required>
                                 </v-text-field>
                             </v-col>
-                            <v-col class="no-padding" cols="8" sm="8" md="8">
-                                <v-text-field label="Apellido" v-model="name" :rules="nameRules" required>
+                            <v-col class="no-padding" cols="8" sm="8" md="8" xs="12">
+                                <v-text-field label="Apellido" v-model="apellido" :rules="campoRequerido" required>
                                 </v-text-field>
                             </v-col>
-                            <v-col class="no-padding" cols="8" sm="8" md="8">
-                                <v-text-field label="Email" v-model="email" :rules="nameRules" required>
+                            <v-col class="no-padding" cols="8" sm="8" md="8" xs="12">
+                                <v-text-field label="Email" v-model="email" :rules="emailRules" required>
                                 </v-text-field>
                             </v-col>
-                            <v-col class="no-padding" cols="8" sm="8" md="8">
-                                <v-select :items="paises" label="País">
+                            <v-col class="no-padding" cols="8" sm="8" md="8" xs="12">
+                                <v-select :items="paises" label="País" :rules="campoRequerido">
                                 </v-select>
                             </v-col>
-                            <v-col class="no-padding" cols="8" sm="8" md="8">
-                                <v-text-field label="Compañia/Universidad" v-model="companiaUniversidad" :rules="nameRules" required>
+                            <v-col class="no-padding" cols="8" sm="8" md="8" xs="12">
+                                <v-text-field label="Compañia/Universidad" v-model="companiaUniversidad" :rules="campoRequerido" required>
                                 </v-text-field>
                             </v-col>
-                            <v-col class="no-padding" cols="8" sm="8" md="8">
-                                <v-text-field label="Profesión" v-model="name" :rules="nameRules" required>
+                            <v-col class="no-padding" cols="8" sm="8" md="8" xs="12">
+                                <v-text-field label="Profesión" v-model="profesion" :rules="campoRequerido" required>
                                 </v-text-field>
                             </v-col>
-                            <v-col class="no-padding text-center" cols="8" sm="8" md="8"  justify="center">
+                            <v-col class="no-padding text-center" cols="8" sm="8" md="8" xs="12" justify="center">
                                 <v-btn :disabled="!valid" color="success" class="mr-4" @click="validate">
                                     Guardar
                                 </v-btn>
@@ -55,7 +71,19 @@ export default {
     name: 'perfil',
     data:() => ({
         valid: true,
+        campoRequerido: [
+            v => !!v || 'Este campo es requerido'
+        ],
+        emailRules: [
+            v => !!v || 'El email es requerido',
+            v => /.+@.+\..+/.test(v) || 'El imail debe ser valido',
+        ],
         nombre: "",
+        apellido:"",
+        username:"",
+        email:"",
+        companiaUniversidad:"",
+        profesion:"",
         paises: ["Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antarctica", "Antigua and Barbuda",
 "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados",
 "Belarus", "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana",
@@ -77,7 +105,20 @@ export default {
 "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Togo", "Tonga", "Trinidad and Tobago",
 "Tunisia", "Turkey", "Turkmenistan", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States",
 "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"],
-    })
+    }),
+    methods:{
+        validate () {
+            if (this.$refs.form.validate()) {
+                this.snackbar = true
+            }
+        },
+        reset () {
+            this.$refs.form.reset()
+        },
+        resetValidation () {
+            this.$refs.form.resetValidation()
+        },
+    }
 }
 </script>
 
