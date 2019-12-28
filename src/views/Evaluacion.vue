@@ -64,7 +64,7 @@
             <v-checkbox
               v-model="checkbox"
               label="Checkbox 3"
-            ></v-checkbox>
+            ></v-checkbox> 
           </v-col>
           <v-col md="12" sm="12" xs="12" class="py-5">
             <p class="body-1">¿Cuanto es 1+1?</p>
