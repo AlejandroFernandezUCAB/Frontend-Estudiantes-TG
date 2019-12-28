@@ -54,5 +54,10 @@ export default {
   data: () => ({
     //
   }),
+  watch: {
+    $route(to, from) {
+      document.title = to.meta.title || 'Some Default Title';
+    },
+  }
 };
 </script>

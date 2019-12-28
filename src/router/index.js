@@ -14,7 +14,10 @@ const routes = [
   {
     path: '/perfil',
     name: 'Perfil',
-    component: Perfil
+    component: Perfil,
+    meta:{
+      title: 'Perfil del estudiante',
+    }
   },
   {
     path: '/about',
