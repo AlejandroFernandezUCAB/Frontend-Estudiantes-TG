@@ -1,44 +1,76 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
-import Perfil from '../views/Perfil.vue'
-import Evaluacion from '../views/Evaluacion.vue'
+import Vue from "vue";
+import Router from "vue-router";
+import Hello from "@/components/Hello";
+import Login from "@/components/Login";
+import Logout from "@/components/Logout";
+import CreateUser from "@/components/Sign-Up";
+import Edit from "@/components/Edit-User";
+import Lesson from "@/components/Lesson";
+import SingleLesson from "@/components/SingleLesson";
+import Courses from "@/components/Courses";
+import GetCourses from "@/components/GetCourses";
+import MyCourses from "@/components/MyCourses";
+import SingleCourses from "@/components/SingleCourses";
 
-Vue.use(VueRouter)
+Vue.use(Router);
 
-const routes = [
-  {
-    path: '/',
-    name: 'home',
-    component: Home
-  },
-  {
-    path: '/perfil',
-    name: 'Perfil',
-    component: Perfil,
-    meta:{
-      title: 'Perfil del estudiante',
+export default new Router({
+  mode: "history",
+  routes: [
+    {
+      path: "/login",
+      name: "Login",
+      component: Login
+    },
+    {
+      path: "/",
+      name: "Home",
+      component: Hello
+    },
+    {
+      path: "/edit",
+      name: "Edit",
+      component: Edit
+    },
+    {
+      path: "/sign-up",
+      name: "Sign-Up",
+      component: CreateUser
+    },
+    {
+      path: "/courses",
+      name: "Courses",
+      component: Courses
+    },
+    {
+      path: "/courses/:id",
+      name: "GetCourses",
+      component: GetCourses
+    },
+    {
+      path: "/my-courses",
+      name: "MyCourses",
+      component: MyCourses
+    },
+    {
+      path: "/my-courses/:id",
+      name: "SingleCourses",
+      component: SingleCourses
+    },
+    {
+      path: "/lesson",
+      name: "Lesson",
+      component: Lesson
+    },
+    {
+      path: "/lesson/:id",
+      name: "SingleLesson",
+      component: SingleLesson
+    },
+    {
+      path: "/logout",
+      name: "Logout",
+      component: Logout
     }
-  },
-  {
-    path: '/evaluacion',
-    name: 'Evaluacion',
-    component: Evaluacion
-  },
-  {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
-]
-
-const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes
-})
-
-export default router
+  ]
+});
