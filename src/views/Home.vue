@@ -51,8 +51,9 @@
       </v-col>
 
       <v-col class="py-5" cols="12" sm="12" md="12" lg="12">
-        <v-row no-gutters>
-          <v-col cols="4" sm="12" md="4" lg="4">
+        <v-row no-gutters align="center"
+      justify="center">
+          <v-col cols="4" sm="12" md="4" lg="4" >
             <p class="text-center">
               <b>Los mejores cursos</b>
               <br>
@@ -60,76 +61,17 @@
             </p>
           </v-col>
           <v-col cols="8" sm="12" md="8" lg="8">
-             <v-card color="basil">
-              <v-tabs
-                v-model="tab"
-                background-color="transparent"
-                color="basil"
-                grow
-              >
-                <v-tab
-                  v-for="item in items"
-                  :key="item"
-                >
-                  {{ item }}
-                </v-tab>
-              </v-tabs>
-
-              <v-tabs-items v-model="tab">
-                <v-tab-item
-                  v-for="item in items"
-                  :key="item"
-                >
-                  <v-card flat color="basil">
-                    <v-card
-                      class="mx-auto"
-                      max-width="400"
-                      >
-                      <v-img
-                        class="white--text align-end"
-                        height="200px"
-                        src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
-                      >
-                        <v-card-title>Top 10 Australian beaches</v-card-title>
-                      </v-img>
-
-                      <v-card-subtitle class="pb-0">Number 10</v-card-subtitle>
-
-                      <v-card-text class="text--primary">
-                        <div>Whitehaven Beach</div>
-
-                        <div>Whitsunday Island, Whitsunday Islands</div>
-                      </v-card-text>
-
-                      <v-card-actions>
-                        <v-btn
-                          color="orange"
-                          text
-                        >
-                          Share
-                        </v-btn>
-
-                        <v-btn
-                          color="orange"
-                          text
-                        >
-                          Explore
-                        </v-btn>
-                      </v-card-actions>
-                    </v-card>
-                  </v-card>
-                </v-tab-item>
-              </v-tabs-items>
-            </v-card>
+            <carrusel>
+            </carrusel>
           </v-col>
         </v-row>
       </v-col>
-
     </v-row>
   </v-container>
 </template>
 
 <script>
+import Carrusel from '../components/Carrusel.vue'
 
 export default {
   name: 'home',
@@ -154,6 +96,9 @@ export default {
           'Programación', 'Cocina', 'Educación', 'Idiomas',
         ],
         text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
-  })
+  }),
+  components:{
+    Carrusel
+  }
 }
 </script>
