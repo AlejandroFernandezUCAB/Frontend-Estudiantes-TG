@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import Perfil from '../views/Perfil.vue'
 import Evaluacion from '../views/Evaluacion.vue'
 import Carrusel from "../components/Carrusel.vue";
+import CarruselVistoEstudiantes from "../components/CarruselVistoEstudiantes.vue";
 
 Vue.use(VueRouter)
 
@@ -38,7 +39,12 @@ const routes = [
     path: '/carrusel',
     name: 'carrusel',
     component: Carrusel
+  },{
+    path: '/carrusel-visto-estudiantes',
+    name: 'carrusel-visto-estudiantes',
+    component: CarruselVistoEstudiantes
   }
+
 ]
 
 const router = new VueRouter({

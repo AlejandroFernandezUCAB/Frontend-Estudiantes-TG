@@ -50,19 +50,44 @@
         </v-card>
       </v-col>
 
-      <v-col class="py-5" cols="12" sm="12" md="12" lg="12">
-        <v-row no-gutters align="center"
-      justify="center">
-          <v-col cols="4" sm="12" md="4" lg="4" >
+      <v-col 
+        class="py-5" 
+        cols="12" 
+        sm="12" 
+        md="12" 
+        lg="12">
+        <v-row
+          no-gutters 
+          align="center"
+          justify="center">
+          <v-col 
+            cols="4" 
+            sm="12" 
+            md="4" 
+            lg="4" >
             <p class="text-center">
               <b>Los mejores cursos</b>
               <br>
               Puedes conseguirlos aquí
             </p>
           </v-col>
-          <v-col cols="8" sm="12" md="8" lg="8">
+          <v-col 
+            cols="8" 
+            sm="12" 
+            md="8" 
+            lg="8">
             <carrusel>
             </carrusel>
+          </v-col>
+          <v-col
+            class="py-5"  
+            cols="12" 
+            sm="12" 
+            md="12" 
+            lg="12">
+          <h2 class="headline">Lo más visto por nuestros estudiantes</h2>
+            <carrusel-visto-estudiantes>
+            </carrusel-visto-estudiantes>
           </v-col>
         </v-row>
       </v-col>
@@ -72,6 +97,7 @@
 
 <script>
 import Carrusel from '../components/Carrusel.vue'
+import CarruselVistoEstudiantes from "../components/CarruselVistoEstudiantes.vue";
 
 export default {
   name: 'home',
@@ -98,7 +124,8 @@ export default {
         text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
   }),
   components:{
-    Carrusel
+    Carrusel,
+    CarruselVistoEstudiantes
   }
 }
 </script>

@@ -1,27 +1,12 @@
 <template>
-  <v-card color="basil">
-    <v-tabs
-      v-model="tab"
-      background-color="transparent"
-      color="basil"
-      grow
+  <v-carousel class="vega" hide-delimiters light>
+    <v-carousel-item
+      v-for="(color) in colors"
+      :key="color"
     >
-      <v-tab
-        v-for="item in items"
-        :key="item"
-      >
-        {{ item }}
-      </v-tab>
-    </v-tabs>
-
-    <v-tabs-items v-model="tab">
-      <v-tab-item
-        v-for="item in items"
-        :key="item"
-      >
-        <v-card flat color="basil">
-          <v-row no-gutters>
-            <v-col v-for="i in 3" :key="i" sm="4">
+        <v-row
+        >
+          <v-col v-for="i in 3" :key="i" sm="4">
               <v-card
                 class="mx-auto"
                 max-width="400"
@@ -57,28 +42,29 @@
                 </v-card-actions>
               </v-card>
             </v-col>
-          </v-row>
-        </v-card>
-      </v-tab-item>
-    </v-tabs-items>
-  </v-card>
+        </v-row>
+    </v-carousel-item>
+  </v-carousel>
 </template>
 
 <script>
 
   export default  {
-    name: 'carrusel-cursos',
+    name: 'carrusel-visto-estudiantes',
     props: [],
     mounted () {
 
     },
     data () {
       return {
-        items: [
-          'Programación', 'Cocina', 'Educación', 'Idiomas',
+        colors: [
+          'primary',
+          'secondary',
+          'yellow darken-2',
+          'red',
+          'orange',
         ],
-        tab: null      
-        }
+      }
     },
     methods: {
 
@@ -92,7 +78,14 @@
 </script>
 
 <style scoped lang="scss">
-  .carrusel-cursos {
+  .carrusel-visto-estudiantes {
 
   }
+
+  @media (max-width: 400px) {
+    .vega {
+    height: 40px !important;
+    background-color: green;
+  }
+}
 </style>

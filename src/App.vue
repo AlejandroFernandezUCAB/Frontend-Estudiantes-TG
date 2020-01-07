@@ -10,7 +10,7 @@
           alt="Vuetify Logo"
           class="shrink mr-2"
           contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
+          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-light.png"
           transition="scale-transition"
           width="40"
         />
@@ -20,14 +20,14 @@
           class="shrink mt-1 hidden-sm-and-down"
           contain
           min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
+          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-light.png"
           width="100"
         />
       </div>
 
       <v-spacer></v-spacer>
       
-      <v-btn icon>
+      <v-btn icon color="black">
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
 
@@ -35,6 +35,7 @@
         href="https://github.com/vuetifyjs/vuetify/releases/latest"
         target="_blank"
         text
+        color="black"
       >
         <span class="mr-2">Iniciar sesión</span>
         <v-icon>mdi-account-outline</v-icon>
@@ -44,6 +45,7 @@
         href="https://github.com/vuetifyjs/vuetify/releases/latest"
         target="_blank"
         text
+        color="black"
       >
         <span class="mr-2">Regístrate</span>
         <v-icon>mdi-pencil-box-outline</v-icon>
