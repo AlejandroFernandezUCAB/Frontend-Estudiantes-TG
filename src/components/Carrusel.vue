@@ -29,11 +29,11 @@
                 <v-img
                   class="white--text align-end"
                   height="200px"
-                  src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
+                  src="https://i.ytimg.com/vi/7TezZ2JbvZs/maxresdefault.jpg"
                 >
-                  <v-card-title>Programación en Java</v-card-title>
                 </v-img>
 
+                <v-card-title>Programación en Java</v-card-title>
                 <v-card-subtitle class="pb-0">Básico</v-card-subtitle>
 
                 <v-card-text class="text--primary">

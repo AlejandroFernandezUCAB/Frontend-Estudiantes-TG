@@ -19,7 +19,7 @@
               :key="i"
             >
               <v-sheet
-                :color="colors[i]"
+                class="background"
                 height="100%"
                 tile
               >
@@ -80,7 +80,7 @@
             </carrusel>
           </v-col>
           <v-col
-            class="py-5"  
+            class="pt-5"  
             cols="12" 
             sm="12" 
             md="12" 
@@ -129,3 +129,11 @@ export default {
   }
 }
 </script>
+
+<style scoped lang="scss">
+  .background{
+    background-image: url("https://i.ytimg.com/vi/7TezZ2JbvZs/maxresdefault.jpg") !important;
+  }
+
+</style>
+

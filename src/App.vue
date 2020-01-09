@@ -7,21 +7,12 @@
     >
       <div class="d-flex align-center">
         <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-light.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
+          alt="UCAB lOGO"
           class="shrink mt-1 hidden-sm-and-down"
           contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-light.png"
-          width="100"
+          min-width="200"
+          src="https://du.ucab.edu.ve/images/LogoUCAB600x123.png"
+          width="255"
         />
       </div>
 

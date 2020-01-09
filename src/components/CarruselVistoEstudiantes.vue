@@ -1,5 +1,5 @@
 <template>
-  <v-carousel class="vega" hide-delimiters light>
+  <v-carousel class="vertical-center-carousel" hide-delimiters light>
     <v-carousel-item
       v-for="(color) in colors"
       :key="color"
@@ -14,11 +14,11 @@
                 <v-img
                   class="white--text align-end"
                   height="200px"
-                  src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
+                  src="https://i.ytimg.com/vi/7TezZ2JbvZs/maxresdefault.jpg"
                 >
-                  <v-card-title>Programación en Java</v-card-title>
                 </v-img>
-
+                <v-card-title class="background-shape">Programación en Java</v-card-title>
+  
                 <v-card-subtitle class="pb-0">Básico</v-card-subtitle>
 
                 <v-card-text class="text--primary">
@@ -78,14 +78,12 @@
 </script>
 
 <style scoped lang="scss">
-  .carrusel-visto-estudiantes {
+  .vertical-center-carousel{
+    height: 400px !important;
+  }
+
+  .background-shape{
 
   }
 
-  @media (max-width: 400px) {
-    .vega {
-    height: 40px !important;
-    background-color: green;
-  }
-}
 </style>
