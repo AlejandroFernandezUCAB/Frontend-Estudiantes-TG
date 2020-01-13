@@ -32,8 +32,9 @@
           <v-icon>mdi-account-outline</v-icon>
         </v-btn>
       </router-link>
+      
+      <router-link to="/signin">
       <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
         target="_blank"
         text
         color="black"
@@ -41,6 +42,8 @@
         <span class="mr-2">Regístrate</span>
         <v-icon>mdi-pencil-box-outline</v-icon>
       </v-btn>
+      </router-link>
+
     </v-app-bar>
 
     <v-content>
