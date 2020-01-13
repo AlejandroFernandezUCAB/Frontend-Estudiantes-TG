@@ -4,9 +4,17 @@
       <p>Este es el nombre del Curso {{list.nombre}}</p>
       <h2>Lecciones</h2>
       <template v-for="element in module">
-        <ul v-for="lesson in element.leccion">
+        <ul v-for="lesson in element.leccion" v-bind:key="lesson.id">
           <li>
             <router-link v-bind:to="'/lesson/'+lesson.id">{{lesson.id}} -- {{lesson.post_title}}</router-link>
+
+            <ul class="evaluation-list" v-if="lesson.evaluacion">
+              <li>
+                <router-link
+                  v-bind:to="'/lesson/'+lesson.id +'/'+ lesson.evaluacion.ID"
+                >{{lesson.evaluacion.post_title}}</router-link>
+              </li>
+            </ul>
           </li>
         </ul>
       </template>
@@ -50,6 +58,7 @@ export default {
       }
     },
     validateCoursesInscribed() {
+      // Se verifica si el usuario esta inscrito en el cursos solicitado
       this.$http
         .get("my_rest_server/v1/user-by-course?course=" + this.id)
         .then(request => {
@@ -63,7 +72,7 @@ export default {
       this.$http
         .get("/wp/v2/curso/" + this.id)
         .then(request => {
-          // console.log(request);
+          console.log(request);
           this.SearchSuccessful(request);
         })
         .catch(error => this.SearchFailed());
@@ -83,3 +92,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.evaluation-list {
+  padding-left: 36px;
+}
+</style>

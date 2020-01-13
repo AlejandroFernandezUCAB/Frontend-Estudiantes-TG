@@ -1,7 +1,7 @@
 <template>
   <div class>
     <ul>
-      <li v-for="lesson in list">
+      <li v-for="lesson in list" v-bind:key="lesson.id">
         <router-link v-bind:to="'/lesson/'+lesson.id">{{lesson.id}} -- {{lesson.nombre}}</router-link>
       </li>
     </ul>

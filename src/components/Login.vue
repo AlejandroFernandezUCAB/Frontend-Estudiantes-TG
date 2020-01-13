@@ -64,6 +64,7 @@ export default {
   },
   methods: {
     checkCurrentLogin() {
+      // Verifica si el usuario se encuentra login, de no ser asi, lo redirige al home
       if (this.currentUser) {
         this.$router.replace(this.$route.query.redirect || "/");
       }
@@ -74,6 +75,7 @@ export default {
       }
     },
     login() {
+      // Se obtiene el token de usuario en base a las credenciales ingresadas
       this.$http
         .post("/jwt-auth/v1/token", {
           username: this.username,
@@ -83,6 +85,7 @@ export default {
         .catch(() => this.loginFailed());
     },
     loginSuccessful(req) {
+      // Si el login es correcto, se guardan en variables locales para usarlas mientras el usuario este login
       if (!req.data.token) {
         this.loginFailed();
         return;

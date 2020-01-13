@@ -3,7 +3,7 @@
     <H1>Mis cursos</H1>
     <div class="alert alert-danger" v-if="msg">{{ msg }}</div>
     <ul>
-      <li v-for="courses in list">
+      <li v-for="courses in list" v-bind:key="courses.id">
         <router-link
           v-bind:to="'/my-courses/'+courses.id"
         >{{courses.id}} -- {{courses.title.rendered}}</router-link>
@@ -45,6 +45,7 @@ export default {
       }
     },
     validateCoursesInscribed() {
+      // Se busca segun el username, a cuales cursos esta inscrito el usuario
       this.$http
         .get(
           "my_rest_server/v1/user-inscribed?username=" + localStorage.username
@@ -57,6 +58,7 @@ export default {
         .catch(error => this.SearchFailed());
     },
     getData() {
+      // Se obtenien todos los cursos
       this.$http
         .get("/wp/v2/curso")
         .then(request => {
@@ -67,6 +69,7 @@ export default {
     },
     edit() {},
     SearchSuccessful(request) {
+      // Se guarda en una lista los cursos que en los cuales el usuario esta inscrito
       var i;
       var j;
       var data = request.data;

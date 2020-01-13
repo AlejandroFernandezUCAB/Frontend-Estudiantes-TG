@@ -1,13 +1,20 @@
 <template>
   <div class>
-    <p>Este es el nombre del Curso {{list.nombre}}</p>
-    <h2>Lecciones</h2>
-    <template v-for="element in module">
-      <ul v-for="lesson in element.leccion">
-        <li>{{lesson.id}} -- {{lesson.post_title}}</li>
-      </ul>
-    </template>
-    <v-btn color="warning" dark v-on:click="user_inscribed">Inscribirse</v-btn>
+    <div v-if="find">
+      <p>Este es el nombre del Curso {{list.nombre}}</p>
+      <h2>Lecciones</h2>
+      <!-- Se recorre los modulos que tiene el curso para mostrar las lecciones que posee -->
+      <template v-for="element in module">
+        <ul v-for="lesson in element.leccion" v-bind:key="lesson.id">
+          <li>{{lesson.id}} -- {{lesson.post_title}}</li>
+        </ul>
+      </template>
+      <v-btn color="warning" dark v-on:click="user_inscribed">Inscribirse</v-btn>
+    </div>
+    <div v-else>
+      {{ error }}
+      <router-link v-if="error" v-bind:to="'/my-courses/'+this.id">Ir</router-link>
+    </div>
   </div>
 </template>
 
@@ -21,6 +28,7 @@ export default {
     ...mapGetters({ currentUser: "currentUser" })
   },
   mounted() {
+    this.validateCoursesInscribed();
     this.getData();
   },
   created() {
@@ -31,6 +39,7 @@ export default {
   },
   data() {
     return {
+      find: false,
       list: [],
       module: [],
       validate: false,
@@ -39,6 +48,17 @@ export default {
     };
   },
   methods: {
+    validateCoursesInscribed() {
+      // Se valida que el curso solicitado existe, y de ser asi, si se encuentra ya inscrito
+      this.$http
+        .get("my_rest_server/v1/user-by-course?course=" + this.id)
+        .then(request => {
+          // console.log(request);
+          this.courses_inscribed = request.data;
+          this.getData();
+        })
+        .catch(error => this.SearchFailed());
+    },
     user_inscribed() {
       this.$http
         .post("/my_rest_server/v1/user-inscribed", {
@@ -66,8 +86,14 @@ export default {
         .catch(error => this.SearchFailed());
     },
     SearchSuccessful(request) {
-      this.list = request.data;
-      this.module = request.data.modulo;
+      // Si ya esta inscrito le muestra un msje, si no, le permite inscribirse en el curso
+      if (this.courses_inscribed.length == 0) {
+        this.list = request.data;
+        this.module = request.data.modulo;
+        this.find = true;
+      } else {
+        this.error = "Se encuentra inscrito en el curso solicitado";
+      }
     },
     SearchFailed() {
       this.error = "El curso solicitado no existe";

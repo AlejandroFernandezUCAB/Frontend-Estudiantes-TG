@@ -11,6 +11,7 @@ import Courses from "@/components/Courses";
 import GetCourses from "@/components/GetCourses";
 import MyCourses from "@/components/MyCourses";
 import SingleCourses from "@/components/SingleCourses";
+import Evaluation from "@/components/Evaluation";
 
 Vue.use(Router);
 
@@ -66,6 +67,11 @@ export default new Router({
       path: "/lesson/:id",
       name: "SingleLesson",
       component: SingleLesson
+    },
+    {
+      path: "/lesson/:idLesson/:idEvaluation",
+      name: "Evaluation",
+      component: Evaluation
     },
     {
       path: "/logout",

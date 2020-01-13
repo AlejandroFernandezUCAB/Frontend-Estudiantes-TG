@@ -125,6 +125,7 @@ export default {
       }
     },
     getData() {
+      // Se obtiene la data del usuario segun el token se inicio de sesion
       this.$http
         .get("/wp/v2/users/me")
         .then(request => {
@@ -147,6 +148,7 @@ export default {
         .catch(() => this.EditFailed());
     },
     EditSuccessful(req) {
+      // Se actualiza la pagina
       this.$router.go();
     },
     EditFailed() {

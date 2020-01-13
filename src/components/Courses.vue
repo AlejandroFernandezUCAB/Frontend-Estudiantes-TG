@@ -1,7 +1,8 @@
 <template>
   <div class>
     <ul>
-      <li v-for="course in list">
+      <!-- Se muestra la lista de los cursos que se tienen  -->
+      <li v-for="course in list" v-bind:key="course.id">
         <router-link v-bind:to="'/courses/'+course.id">{{course.id}} -- {{course.nombre}}</router-link>
       </li>
     </ul>
@@ -24,12 +25,12 @@ export default {
   data() {
     return {
       courses_inscribed: [],
-      list: [],
-      error: false
+      list: []
     };
   },
   methods: {
     validateCoursesInscribed() {
+      // Se busca los cursos a los cuales esta inscrito el usuario
       this.$http
         .get(
           "my_rest_server/v1/user-inscribed?username=" + localStorage.username
@@ -42,6 +43,7 @@ export default {
         .catch(error => this.SearchFailed());
     },
     getData() {
+      // Se buscan todos los cursos
       this.$http
         .get("/wp/v2/curso")
         .then(request => {
@@ -53,6 +55,7 @@ export default {
     },
 
     SearchSuccessful(request) {
+      // Se valida que el usuario ya este inscrito en algun curso, de ser asi no se muestra en la lista de cursos
       var i;
       var j;
       var find = false;
@@ -71,7 +74,6 @@ export default {
           this.list.push(request.data[i]);
         }
       }
-      this.error = "No se encuentra inscrito en el curso solicitado";
     }
   }
 };
