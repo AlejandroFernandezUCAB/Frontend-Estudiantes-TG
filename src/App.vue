@@ -22,16 +22,16 @@
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
 
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-        color="black"
-      >
-        <span class="mr-2">Iniciar sesión</span>
-        <v-icon>mdi-account-outline</v-icon>
-      </v-btn>
-
+      <router-link to="/login">
+        <v-btn
+          target="_blank"
+          text
+          color="black"
+        >
+          <span class="mr-2">Iniciar sesión</span>
+          <v-icon>mdi-account-outline</v-icon>
+        </v-btn>
+      </router-link>
       <v-btn
         href="https://github.com/vuetifyjs/vuetify/releases/latest"
         target="_blank"

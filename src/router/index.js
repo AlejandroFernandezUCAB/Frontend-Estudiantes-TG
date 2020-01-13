@@ -5,6 +5,7 @@ import Perfil from '../views/Perfil.vue'
 import Evaluacion from '../views/Evaluacion.vue'
 import Carrusel from "../components/Carrusel.vue";
 import CarruselVistoEstudiantes from "../components/CarruselVistoEstudiantes.vue";
+import Login from "../views/Login.vue";
 
 Vue.use(VueRouter)
 
@@ -39,10 +40,15 @@ const routes = [
     path: '/carrusel',
     name: 'carrusel',
     component: Carrusel
-  },{
+  },
+  {
     path: '/carrusel-visto-estudiantes',
     name: 'carrusel-visto-estudiantes',
     component: CarruselVistoEstudiantes
+  },{
+    path: '/login',
+    name: 'login',
+    component: Login
   }
 
 ]
