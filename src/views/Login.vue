@@ -1,16 +1,16 @@
 <template >
-  <v-parallax
-    dark
-    src="https://cdn.vuetifyjs.com/images/backgrounds/vbanner.jpg"
-  >
-    <v-container fill-height>
+    <v-container class="background-img" fill-height fluid>
         <v-row>
             <v-col 
-                cols="6"
-                sm="6"
+                cols="9"
+                md="7"
+                sm="9"
                 lg="6"
-                xl="6"
-                offset-md="3"
+                xl="7"
+                offset-md="2"
+                offset-sm="2"
+                offset-xl="2"
+                offset-lg="3"
                 class="background-form my-10"
                 align="center"
                 justify="center"
@@ -20,6 +20,7 @@
                 ref="form"
                 v-model="valid"
                 lazy-validation
+                class="px-7 py-5"
             >
                 <v-text-field
                 v-model="name"
@@ -40,38 +41,28 @@
                 <v-checkbox
                 v-model="checkbox"
                 :rules="[v => !!v || 'You must agree to continue!']"
-                label="Do you agree?"
+                label="¿Recordar contraseña?"
                 required
                 ></v-checkbox>
 
                 <v-btn
-                :disabled="!valid"
                 color="success"
-                class="mr-4"
-                @click="validate"
-                >
-                Validate
-                </v-btn>
-
-                <v-btn
-                color="error"
                 class="mr-4"
                 @click="reset"
                 >
-                Reset Form
+                Olvíde la contraseña
                 </v-btn>
 
                 <v-btn
-                color="warning"
+                color="verde"
                 @click="resetValidation"
                 >
-                Reset Validation
+                    <span class="font-color">Ingresar</span>
                 </v-btn>
             </v-form>
             </v-col>
         </v-row>
     </v-container>
-  </v-parallax>
 </template>
 
 <script>
@@ -93,5 +84,8 @@ export default {
     .background-form{
         background-color: #E6E6E6;
         border-radius: 20px;
+    }
+    .font-color{
+        color: white;
     }
 </style>

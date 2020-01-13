@@ -131,6 +131,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  v-content{
+    background-image: url("https://i.ytimg.com/vi/7TezZ2JbvZs/maxresdefault.jpg") !important;
+  }
   .background{
     background-image: url("https://i.ytimg.com/vi/7TezZ2JbvZs/maxresdefault.jpg") !important;
   }
