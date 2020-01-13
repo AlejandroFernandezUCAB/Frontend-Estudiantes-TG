@@ -33,7 +33,7 @@
         </v-btn>
       </router-link>
       
-      <router-link to="/signin">
+      <router-link to="/signup">
       <v-btn
         target="_blank"
         text

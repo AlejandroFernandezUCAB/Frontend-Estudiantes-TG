@@ -6,7 +6,8 @@ import Evaluacion from '../views/Evaluacion.vue'
 import Carrusel from "../components/Carrusel.vue";
 import CarruselVistoEstudiantes from "../components/CarruselVistoEstudiantes.vue";
 import Login from "../views/Login.vue";
-import Signin from "../views/Sign-In.vue"
+import Signup from "../views/Sign-Up.vue"
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -52,9 +53,9 @@ const routes = [
     component: Login
   },
   {
-    path :'/signin',
-    name: 'signin',
-    component: Signin
+    path :'/signup',
+    name: 'signup',
+    component: Signup
   }
 
 ]
