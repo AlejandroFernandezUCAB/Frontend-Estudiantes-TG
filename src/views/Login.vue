@@ -3,10 +3,13 @@
         <v-row>
             <v-col 
                 cols="9"
+                xs="7"
                 md="7"
                 sm="9"
                 lg="6"
                 xl="7"
+                offset="2"
+                offset-xs="5"
                 offset-md="2"
                 offset-sm="2"
                 offset-xl="2"
