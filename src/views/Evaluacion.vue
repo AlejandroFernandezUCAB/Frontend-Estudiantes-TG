@@ -1,43 +1,8 @@
 <template>
 
   <section>
-    <v-navigation-drawer
-      absolute
-      permanent
-      right
-    >
-      <template v-slot:prepend>
-        <v-list-item two-line>
-          <v-list-item-avatar>
-            <img src="https://randomuser.me/api/portraits/women/81.jpg">
-          </v-list-item-avatar>
 
-          <v-list-item-content>
-            <v-list-item-title>Jane Smith</v-list-item-title>
-            <v-list-item-subtitle>Logged In</v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
-      </template>
-
-      <v-divider></v-divider>
-
-      <v-list dense>
-        <v-list-item
-          v-for="item in items"
-          :key="item.title"
-        >
-          <v-list-item-icon>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-icon>
-
-          <v-list-item-content>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
-
-    <v-container class="py-5">
+      <v-container class="py-5 fill-height">
       <h1 class="headline">Evaluación</h1>
         <v-row no-gutters>
           <v-col md="12" sm="12" xs="12" class="py-5">
@@ -73,6 +38,39 @@
           </v-col>
         </v-row>
     </v-container>
+    
+    <v-navigation-drawer
+      absolute
+      permanent
+      floating="true"
+    >
+      
+      <v-list-item two-line>
+        <v-list-item-avatar>
+          <img src="https://i.ytimg.com/vi/7TezZ2JbvZs/maxresdefault.jpg">
+        </v-list-item-avatar>
+
+        <v-list-item-content>
+          <v-list-item-title class="caption">Curso de programación</v-list-item-title>
+          
+        </v-list-item-content>
+      </v-list-item>
+
+      <v-divider></v-divider>
+
+      <v-list dense>
+        <v-list-item
+          v-for="item in items"
+          :key="item.title"
+        >
+
+          <v-list-item-content>
+            <v-list-item-title class="font-regular">{{ item.title }}</v-list-item-title>
+          </v-list-item-content>
+
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
   </section>
 </template>
 
@@ -81,9 +79,13 @@
     data () {
       return {
         items: [
-          { title: 'Home', icon: 'mdi-home-city' },
-          { title: 'My Account', icon: 'mdi-account' },
-          { title: 'Users', icon: 'mdi-account-group-outline' },
+          { title: 'Lección 1 - Conceptos Básico' },
+          { title: 'Quiz #1' },
+          { title: 'Lección 2 - Declaración de variables' },
+          { title: 'Quiz #2' },
+          { title: 'Lección 3 - COndicionales' },
+          { title: 'Quiz #3' },
+          { title: 'Examen' }
         ],
         campoRequerido: [
             v => !!v || 'Este campo es requerido'
