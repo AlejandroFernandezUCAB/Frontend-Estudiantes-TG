@@ -1,5 +1,5 @@
 <template>
-  <div class>
+  <div class v-if="find">
     <form class="form-signin" @submit.prevent="edit">
       <h2 class="form-signin-heading">Edit User Data</h2>
       <div class="alert alert-danger" v-if="error">{{ error }}</div>
@@ -115,7 +115,8 @@ export default {
         pais: "",
         imagen_usuario: ""
       },
-      error: false
+      error: false,
+      find: false
     };
   },
   methods: {
@@ -130,6 +131,7 @@ export default {
         .get("/wp/v2/users/me")
         .then(request => {
           this.dataUser = request.data;
+          this.find = true;
           console.log(request);
           console.log(request.data.imagen_usuario);
         })

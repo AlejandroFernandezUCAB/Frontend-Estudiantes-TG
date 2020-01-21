@@ -114,15 +114,6 @@ export default {
     };
   },
   methods: {
-    getToken() {
-      this.$http
-        .post("/jwt-auth/v1/token", {
-          username: "aquilesal",
-          password: "24455313"
-        })
-        .then(request => this.success(request))
-        .catch(error => error);
-    },
     success(req) {
       localStorage.token = req.data.token;
     },
@@ -134,7 +125,7 @@ export default {
     },
     register() {
       this.$http
-        .post("/wp/v2/users", {
+        .post("/my_rest_server/v1/users/register", {
           username: this.username,
           email: this.email,
           nombre: this.nombre,
@@ -144,11 +135,13 @@ export default {
           pais: this.pais,
           imagen_usuario: this.imagen_usuario,
           password: this.password,
-          roles: "estudiante",
           email_usuario: this.email
         })
         .then(request => this.SignUpSuccessful(request))
-        .catch(() => this.SignUpFailed());
+        .catch(error => {
+          console.log(error);
+          this.SignUpFailed();
+        });
     },
     SignUpSuccessful(req) {
       // this.tokenUser();

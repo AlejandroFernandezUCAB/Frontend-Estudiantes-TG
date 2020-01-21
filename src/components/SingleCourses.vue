@@ -60,9 +60,12 @@ export default {
     validateCoursesInscribed() {
       // Se verifica si el usuario esta inscrito en el cursos solicitado
       this.$http
-        .get("my_rest_server/v1/user-by-course?course=" + this.id)
+        .post("my_rest_server/v1/user-by-course", {
+          user: localStorage.username,
+          course: this.id
+        })
         .then(request => {
-          // console.log(request);
+          console.log(request);
           this.courses_inscribed = request.data;
           this.getData();
         })
@@ -72,7 +75,7 @@ export default {
       this.$http
         .get("/wp/v2/curso/" + this.id)
         .then(request => {
-          console.log(request);
+          // console.log(request);
           this.SearchSuccessful(request);
         })
         .catch(error => this.SearchFailed());

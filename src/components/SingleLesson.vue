@@ -13,12 +13,12 @@
         controls
         controlslist="nodownload"
       ></video>
-      <div v-if="list.evaluacion">
+      <!-- <div v-if="list.evaluacion">
         <v-btn color="warning" dark v-on:click="user_inscribed"
           >Presentar evaluacion --
           {{ list.evaluacion[0].puntaje_evaluacin }} Ptos</v-btn
         >
-      </div>
+      </div>-->
     </div>
   </div>
 </template>

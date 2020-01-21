@@ -11,10 +11,11 @@
       </template>
       <v-btn color="warning" dark v-on:click="user_inscribed">Inscribirse</v-btn>
     </div>
-    <div v-else>
+    <div v-if="inscribed">
       {{ error }}
       <router-link v-if="error" v-bind:to="'/my-courses/'+this.id">Ir</router-link>
     </div>
+    <div v-if="notFind">{{ error }}</div>
   </div>
 </template>
 
@@ -28,7 +29,6 @@ export default {
     ...mapGetters({ currentUser: "currentUser" })
   },
   mounted() {
-    this.validateCoursesInscribed();
     this.getData();
   },
   created() {
@@ -39,7 +39,9 @@ export default {
   },
   data() {
     return {
+      inscribed: false,
       find: false,
+      notFind: false,
       list: [],
       module: [],
       validate: false,
@@ -48,16 +50,19 @@ export default {
     };
   },
   methods: {
-    validateCoursesInscribed() {
-      // Se valida que el curso solicitado existe, y de ser asi, si se encuentra ya inscrito
+    validateCoursesInscribed(req) {
+      // Se valida que el curso solicitado existe, y de ser asi, si se encuentra ya inscrito el usuario
       this.$http
-        .get("my_rest_server/v1/user-by-course?course=" + this.id)
+        .post("my_rest_server/v1/user-by-course", {
+          user: localStorage.username,
+          course: this.id
+        })
         .then(request => {
           // console.log(request);
           this.courses_inscribed = request.data;
-          this.getData();
-        })
-        .catch(error => this.SearchFailed());
+          this.SearchSuccessful(req);
+          // this.getData();
+        });
     },
     user_inscribed() {
       this.$http
@@ -66,22 +71,23 @@ export default {
           courseID: this.list.id
         })
         .then(request => {
-          console.log(request);
+          // console.log(request);
           this.$router.push("/my-courses");
         })
         .catch(error => this.SearchFailed());
     },
     checkCurrentLogin() {
       if (!this.currentUser && this.$route.path !== "/") {
-        this.$router.push("/?redirect=" + this.$route.path);
+        this.$router.push("/login");
       }
     },
     getData() {
+      // Se busca el curso solicitado para ver si existe
       this.$http
         .get("/wp/v2/curso/" + this.id)
         .then(request => {
-          console.log(request);
-          this.SearchSuccessful(request);
+          // console.log(request);
+          this.validateCoursesInscribed(request);
         })
         .catch(error => this.SearchFailed());
     },
@@ -93,9 +99,11 @@ export default {
         this.find = true;
       } else {
         this.error = "Se encuentra inscrito en el curso solicitado";
+        this.inscribed = true;
       }
     },
     SearchFailed() {
+      this.notFind = true;
       this.error = "El curso solicitado no existe";
     }
   }
