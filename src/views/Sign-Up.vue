@@ -26,74 +26,107 @@
                 class="px-7 pb-5"
             >
                 <v-text-field
-                v-model="name"
-                :rules="nameRules"
-                label="Nombre"
-                required
-                color="success"
+                    v-model="nombreUsuario"
+                    :rules="nombreRules"
+                    label="Nombre de Usuario"
+                    required
+                    color="success"
                 ></v-text-field>
 
                 <v-text-field
-                v-model="name"
-                :rules="nameRules"
-                label="Apellido"
-                required
-                color="success"
+                    v-model="nombre"
+                    :rules="nombreRules"
+                    label="Nombre"
+                    required
+                    color="success"
                 ></v-text-field>
 
                 <v-text-field
-                v-model="name"
-                :rules="nameRules"
-                label="Email"
-                required
-                color="success"
+                    v-model="apellido"
+                    :rules="nombreRules"
+                    label="Apellido"
+                    required
+                    color="success"
                 ></v-text-field>
 
                 <v-text-field
-                v-model="email"
-                :rules="emailRules"
-                label="Contraseña"
-                required
-                color="success"
+                    v-model="email"
+                    :rules="emailRules"
+                    label="Correo electronico"
+                    required
+                    color="success"
                 ></v-text-field>
 
                 <v-text-field
-                v-model="email"
-                :rules="emailRules"
-                label="Confirma la contraseña"
-                required
-                color="success"
+                    :append-icon="showContrasena ? 'mdi-eye' : 'mdi-eye-off'"
+                    :type="showContrasena ? 'text' : 'password'"
+                    hint="Debe tener al menos 8 caracteres"
+                    counter
+                    @click:append="showContrasena = !showContrasena"
+                    v-model="contrasena"
+                    :rules="contrasenaRules"
+                    label="Contraseña"
+                    required
+                    color="success"
                 ></v-text-field>
 
-                <v-select 
-                :items="paises" 
-                color="success"
-                label="País" 
-                :rules="campoRequerido">
+                <v-text-field
+                    v-model="contrasenaVef"
+                    :rules="contrasenaRules"
+                    label="Confirma la contraseña"
+                    required
+                    color="success"
+                    :append-icon="showContrasenaVef ? 'mdi-eye' : 'mdi-eye-off'"
+                    :type="showContrasenaVef ? 'text' : 'password'"
+                    hint="Debe tener al menos 8 caracteres"
+                    counter
+                    @click:append="showContrasenaVef = !showContrasenaVef"
+                ></v-text-field>
+
+                <v-select
+                    v-model="pais" 
+                    :items="paises" 
+                    color="success"
+                    label="País" 
+                    :rules="campoRequerido">
                 </v-select>
 
                 <v-text-field 
-                color="success"
-                label="Compañia/Universidad" 
-                v-model="companiaUniversidad" 
-                :rules="campoRequerido" 
-                required>
+                    color="success"
+                    label="Compañia/Universidad" 
+                    v-model="companiaUniversidad" 
+                    :rules="campoRequerido" 
+                    required>
                 </v-text-field>
 
                 <v-text-field 
-                label="Profesión" 
-                v-model="profesion" 
-                :rules="campoRequerido" 
-                required>
+                    label="Profesión" 
+                    v-model="profesion" 
+                    :rules="campoRequerido" 
+                    color="success"
+                    required>
                 </v-text-field>
 
                 <v-btn
-                color="verde"
-                @click="resetValidation"
+                    color="verde"
+                    @click="crearCuenta"
                 >
                     <span class="font-color">Crear mi cuenta</span>
                 </v-btn>
             </v-form>
+            <v-snackbar
+                v-model="snackbar"
+                >
+                {{snackbartext}}
+                <v-btn
+                    light
+                    color="error"
+                    text
+                    @click="snackbar = false"
+                >
+                    Cerrar
+            </v-btn>
+            </v-snackbar>
             </v-col>
         </v-row>
     </v-container>
@@ -101,12 +134,44 @@
 
 <script>
 import light from '../plugins/vuetify'
+import axios from 'axios'
 
 export default {
     data () {
-      return {
-          primary:light.primary,
-          paises: ["Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antarctica", "Antigua and Barbuda",
+        return {
+            snackbar: false,
+            snackbartext:"",
+            primary:light.primary,
+            nombreUsuario:"",
+            nombre:"",
+            apellido:"",
+            email:"",
+            contrasena:"",
+            showContrasena:false,
+            contrasenaVef:"",
+            showContrasenaVef:false,
+            companiaUniversidad:"",
+            emailRepetido:false,
+            contrasenaRules:[
+                v => !!v || 'Este campo es obligatorio',
+                v => v.length >= 8 || 'Este campo debe tener minimo 4 caracteres',
+            ],
+            profesion:"",
+            nombreRules: [
+                v => !!v || 'Este campo es obligatorio',
+                v => v.length >= 4 || 'Este campo debe tener minimo 4 caracteres',
+            ],
+            emailRules: [
+                v => !!v || 'El email es requerido',
+                v => /.+@.+/.test(v) || 'Este email debe ser válido',
+                v => !this.emailRepetido || "Este email ya se encuentra en uso"
+            ],
+            campoRequerido:[
+                v => !!v || 'Este campo es obligatorio',
+            ],
+            pais:"",
+            valid:true,
+            paises: ["Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antarctica", "Antigua and Barbuda",
 "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados",
 "Belarus", "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana",
 "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burma", "Burundi", "Cambodia", "Cameroon", "Canada", "Cape Verde",
@@ -128,6 +193,43 @@ export default {
 "Tunisia", "Turkey", "Turkmenistan", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States",
 "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"]
       }
+    },
+    methods:{
+
+        crearCuenta(){        
+            const self = this;
+
+            if (this.$refs.form.validate()){
+                    axios.post('http://172.23.0.3/wp-json/my_rest_server/v1/users/register', {
+                        username: this.nombreUsuario,
+                        nombre:this.nombre,
+                        apellido:this.apellido,
+                        compania_universidad:this.companiaUniversidad,
+                        profesion:this.profesion,
+                        pais:this.pais,
+                        email:this.email,
+                        email_usuario:this.email,
+                        password:this.contrasena
+                    })
+                        .then(function (response) {
+                            console.log(response);
+                        })
+                        .catch( (error) => {
+
+                            if(error.response.data.code == 406 ){
+                                
+
+                                self.emailRepetido = true;
+                                self.snackbar = true;
+                                self.snackbartext = error.response.data.message;
+
+                            }
+                            
+                        }); 
+            }
+            
+        }
+
     }
 }
 </script>
