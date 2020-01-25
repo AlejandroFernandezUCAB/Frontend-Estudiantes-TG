@@ -134,7 +134,6 @@
 
 <script>
 import light from '../plugins/vuetify'
-import axios from 'axios'
 
 export default {
     data () {
@@ -200,7 +199,7 @@ export default {
             const self = this;
 
             if (this.$refs.form.validate()){
-                    axios.post('http://172.23.0.3/wp-json/my_rest_server/v1/users/register', {
+                    this.$http.post('http://172.23.0.3/wp-json/my_rest_server/v1/users/register', {
                         username: this.nombreUsuario,
                         nombre:this.nombre,
                         apellido:this.apellido,
