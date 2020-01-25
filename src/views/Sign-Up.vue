@@ -134,6 +134,7 @@
 
 <script>
 import light from '../plugins/vuetify'
+import { mapGetters } from "vuex";
 
 export default {
     data () {
@@ -194,12 +195,14 @@ export default {
       }
     },
     methods:{
-
+        registroExitoso(){
+            this.$router.push("/login");
+        },
         crearCuenta(){        
             const self = this;
 
             if (this.$refs.form.validate()){
-                    this.$http.post('http://172.23.0.3/wp-json/my_rest_server/v1/users/register', {
+                    this.$http.post("/my_rest_server/v1/users/register", {
                         username: this.nombreUsuario,
                         nombre:this.nombre,
                         apellido:this.apellido,
@@ -210,20 +213,16 @@ export default {
                         email_usuario:this.email,
                         password:this.contrasena
                     })
-                        .then(function (response) {
-                            console.log(response);
+                        .then((response) => {
+    
+                            this.registroExitoso();
+
                         })
-                        .catch( (error) => {
-
-                            if(error.response.data.code == 406 ){
+                        .catch( (error) =>{
                                 
+                            self.snackbar = true;
+                            self.snackbartext = error.response.data.message;
 
-                                self.emailRepetido = true;
-                                self.snackbar = true;
-                                self.snackbartext = error.response.data.message;
-
-                            }
-                            
                         }); 
             }
             
