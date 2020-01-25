@@ -200,9 +200,10 @@ export default {
         },
         crearCuenta(){        
             const self = this;
-
+            const http = this.$http;
+            
             if (this.$refs.form.validate()){
-                    this.$http.post("/my_rest_server/v1/users/register", {
+                    this.$http.post("http://172.23.0.3/wp-json/my_rest_server/v1/users/register", {
                         username: this.nombreUsuario,
                         nombre:this.nombre,
                         apellido:this.apellido,

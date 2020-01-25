@@ -20,25 +20,32 @@
             >
             <h1 class="display-1 py-10">Iniciar sesión</h1>
             <v-form
+                @submit.prevent="login"
                 ref="form"
                 v-model="valid"
                 lazy-validation
                 class="px-7 py-5"
             >
                 <v-text-field
-                v-model="name"
+                v-model="username"
                 :rules="nameRules"
-                label="Correo electrónico"
+                label="Nombre de usuario"
                 required
                 color="success"
+                autofocus
                 ></v-text-field>
 
+
                 <v-text-field
-                v-model="email"
-                :rules="emailRules"
-                label="Contraseña"
-                required
-                color="success"
+                    :append-icon="showContrasena ? 'mdi-eye' : 'mdi-eye-off'"
+                    :type="showContrasena ? 'text' : 'password'"
+                    counter
+                    @click:append="showContrasena = !showContrasena"
+                    v-model="contrasena"
+                    :rules="[rules.required, rules.min]"
+                    label="Contraseña"
+                    required
+                    color="success"
                 ></v-text-field>
 
                 <v-checkbox
@@ -57,8 +64,8 @@
                 </v-btn>
 
                 <v-btn
-                color="verde"
-                @click="resetValidation"
+                    color="verde"
+                    type="submit"                
                 >
                     <span class="font-color">Ingresar</span>
                 </v-btn>
@@ -69,15 +76,77 @@
 </template>
 
 <script>
-import light from '../plugins/vuetify'
+import { mapGetters } from "vuex";
 
 export default {
-    data () {
-      return {
-          primary:light.primary
+  name: "Login",
+  data() {
+    return {
+      username: "",
+      error: false,
+      showContrasena: false,
+      contrasena: "",
+      nameRules: [v => !!v || "El nombre de usuario es requerido"],
+      rules: {
+        required: value => !!value || "Obligatorio",
+        min: v => v.length >= 8 || "Minimo 8 caracteres"
       }
+    };
+  },
+  computed: {
+    ...mapGetters({ currentUser: "currentUser" })
+  },
+  created() {
+    this.checkCurrentLogin();
+  },
+  updated() {
+    this.checkCurrentLogin();
+  },
+  methods: {
+    checkCurrentLogin() {
+      // Verifica si el usuario se encuentra login, de no ser asi, lo redirige al home
+      if (this.currentUser) {
+        this.$router.replace(this.$route.query.redirect || "/");
+      }
+    },
+    validate() {
+      if (this.$refs.form.validate()) {
+        this.login();
+      }
+    },
+    login() {
+      // Se obtiene el token de usuario en base a las credenciales ingresadas
+      this.$http
+        .post("http://172.23.0.3/wp-json/jwt-auth/v1/token", {
+          username: this.username,
+          password: this.contrasena
+        })
+        .then(request => this.loginSuccessful(request))
+        .catch(() => this.loginFailed());
+    },
+    loginSuccessful(req) {
+      // Si el login es correcto, se guardan en variables locales para usarlas mientras el usuario este login
+      if (!req.data.token) {
+        this.loginFailed();
+        return;
+      }
+      this.error = false;
+      localStorage.token = req.data.token;
+      localStorage.email = req.data.user_email;
+      localStorage.username = req.data.user_nicename;
+      this.$store.dispatch("login");
+      this.$router.go();
+      this.$router.replace(this.$route.query.redirect || "/");
+    },
+    loginFailed() {
+      this.error = "Login failed!";
+      this.$store.dispatch("logout");
+      delete localStorage.token;
+      delete localStorage.username;
+      delete localStorage.email;
     }
-}
+  }
+};
 </script>
 
 <style>
