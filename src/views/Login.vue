@@ -22,7 +22,6 @@
             <v-form
                 @submit.prevent="login"
                 ref="form"
-                v-model="valid"
                 lazy-validation
                 class="px-7 py-5"
             >
@@ -70,6 +69,19 @@
                     <span class="font-color">Ingresar</span>
                 </v-btn>
             </v-form>
+            <v-snackbar
+                v-model="snackbar"
+                >
+                {{snackbartext}}
+                <v-btn
+                    light
+                    color="error"
+                    text
+                    @click="snackbar = false"
+                >
+                    Cerrar
+                </v-btn>
+            </v-snackbar>
             </v-col>
         </v-row>
     </v-container>
@@ -86,6 +98,8 @@ export default {
       error: false,
       showContrasena: false,
       contrasena: "",
+      snackbar:false,
+      snackbartext:"El nombre de usuario y la contraseña no coinciden.",
       nameRules: [v => !!v || "El nombre de usuario es requerido"],
       rules: {
         required: value => !!value || "Obligatorio",
@@ -121,10 +135,10 @@ export default {
           username: this.username,
           password: this.contrasena
         })
-        .then(request => this.loginSuccessful(request))
-        .catch(() => this.loginFailed());
+        .then(request => this.loginExitoso(request))
+        .catch(() => this.loginFallido());
     },
-    loginSuccessful(req) {
+    loginExitoso(req) {
       // Si el login es correcto, se guardan en variables locales para usarlas mientras el usuario este login
       if (!req.data.token) {
         this.loginFailed();
@@ -138,8 +152,8 @@ export default {
       this.$router.go();
       this.$router.replace(this.$route.query.redirect || "/");
     },
-    loginFailed() {
-      this.error = "Login failed!";
+    loginFallido() {
+      this.snackbar = true;
       this.$store.dispatch("logout");
       delete localStorage.token;
       delete localStorage.username;
