@@ -134,9 +134,27 @@ export default {
     },
     methods:{
         validate () {
+
             if (this.$refs.form.validate()) {
-                this.snackbar = true
+                this.$http
+                    .post("http://172.23.0.3/wp-json/wp/v2/users/" + this.userM.id, {
+                        nombre: this.userM.nombre,
+                        apellido: this.userM.apellido,
+                        compania_universidad: this.userM.compania_universidad,
+                        profesion: this.userM.profesion,
+                        pais: this.userM.pais
+                    })
+                    .then(request => this.edicionExitoso(request))
+                    .catch(() => this.edicionFallido());
             }
+
+        },
+        edicionExitoso(req) {
+            console.log("Editado exitoso")
+            this.$router.go();
+        },
+        edicionFallido() {
+            this.error = "Edit failed!";
         },
         reset () {
             this.$refs.form.reset()
