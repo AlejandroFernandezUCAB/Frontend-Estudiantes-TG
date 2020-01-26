@@ -24,31 +24,31 @@
                     <v-container>
                         <v-row justify="center">
                             <v-col class="no-padding" cols="8" sm="8" md="8" xs="12">
-                                <v-text-field label="Nombre de usuario" v-model="username" :rules="campoRequerido" required>
+                                <v-text-field label="Nombre de usuario" v-model="userM.name" :rules="campoRequerido" required>
                                 </v-text-field>
                             </v-col>
                             <v-col class="no-padding" cols="8" sm="8" md="8" xs="12" >
-                                <v-text-field label="Nombre" v-model="nombre" :rules="campoRequerido" required>
+                                <v-text-field label="Nombre" v-model="userM.nombre" :rules="campoRequerido" required>
                                 </v-text-field>
                             </v-col>
                             <v-col class="no-padding" cols="8" sm="8" md="8" xs="12">
-                                <v-text-field label="Apellido" v-model="apellido" :rules="campoRequerido" required>
+                                <v-text-field label="Apellido" v-model="userM.apellido" :rules="campoRequerido" required>
                                 </v-text-field>
                             </v-col>
                             <v-col class="no-padding" cols="8" sm="8" md="8" xs="12">
-                                <v-text-field label="Email" v-model="email" :rules="emailRules" required>
+                                <v-text-field label="Email" v-model="userM.email_usuario" :rules="emailRules" required>
                                 </v-text-field>
                             </v-col>
                             <v-col class="no-padding" cols="8" sm="8" md="8" xs="12">
-                                <v-select :items="paises" label="País" :rules="campoRequerido">
+                                <v-select v-model="userM.pais" :items="paises" label="País" :rules="campoRequerido">
                                 </v-select>
                             </v-col>
                             <v-col class="no-padding" cols="8" sm="8" md="8" xs="12">
-                                <v-text-field label="Compañia/Universidad" v-model="companiaUniversidad" :rules="campoRequerido" required>
+                                <v-text-field label="Compañia/Universidad" v-model="userM.compania_universidad" :rules="campoRequerido" required>
                                 </v-text-field>
                             </v-col>
                             <v-col class="no-padding" cols="8" sm="8" md="8" xs="12">
-                                <v-text-field label="Profesión" v-model="profesion" :rules="campoRequerido" required>
+                                <v-text-field label="Profesión" v-model="userM.profesion" :rules="campoRequerido" required>
                                 </v-text-field>
                             </v-col>
                             <v-col class="no-padding text-center" cols="8" sm="8" md="8" xs="12" justify="center">
@@ -66,10 +66,24 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+import UserM from "../models/UserM";
 
 export default {
+    
     name: 'perfil',
     data:() => ({
+        userM:{
+            id: "",
+            name: "",
+            nombre: "",
+            apellido: "",
+            email_usuario: "",
+            compania_universidad: "",
+            profesion: "",
+            pais: "",
+            imagen_usuario: ""
+        },
         valid: true,
         campoRequerido: [
             v => !!v || 'Este campo es requerido'
@@ -106,6 +120,18 @@ export default {
 "Tunisia", "Turkey", "Turkmenistan", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States",
 "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"],
     }),
+    beforeCreate(){
+        let user = new UserM();
+        this.$http
+            .get("http://172.23.0.3/wp-json/wp/v2/users/me")
+            .then(request => {
+                this.userM = request.data;
+                this.find = true;
+                console.log(this.userM);
+                console.log(request.data.imagen_usuario);
+            })
+            .catch(error => console.log(error));
+    },
     methods:{
         validate () {
             if (this.$refs.form.validate()) {

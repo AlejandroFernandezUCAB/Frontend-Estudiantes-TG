@@ -203,9 +203,8 @@ export default {
             const self = this;
             const http = this.$http;
             
-
             if (this.$refs.form.validate()){
-                
+
                 let userM = new UserM({
                         username: this.nombreUsuario,
                         nombre:this.nombre,
