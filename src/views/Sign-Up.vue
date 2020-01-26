@@ -135,6 +135,7 @@
 <script>
 import light from '../plugins/vuetify'
 import { mapGetters } from "vuex";
+import UserM from "../models/UserM";
 
 export default {
     data () {
@@ -202,8 +203,10 @@ export default {
             const self = this;
             const http = this.$http;
             
+
             if (this.$refs.form.validate()){
-                    this.$http.post("http://172.23.0.3/wp-json/my_rest_server/v1/users/register", {
+                
+                let userM = new UserM({
                         username: this.nombreUsuario,
                         nombre:this.nombre,
                         apellido:this.apellido,
@@ -213,7 +216,9 @@ export default {
                         email:this.email,
                         email_usuario:this.email,
                         password:this.contrasena
-                    })
+                    });
+                
+                    this.$http.post("http://172.23.0.3/wp-json/my_rest_server/v1/users/register", userM)
                         .then((response) => {
     
                             this.registroExitoso();
