@@ -1,8 +1,19 @@
 <template>
   <div class>
+    <div v-if="findCategories">
+      <select name="category_id" @change="onChange($event)">
+        <option value="all">Todas</option>
+        <option
+          v-for="category in categories"
+          v-bind:value="category.id"
+          v-bind:key="category.id"
+        >{{ category.name }}</option>
+      </select>
+    </div>
+
     <ul>
       <!-- Se muestra la lista de los cursos que se tienen  -->
-      <li v-for="course in list" v-bind:key="course.id">
+      <li v-for="course in listCourse" v-bind:key="course.id">
         <router-link v-bind:to="'/courses/'+course.id">{{course.id}} -- {{course.nombre}}</router-link>
       </li>
     </ul>
@@ -21,14 +32,38 @@ export default {
   mounted() {
     // this.validateCoursesInscribed();
     this.getData();
+    this.getCategories();
   },
   data() {
     return {
       // courses_inscribed: [],
-      list: []
+      listCourse: [],
+      requestListCourse: [],
+      categories: [],
+      findCategories: false
     };
   },
   methods: {
+    onChange(event) {
+      var i;
+      var j;
+      var newList = [];
+      if (event.target.value === "all") {
+        console.log("entre");
+        newList = this.requestListCourse;
+      } else {
+        for (i = 0; i < this.requestListCourse.length; i++) {
+          for (j = 0; j < this.requestListCourse[i].categories.length; j++) {
+            if (this.requestListCourse[i].categories[j] == event.target.value) {
+              newList.push(this.requestListCourse[i]);
+            }
+          }
+        }
+      }
+      this.listCourse = newList;
+
+      console.log(this.listCourse);
+    },
     // validateCoursesInscribed() {
     //     // Se busca los cursos a los cuales esta inscrito el usuario
     //     this.$http
@@ -49,8 +84,26 @@ export default {
         .get("/wp/v2/curso")
         .then(request => {
           // console.log(request);
-          this.list = request.data;
+          this.requestListCourse = request.data;
+          this.listCourse = request.data;
+          // console.log(this.listCourse);
           // this.list = request.data;
+        })
+        .catch(error => console.log(error));
+    },
+    getCategories() {
+      var i;
+      // Se buscan todos los cursos
+      this.$http
+        .get("/wp/v2/categories")
+        .then(request => {
+          // console.log(request);
+          for (i = 0; i < request.data.length; i++) {
+            if (request.data[i].name != "Sin categoría")
+              this.categories.push(request.data[i]);
+          }
+          this.findCategories = true;
+          // console.log(this.categories);
         })
         .catch(error => console.log(error));
     }
