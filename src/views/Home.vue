@@ -76,7 +76,10 @@
             sm="12" 
             md="8" 
             lg="8">
-            <carrusel>
+            <carrusel 
+              v-bind:categorias="{categorias}"
+              v-bind:cursos="{cursos}"
+              > 
             </carrusel>
           </v-col>
           <v-col
@@ -98,9 +101,17 @@
 <script>
 import Carrusel from '../components/Carrusel.vue'
 import CarruselVistoEstudiantes from "../components/CarruselVistoEstudiantes.vue";
+import Categoria from "../models/Categoria";
 
 export default {
   name: 'home',
+  beforeCreate(){
+    
+  },
+  created(){
+    this.cargarCategorias();
+    this.cargarCursos();
+  },
    data:() => ({
     colors: [
           'green',
@@ -121,8 +132,32 @@ export default {
         items: [
           'Programación', 'Cocina', 'Educación', 'Idiomas',
         ],
-        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+        categorias: [],
+        cursos:[]
   }),
+  methods: {
+    cargarCategorias(){
+      this.$http
+        .get("http://172.23.0.3/wp-json/wp/v2/categories")
+        .then(request => {
+          this.categorias = request.data;
+        })
+        .catch(() => {
+
+        });
+    },
+    cargarCursos(){
+      this.$http
+        .get("http://172.23.0.3/wp-json/wp/v2/curso")
+        .then(request => {
+          this.cursos = request.data;
+        })
+        .catch(() => {
+
+        });
+    }
+  },
   components:{
     Carrusel,
     CarruselVistoEstudiantes

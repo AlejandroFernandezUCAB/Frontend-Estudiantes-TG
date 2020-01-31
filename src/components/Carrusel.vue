@@ -7,17 +7,18 @@
       grow
     >
       <v-tab
-        v-for="item in items"
-        :key="item"
+        v-for="categoria in categorias"
+        :key="categoria.name"
+        @click="tabsCursos(categoria.name)"
       >
-        {{ item }}
+        {{ categoria.name }}
       </v-tab>
     </v-tabs>
 
     <v-tabs-items v-model="tab">
       <v-tab-item
-        v-for="item in items"
-        :key="item"
+        v-for="curso in cursosCategoria"
+        :key="curso.name"
       >
         <v-card flat color="basil">
           <v-row no-gutters>
@@ -33,7 +34,7 @@
                 >
                 </v-img>
 
-                <v-card-title>Programación en Java</v-card-title>
+                <v-card-title>{{curso.title.rendered}}</v-card-title>
                 <v-card-subtitle class="pb-0">Básico</v-card-subtitle>
 
                 <v-card-text class="text--primary">
@@ -68,20 +69,65 @@
 
   export default  {
     name: 'carrusel-cursos',
-    props: [],
+    created(){
+      this.cargarCursos();
+      this.cargarCategorias();
+    },
     mounted () {
 
     },
     data () {
       return {
-        items: [
-          'Programación', 'Cocina', 'Educación', 'Idiomas',
-        ],
+        cursos:[],
+        categorias:[],
+        cursosCategoria:[],
         tab: null      
         }
     },
     methods: {
+    cargarCategorias(){
+      this.$http
+        .get("http://172.23.0.3/wp-json/wp/v2/categories")
+        .then(request => {
+          this.categorias = request.data;
+        })
+        .catch(() => {
 
+        });
+    },
+    cargarCursos(){
+      this.$http
+        .get("http://172.23.0.3/wp-json/wp/v2/curso")
+        .then(request => {
+          this.cursos = request.data;
+        })
+        .catch(() => {
+
+        });
+    },
+    tabsCursos(categoria){
+      
+      let idCategoriaActual;
+      this.cursosCategoria = [];
+      for (let i = 0; i < this.categorias.length; i++) {
+        
+        if (this.categorias[i].name == categoria) {
+          idCategoriaActual = this.categorias[i].id;
+        }
+
+      }
+      
+      for (let i = 0; i < this.cursos.length; i++) {
+        const element = this.cursos[i];
+
+        if( element.categories.includes(idCategoriaActual)){
+
+          this.cursosCategoria.push(element);
+
+        }
+
+      }
+    }
     },
     computed: {
 
