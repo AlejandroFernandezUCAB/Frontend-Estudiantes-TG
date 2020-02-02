@@ -9,7 +9,6 @@
       <v-tab
         v-for="categoria in categorias"
         :key="categoria.name"
-        @click="tabsCursos(categoria.name)"
       >
         {{ categoria.name }}
       </v-tab>
@@ -17,31 +16,36 @@
 
     <v-tabs-items v-model="tab">
       <v-tab-item
-        v-for="curso in cursosCategoria"
-        :key="curso.name"
+        v-for="categoria in categorias"
+        :key="categoria.name"
       >
         <v-card flat color="basil">
           <v-row no-gutters>
-            <v-col v-for="i in 3" :key="i" sm="4">
+            <v-col 
+              v-for="curso in tabsCursos(cursos, categoria)" 
+              :key="curso.name" :sm="sizeCol(cursos,categoria)"
+            >
               <v-card
                 class="mx-auto"
-                max-width="400"
                 >
                 <v-img
                   class="white--text align-end"
                   height="200px"
-                  src="https://i.ytimg.com/vi/7TezZ2JbvZs/maxresdefault.jpg"
+                  :src="curso.imagen_curso.guid"
                 >
                 </v-img>
 
                 <v-card-title>{{curso.title.rendered}}</v-card-title>
-                <v-card-subtitle class="pb-0">Básico</v-card-subtitle>
+                <v-card-subtitle class="pb-0">{{categoria.name}}</v-card-subtitle>
 
                 <v-card-text class="text--primary">
-                  <div><p>Este curso es dedicado para los nuevos en Java</p></div>
+                  <div>
+                    <p v-if="curso.texto_inicial != '' ">{{curso.texto_inicial}}</p>
+                    <p v-else>Ingresa y ve el contenido del curso</p>
+                  </div>
                 </v-card-text>
 
-                <v-card-actions>
+                <v-card-actions :align="center">
                   <v-btn
                     color="#34B3E1"
                     text
@@ -100,33 +104,45 @@
         .get("http://172.23.0.3/wp-json/wp/v2/curso")
         .then(request => {
           this.cursos = request.data;
+          console.log(this.cursos);
         })
         .catch(() => {
 
         });
     },
-    tabsCursos(categoria){
+    tabsCursos(cursos, categoria){
       
-      let idCategoriaActual;
-      this.cursosCategoria = [];
-      for (let i = 0; i < this.categorias.length; i++) {
-        
-        if (this.categorias[i].name == categoria) {
-          idCategoriaActual = this.categorias[i].id;
-        }
-
-      }
+      let cursosCategoria = [];
       
-      for (let i = 0; i < this.cursos.length; i++) {
-        const element = this.cursos[i];
+      for (let i = 0; i < cursos.length; i++) {
+        const element = cursos[i];
 
-        if( element.categories.includes(idCategoriaActual)){
+        if( element.categories.includes(categoria.id) && cursosCategoria.length < 3){
 
-          this.cursosCategoria.push(element);
+          cursosCategoria.push(element);
 
         }
 
       }
+
+      return cursosCategoria;
+
+    },
+    sizeCol( cursos,categoria ){
+
+      let tamanoCursos = this.tabsCursos(cursos, categoria);
+      let col = 4;
+      
+      if( tamanoCursos.length == 3){
+        return 4;
+      }else if( tamanoCursos.length== 2){
+        return 6;
+      }else if( tamanoCursos.length == 1){
+        return 12
+      }else{
+        return col;
+      }
+
     }
     },
     computed: {
