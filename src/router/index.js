@@ -7,6 +7,7 @@ import Carrusel from "../components/Carrusel.vue";
 import CarruselVistoEstudiantes from "../components/CarruselVistoEstudiantes.vue";
 import Login from "../views/Login.vue";
 import Signup from "../views/Sign-Up.vue"
+import MyCourses from "../views/MyCourses.vue"
 
 Vue.use(VueRouter)
 
@@ -56,6 +57,11 @@ const routes = [
     path :'/signup',
     name: 'signup',
     component: Signup
+  },
+  {
+    path:'/my-courses',
+    name: 'My Courses',
+    component:MyCourses
   }
 
 ]
