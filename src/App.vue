@@ -22,28 +22,53 @@
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
 
-      <router-link to="/login">
+      <div v-if="!currentUser">
+        <router-link to="/login">
+          <v-btn
+            target="_blank"
+            text
+            color="black"
+          >
+            <span class="mr-2">Iniciar sesión</span>
+            <v-icon>mdi-account-outline</v-icon>
+          </v-btn>
+        </router-link>
+        
+        <router-link to="/signup">
         <v-btn
           target="_blank"
           text
           color="black"
         >
-          <span class="mr-2">Iniciar sesión</span>
-          <v-icon>mdi-account-outline</v-icon>
+          <span class="mr-2">Regístrate</span>
+          <v-icon>mdi-pencil-box-outline</v-icon>
         </v-btn>
-      </router-link>
-      
-      <router-link to="/signup">
-      <v-btn
-        target="_blank"
-        text
-        color="black"
-      >
-        <span class="mr-2">Regístrate</span>
-        <v-icon>mdi-pencil-box-outline</v-icon>
-      </v-btn>
-      </router-link>
+        </router-link>
+      </div>
 
+      <div v-if="currentUser">
+        <router-link to="/perfil">
+          <v-btn
+            target="_blank"
+            text
+            color="black"
+          >
+            <span class="mr-2">Mi Perfil</span>
+            <v-icon>mdi-account-outline</v-icon>
+          </v-btn>
+        </router-link>
+        
+        <router-link to="/mis-cursos">
+        <v-btn
+          target="_blank"
+          text
+          color="black"
+        >
+          <span class="mr-2">Mis Cursos</span>
+          <v-icon>mdi-pencil-box-outline</v-icon>
+        </v-btn>
+        </router-link>
+      </div>
     </v-app-bar>
 
     <v-content>
@@ -53,7 +78,10 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
+  
   name: 'App',
 
   components: {
@@ -63,6 +91,9 @@ export default {
   data: () => ({
     //
   }),
+  computed: {
+    ...mapGetters({ currentUser: "currentUser" })
+  },
   watch: {
     $route(to, from) {
       document.title = to.meta.title || 'Some Default Title';

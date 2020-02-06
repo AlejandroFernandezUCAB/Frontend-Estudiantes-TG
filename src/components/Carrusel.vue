@@ -45,10 +45,11 @@
                   </div>
                 </v-card-text>
 
-                <v-card-actions :align="center">
+                <v-card-actions>
                   <v-btn
                     color="#34B3E1"
                     text
+                    @click="comprarCurso(curso.id)"
                   >
                     Comprar
                   </v-btn>
@@ -91,7 +92,7 @@
     methods: {
     cargarCategorias(){
       this.$http
-        .get("http://172.23.0.3/wp-json/wp/v2/categories")
+        .get("wp/v2/categories")
         .then(request => {
           this.categorias = request.data;
         })
@@ -101,7 +102,7 @@
     },
     cargarCursos(){
       this.$http
-        .get("http://172.23.0.3/wp-json/wp/v2/curso")
+        .get("wp/v2/curso")
         .then(request => {
           this.cursos = request.data;
           console.log(this.cursos);
@@ -109,6 +110,19 @@
         .catch(() => {
 
         });
+    },
+    comprarCurso(id){
+
+      this.$http
+        .post("my_rest_server/v1/user-inscribed", {
+          username: localStorage.username,
+          courseID: id
+        })
+        .then(request => {
+          console.log(request.data)
+          this.$router.push("/mis-cursos");
+        })
+        .catch(error => console.log(error));
     },
     tabsCursos(cursos, categoria){
       
@@ -143,11 +157,11 @@
         return col;
       }
 
-    }
     },
     computed: {
 
     }
+  }
 }
 
 

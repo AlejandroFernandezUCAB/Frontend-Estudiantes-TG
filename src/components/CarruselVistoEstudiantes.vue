@@ -1,12 +1,15 @@
 <template>
   <v-carousel class="vertical-center-carousel" hide-delimiters light>
     <v-carousel-item
-      v-for="(color) in colors"
-      :key="color"
+      v-for="i in 3" 
+      :key="i" 
     >
         <v-row
         >
-          <v-col v-for="i in 3" :key="i" sm="4">
+          <v-col 
+            v-for="curso in cursosTags"
+            :key="curso.name" sm="4"
+          >
               <v-card
                 class="mx-auto"
                 max-width="400"
@@ -50,24 +53,75 @@
 <script>
 
   export default  {
-    name: 'carrusel-visto-estudiantes',
-    props: [],
-    mounted () {
-
+    name: 'carrusel-cursos',
+    created(){
+      this.cargarCursos();
     },
     data () {
       return {
-        colors: [
-          'primary',
-          'secondary',
-          'yellow darken-2',
-          'red',
-          'orange',
-        ],
+        cursos:[],
+        tags:[],
+        cursosTags:[],
+        tab: null,
+        destacadoId:null     
       }
     },
     methods: {
+    cargarTags(){
+      this.$http
+        .get("http://172.23.0.3/wp-json/wp/v2/tags")
+        .then(request => {
+          this.tags = request.data;
+          this.tags.forEach(tag => {
+            if (tag.name == "destacado"){
+              this.destacadoId = tag.id
+            }
+          });
+          this.cursosTags = this.cursosTagsFiltro();
+        })
+        .catch(() => {
 
+        });
+    },
+    cargarCursos(){
+      this.$http
+        .get("http://172.23.0.3/wp-json/wp/v2/curso")
+        .then(request => {
+          this.cursos = request.data;
+          this.cargarTags();
+        })
+        .catch(() => {
+
+        });
+    },
+    cursosTagsFiltro( iterador ){
+      
+      let cursosTags = [];
+      
+      for (let i = 0; i < this.cursos.length; i++) {
+        
+        const curso = this.cursos[i];
+        
+        if( curso.tags.includes(this.destacadoId)){
+
+          cursosTags.push(curso);
+
+        }
+
+      }
+      
+      return cursosTags;
+
+    },
+    tamanoCursosTab(){
+      
+      if(this.cursosTags.length % 3 == 1){
+        return (this.cursosTags.length/3) + 1;
+      }else{
+        return this.cursosTags.length;
+      }
+      
+    }
     },
     computed: {
 
