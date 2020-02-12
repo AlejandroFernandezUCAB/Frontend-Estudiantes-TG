@@ -120,7 +120,7 @@
         })
         .then(request => {
           console.log(request.data)
-          this.$router.push("/mis-cursos");
+          this.$router.push("/my-courses");
         })
         .catch(error => console.log(error));
     },

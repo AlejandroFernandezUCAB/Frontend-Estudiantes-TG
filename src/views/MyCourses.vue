@@ -14,25 +14,25 @@
                 sm="4"
                 lg="4"
                 cols="4"
-                v-for="i in 9"
-                :key="i"
+                v-for="curso in cursosAdquiridos"
+                :key="curso.id"
                 >
 
                 <v-card
                     :loading="loading"
-                    class="mx-auto my-12"
+                    class="mx-auto"
                     max-width="374"
                 >
                     <v-img
-                    height="100%"
-                    src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
+                        height="200"
+                        :src="curso.imagen_curso.guid"
                     ></v-img>
 
-                    <v-card-title>Curso 1</v-card-title>
+                    <v-card-title>{{curso.nombre}}</v-card-title>
 
                     <v-card-text>
                     <v-row
-                        align="center"
+                        
                         class="mx-0"
                     >
                         <v-rating
@@ -59,14 +59,14 @@
                         stream
                     ></v-progress-linear>
                     <v-card-actions>
-                    <v-btn
-                        color="success"
-                        text
-                        @click="reserve"
-                         :align="center"
-                    >
-                        Continuar
-                    </v-btn>
+                        <v-btn
+                            color="success"
+                            text
+                            @click="ingresarCurso(curso.id)"
+                            
+                        >
+                            Seguir viendo
+                        </v-btn>
                     </v-card-actions>
                 </v-card>
             </v-col>
@@ -75,18 +75,61 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
   export default {
+    created(){
+        //this.checkCurrentLogin();
+        this.getMyCourses();
+    },
+    computed: {
+    ...mapGetters({ currentUser: "currentUser" })
+    },
     data: () => ({
       loading: false,
       selection: 1,
+      cursosAdquiridos:[],
+      cursosAdquiridosResponse:[]
     }),
-
     methods: {
-      reserve () {
+      ingresarCurso (idCurso) {
         this.loading = true
-
-        setTimeout(() => (this.loading = false), 2000)
+        this.$router.push("/course/"+idCurso);
       },
+
+      getMyCourses(){
+          
+        this.$http
+            .post("my_rest_server/v1/users/courses/user_inscribed_by_username", {
+                username: this.currentUser.username
+            })
+            .then(request => { ;
+                this.cursosAdquiridosResponse = request.data
+                this.getDetailCourse(this.cursosAdquiridosResponse);
+                })
+            .catch((error) => { console.log(error)});
+      },
+
+      getDetailCourse(cursos){
+
+          cursos.forEach(curso => {
+              
+            this.$http
+            .get("wp/v2/curso/"+curso.id_curso)
+            .then(request => { 
+                this.cursosAdquiridos.push( request.data );
+                console.log(request.data);
+                })
+            .catch((error) => { console.log(error)});
+          });
+
+      },
+        checkCurrentLogin() {
+        // Verifica si el usuario se encuentra login, de no ser asi, lo redirige al home
+            if (this.currentUser) {
+                this.$router.replace(this.$route.query.redirect || "/");
+            }
+        },
     },
   }
 </script>
