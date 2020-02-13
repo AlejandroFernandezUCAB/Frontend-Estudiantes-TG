@@ -57,6 +57,7 @@
                   <v-btn
                     color="#34B3E1"
                     text
+                    @click="verContenido(curso.id)"
                   >
                     Ver contenido
                   </v-btn>
@@ -120,9 +121,12 @@
         })
         .then(request => {
           console.log(request.data)
-          this.$router.push("/my-courses");
+          this.$router.push("/mis-cursos");
         })
         .catch(error => console.log(error));
+    },
+    verContenido(cursoId){
+      this.$router.push("/cursos/"+cursoId);
     },
     tabsCursos(cursos, categoria){
       

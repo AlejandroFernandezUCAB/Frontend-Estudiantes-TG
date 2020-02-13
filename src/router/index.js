@@ -60,12 +60,12 @@ const routes = [
     component: Signup
   },
   {
-    path:'/my-courses',
+    path:'/mis-cursos',
     name: 'My Courses',
     component:MyCourses
   },
   { 
-    path: '/course/:id', 
+    path: '/cursos/:id', 
     component: Course
   }
 

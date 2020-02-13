@@ -62,6 +62,14 @@
                         <v-btn
                             color="success"
                             text
+                            @click="verContenido(curso.id)"                            
+                        >
+
+                            Seguir viendo
+                        </v-btn>
+                        <v-btn
+                            color="success"
+                            text
                             @click="ingresarCurso(curso.id)"
                             
                         >
@@ -79,7 +87,6 @@ import { mapGetters } from "vuex";
 
   export default {
     created(){
-        //this.checkCurrentLogin();
         this.getMyCourses();
     },
     computed: {
@@ -94,7 +101,7 @@ import { mapGetters } from "vuex";
     methods: {
       ingresarCurso (idCurso) {
         this.loading = true
-        this.$router.push("/course/"+idCurso);
+        this.$router.push("/cursos/"+idCurso);
       },
 
       getMyCourses(){
