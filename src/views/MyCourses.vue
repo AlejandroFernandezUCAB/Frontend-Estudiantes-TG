@@ -62,18 +62,17 @@
                         <v-btn
                             color="success"
                             text
-                            @click="verContenido(curso.id)"                            
+                            @click="ingresarCurso(curso.id)"                            
                         >
-
-                            Seguir viendo
+                            Ver Detalle
                         </v-btn>
                         <v-btn
                             color="success"
                             text
-                            @click="ingresarCurso(curso.id)"
+                            @click="verContenido(curso.id)"
                             
                         >
-                            Seguir viendo
+                            Continuar
                         </v-btn>
                     </v-card-actions>
                 </v-card>
@@ -116,7 +115,10 @@ import { mapGetters } from "vuex";
                 })
             .catch((error) => { console.log(error)});
       },
-
+      verContenido(cursoId){
+        this.loading = true
+        this.$router.push("/cursos/"+cursoId+"/aprender");
+      },
       getDetailCourse(cursos){
 
           cursos.forEach(curso => {
