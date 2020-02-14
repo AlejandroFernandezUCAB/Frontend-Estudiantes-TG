@@ -58,6 +58,7 @@ export default {
         },
         cambiarLeccion(idLeccion){
             this.$router.push("/cursos/"+this.curso.id+"/aprender/leccion/"+idLeccion);
+            this.$router.go();
         }
     },
     data: () => ({
