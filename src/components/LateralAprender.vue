@@ -9,10 +9,11 @@
           @change="cambiarModulo($event)"
         ></v-select>
       <v-list fill-width>
-        <v-list-item-group v-model="model" mandatory color="success">
+        <v-list-item-group  v-model="model" mandatory color="success">
             <v-list-item
                 v-for="leccion in lecciones"
                 :key="leccion.ID"
+                @click="cambiarLeccion(leccion.ID)"
             >
             <v-list-item-icon>
                 <v-icon v-text="icon"></v-icon>
@@ -54,6 +55,9 @@ export default {
         },
         cambiarModulo(event){
             this.cargarLecciones();
+        },
+        cambiarLeccion(idLeccion){
+            this.$router.push("/cursos/"+this.curso.id+"/aprender/leccion/"+idLeccion);
         }
     },
     data: () => ({
@@ -61,21 +65,7 @@ export default {
         moduloSeleccionado:"",
         modulos:[],
         lecciones:[],
-        items: [
-            {
-            icon: 'mdi-notebook',
-            text: 'Wifi',
-            },
-            {
-            icon: 'mdi-bluetooth',
-            text: 'Bluetooth',
-            },
-            {
-            icon: 'mdi-chart-donut',
-            text: 'Data Usage',
-            },
-      ],
-      model: 1,
+        model: 1,
     }),
 }
 </script>

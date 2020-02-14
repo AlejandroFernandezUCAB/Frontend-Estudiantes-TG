@@ -1,15 +1,56 @@
 <template>
   <v-container fluid fill-height>
+      <v-row>
+          <v-col 
+            sm="12"
+            lg="12"
+            xl="12"
+            >
+              <div>
+                 <h1 class="display-1">{{leccion.nombre}}</h1>
+              </div>
 
+              <div align="center">
+                <video width="55%" controls autoplay>
+                    <source :src="leccion.video.guid" type="video/mp4">
+                </video>
+              </div> 
+                <div 
+                    class="mt-4"
+                    
+                    align="left
+                    ">
+                </div>
+                <div><p>Para continuar con el curso por favor seleccione la lección del lado izquierdo</p></div>
+            </div>
+          </v-col>
+      </v-row>
   </v-container>
 </template>
 
 <script>
-export default {
 
+export default {
+    props:["leccion"],
+    created(){
+      console.log(this.leccion);
+    },
+    data:() => ({
+
+    }),
+    methods(){
+      
+    },
+    components:{
+      
+    }
 }
 </script>
 
 <style>
-
+video {
+    width: 55%;
+    
+    object-fit: cover;
+}
 </style>

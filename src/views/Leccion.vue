@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-      <v-row>
+        <v-row>
           <v-col
             sm="4"
             lg="4"
@@ -15,42 +15,30 @@
             lg="8"
             xl="8"
           >
-            <div align="center">
-
-                <h1 class="display-1">Bienvenido a {{curso.nombre}}</h1>
-                
-                <v-img
-                    class="mt-4 borde-redondo"
-                    width="60%"
-                    :src="curso.imagen_curso.guid"
-                ></v-img>
-
-                <div 
-                    class="mt-4"
-                    v-html="curso.informacion_del_curso" 
-                    align="left
-                    ">
-                </div>
-                <div><p>Para continuar con el curso por favor seleccione la lección del lado izquierdo</p></div>
-            </div>
-        
-
+            <leccion-aprender v-if="loadingLeccion" :curso="curso" :leccion="leccion"></leccion-aprender>
+            
           </v-col>
-      </v-row>
+        </v-row>
   </v-container>
 </template>
 
 <script>
 import LateralAprender from "../components/LateralAprender.vue"
+import LeccionAprender from "../components/LeccionAprender.vue"
+
 
 export default {
     created(){
-        this.curso = this.$route.params.id;
+        this.curso = this.$route.params.idCurso;
+        this.leccion = this.$route.params.idLeccion;
         this.obtenerCursoActual();
+        this.obtenerLeccionActual();
     },
     data: () => ({
         curso : "",
-        loading: false
+        leccion: "",
+        loading: false,
+        loadingLeccion:false
     }),
     methods:{
         obtenerCursoActual(){
@@ -63,16 +51,21 @@ export default {
                 })
             .catch((error) => { console.log(error)});
 
+        },
+        obtenerLeccionActual(){
+            this.$http
+            .get("wp/v2/leccion/"+this.leccion)
+            .then(request => { 
+                    this.leccion = request.data;
+                    console.log(this.leccion);
+                    this.loadingLeccion = true;
+                })
+            .catch((error) => { console.log(error)});
         }
     },
     components:{
-        LateralAprender
+        LateralAprender,
+        LeccionAprender
     }
 }
 </script>
-
-<style>
-.borde-redondo{
-    border-radius:10%;
-}
-</style>

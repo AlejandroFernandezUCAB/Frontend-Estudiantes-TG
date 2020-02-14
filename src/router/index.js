@@ -10,6 +10,7 @@ import Signup from "../views/Sign-Up.vue"
 import MyCourses from "../views/MyCourses.vue"
 import Course from "../views/Course.vue"
 import Learn from "../views/Learn.vue"
+import Leccion from "../views/Leccion.vue"
 
 Vue.use(VueRouter)
 
@@ -68,10 +69,16 @@ const routes = [
   { 
     path: '/cursos/:id', 
     component: Course
-  },{
+  },
+  {
     path: '/cursos/:id/aprender/',
     component:Learn
+  },
+  {
+    path: '/cursos/:idCurso/aprender/leccion/:idLeccion',
+    component:Leccion
   }
+
 
 
 ]
