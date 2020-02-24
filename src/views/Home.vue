@@ -1,6 +1,9 @@
 <template>
 
   <v-container fluid>
+
+    <toolbar-principal></toolbar-principal>
+    
     <v-row no-gutters>
       <v-col cols="12" sm="12" md="12" lg="12">
         <v-card>
@@ -102,6 +105,7 @@
 import Carrusel from '../components/Carrusel.vue'
 import CarruselVistoEstudiantes from "../components/CarruselVistoEstudiantes.vue";
 import Categoria from "../models/Categoria";
+import ToolbarPrincipal from "../components/ToolbarPrincipal";
 
 export default {
   name: 'home',
@@ -160,7 +164,8 @@ export default {
   },
   components:{
     Carrusel,
-    CarruselVistoEstudiantes
+    CarruselVistoEstudiantes,
+    ToolbarPrincipal
   }
 }
 </script>

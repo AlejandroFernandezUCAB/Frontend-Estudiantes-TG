@@ -1,5 +1,6 @@
 <template >
     <v-container class="background-img" fill-height fluid>
+      <toolbar-principal></toolbar-principal>
         <v-row>
             <v-col 
                 cols="9"
@@ -89,6 +90,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import ToolbarPrincipal from "../components/ToolbarPrincipal"
 
 export default {
   name: "Login",
@@ -159,6 +161,9 @@ export default {
       delete localStorage.username;
       delete localStorage.email;
     }
+  },
+  components:{
+    ToolbarPrincipal
   }
 };
 </script>

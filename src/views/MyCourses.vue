@@ -1,5 +1,6 @@
 <template>
     <v-container fill-height>
+        <toolbar-principal></toolbar-principal>
         <v-row>
             <v-col 
                 sm="12"
@@ -83,6 +84,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import ToolbarPrincipal from "../components/ToolbarPrincipal"
 
   export default {
     created(){
@@ -140,6 +142,9 @@ import { mapGetters } from "vuex";
             }
         },
     },
+    components:{
+        ToolbarPrincipal
+    }
   }
 </script>
 

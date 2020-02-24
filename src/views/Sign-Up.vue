@@ -1,5 +1,6 @@
 <template >
     <v-container class="background-img" fill-height fluid>
+        <toolbar-principal></toolbar-principal>
         <v-row>
             <v-col 
                 cols="9"
@@ -135,6 +136,7 @@
 <script>
 import light from '../plugins/vuetify'
 import { mapGetters } from "vuex";
+import ToolbarPrincipal from '../components/ToolbarPrincipal';
 import UserM from "../models/UserM";
 
 export default {
@@ -233,6 +235,9 @@ export default {
             
         }
 
+    },
+    components:{
+        ToolbarPrincipal
     }
 }
 </script>

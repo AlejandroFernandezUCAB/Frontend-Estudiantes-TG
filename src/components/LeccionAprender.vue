@@ -22,7 +22,6 @@
                     ">
                 </div>
                 <div><p>Para continuar con el curso por favor seleccione la lección del lado izquierdo</p></div>
-            </div>
           </v-col>
       </v-row>
   </v-container>

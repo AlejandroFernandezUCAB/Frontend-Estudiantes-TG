@@ -1,5 +1,6 @@
 <template>
   <v-container>
+      <toolbar-principal></toolbar-principal>
       <v-row>
         <v-col
             sm="8"
@@ -81,6 +82,9 @@
 </template>
 
 <script>
+
+import ToolbarPrincipal from "../components/ToolbarPrincipal";
+
 export default {
     created(){
         this.idCurso = this.$route.params.id;
@@ -122,8 +126,7 @@ export default {
                 });
             });
         },
-        comprarCurso( cursoId ){
-
+        comprarCurso( cursoId ){module
             this.$http
             .post("my_rest_server/v1/user-inscribed", {
                 username: localStorage.username,
@@ -135,6 +138,9 @@ export default {
             .catch(error => console.log(error));
 
         }
+    },
+    components:{
+        ToolbarPrincipal
     }
 }
 </script>

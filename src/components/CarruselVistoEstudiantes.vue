@@ -99,7 +99,7 @@
       let cursosTags = [];
       
       for (let i = 0; i < this.cursos.length; i++) {
-        
+        module
         const curso = this.cursos[i];
         
         if( curso.tags.includes(this.destacadoId)){

@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    <toolbar-principal></toolbar-principal>
     <v-row no-gutters>
         <v-col md="4" sm="12" xs="12">
             <section class="py-2">
@@ -68,6 +69,7 @@
 <script>
 import { mapGetters } from "vuex";
 import UserM from "../models/UserM";
+import ToolbarPrincipal from "../components/ToolbarPrincipal";
 
 export default {
     
@@ -162,6 +164,9 @@ export default {
         resetValidation () {
             this.$refs.form.resetValidation()
         },
+    },
+    components:{
+        ToolbarPrincipal
     }
 }
 </script>
