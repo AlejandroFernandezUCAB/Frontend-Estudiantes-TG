@@ -1,9 +1,9 @@
 <template>
   <div>
-    <v-toolbar
-        app
-        color="primary"
-        dark
+  <v-app-bar
+      app
+      color="primary"
+      dark
     >
       <v-app-bar-nav-icon color="black" @click="menu=!menu"></v-app-bar-nav-icon>
       
@@ -24,7 +24,7 @@
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
 
-      <div>
+      <div v-if="!currentUser">
         <router-link to="/login">
           <v-btn
             target="_blank"
@@ -48,27 +48,120 @@
         </router-link>
       </div>
 
-    </v-toolbar>
+      <div v-if="currentUser">
+        <router-link to="/perfil">
+          <v-btn
+            target="_blank"
+            text
+            color="black"
+          >
+            <span class="mr-2">Mi Perfil</span>
+            <v-icon>mdi-account-outline</v-icon>
+          </v-btn>
+        </router-link>
+        
+        <router-link to="/mis-cursos">
+        <v-btn
+          target="_blank"
+          text
+          color="black"
+        >
+          <span class="mr-2">Mis Cursos</span>
+          <v-icon>mdi-pencil-box-outline</v-icon>
+        </v-btn>
+        </router-link>
+      </div>
+
+  </v-app-bar>
     <v-container>
       <v-navigation-drawer app v-model="menu" color="primary">
-        asdasdas
+        <v-container> 
+            <v-select
+            :items="modulos"
+            v-model="moduloSeleccionado"
+            label="Modulo"
+            outlined
+            color="success"
+            @change="cambiarModulo($event)"
+            ></v-select>
+            <v-list fill-width>
+                <v-list-item-group  v-model="model" mandatory color="success">
+                    <v-list-item
+                        v-for="leccion in lecciones"
+                        :key="leccion.ID"
+                        @click="cambiarLeccion(leccion.ID)"
+                    >
+                    <v-list-item-icon>
+                        <v-icon v-text="icon"></v-icon>
+                    </v-list-item-icon>
+
+                    <v-list-item-content>
+                        <v-list-item-title v-text="leccion.nombre"></v-list-item-title>
+                    </v-list-item-content>
+                    </v-list-item>
+                </v-list-item-group>
+            </v-list>
+        </v-container>
       </v-navigation-drawer>
     </v-container>
     </div>
 </template>
 
 <script>
-  export default {
-    data: () => ({
-      drawer: false,
-      group: null,
-      menu:false
-    }),
+import { mapGetters } from "vuex";
 
+  export default {
+    props:[ "curso" ,"leccion"],
+    data: () => ({
+        drawer: false,
+        group: null,
+        menu:true,
+        icon: "mdi-notebook",
+        moduloSeleccionado:"",
+        modulos:[],
+        lecciones:[],
+        model: 1,
+    }),
+    computed: {
+        ...mapGetters({ currentUser: "currentUser" })
+    },
     watch: {
-      group () {
-        this.drawer = false
-      },
+        group () {
+            this.drawer = false
+        },
+        $route(to, from) {
+            document.title = to.meta.title || 'Some Default Title';
+        },
+    },
+    created(){
+        this.cargarModulos();
+        this.cargarLecciones();
+    },
+    methods:{
+        cargarModulos(){
+
+            this.curso.modulo.forEach(modulo => {
+                this.modulos.push(modulo.post_name);
+                this.moduloSeleccionado = modulo.post_name;
+            });    
+            
+        },
+        cargarLecciones(){
+            this.curso.modulo.forEach( modulo =>{
+
+                if(modulo.post_name == this.moduloSeleccionado){
+                    this.lecciones = modulo.leccion;
+                }
+
+            });
+        },
+        cambiarModulo(event){
+            this.cargarLecciones();
+        },
+        cambiarLeccion(idLeccion){
+            this.$router.push("/cursos/"+this.curso.id+"/aprender/leccion/"+idLeccion);
+            this.$router.go();
+        }
     },
   }
 </script>
