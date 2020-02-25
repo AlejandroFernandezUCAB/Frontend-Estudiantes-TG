@@ -1,110 +1,135 @@
 <template>
-  <div>
-  <v-app-bar
-      app
-      color="primary"
-      dark
-    >
-      <v-app-bar-nav-icon color="black" @click="menu=!menu"></v-app-bar-nav-icon>
-      
-      <div class="d-flex align-center">
-        <v-img
-          alt="UCAB lOGO"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="200"
-          src="https://du.ucab.edu.ve/images/LogoUCAB600x123.png"
-          width="255"
-        />
-      </div>
-
-      <v-spacer></v-spacer>
-      
-      <v-btn icon color="black">
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
-
-      <div v-if="!currentUser">
-        <router-link to="/login">
-          <v-btn
-            target="_blank"
-            text
-            color="black"
-          >
-            <span class="mr-2">Iniciar sesión</span>
-            <v-icon>mdi-account-outline</v-icon>
-          </v-btn>
-        </router-link>
-        
-        <router-link to="/signup">
-        <v-btn
-          target="_blank"
-          text
-          color="black"
-        >
-          <span class="mr-2">Regístrate</span>
-          <v-icon>mdi-pencil-box-outline</v-icon>
-        </v-btn>
-        </router-link>
-      </div>
-
-      <div v-if="currentUser">
-        <router-link to="/perfil">
-          <v-btn
-            target="_blank"
-            text
-            color="black"
-          >
-            <span class="mr-2">Mi Perfil</span>
-            <v-icon>mdi-account-outline</v-icon>
-          </v-btn>
-        </router-link>
-        
-        <router-link to="/mis-cursos">
-        <v-btn
-          target="_blank"
-          text
-          color="black"
-        >
-          <span class="mr-2">Mis Cursos</span>
-          <v-icon>mdi-pencil-box-outline</v-icon>
-        </v-btn>
-        </router-link>
-      </div>
-
-  </v-app-bar>
     <v-container>
-      <v-navigation-drawer app v-model="menu" color="primary">
-        <v-container> 
-            <v-select
-            :items="modulos"
-            v-model="moduloSeleccionado"
-            label="Modulo"
-            outlined
-            color="success"
-            @change="cambiarModulo($event)"
-            ></v-select>
-            <v-list fill-width>
-                <v-list-item-group  v-model="model" mandatory color="success">
-                    <v-list-item
-                        v-for="leccion in lecciones"
-                        :key="leccion.ID"
-                        @click="cambiarLeccion(leccion.ID)"
-                    >
-                    <v-list-item-icon>
-                        <v-icon v-text="icon"></v-icon>
-                    </v-list-item-icon>
+        <v-app-bar
+        app
+        color="primary"
+        dark
+        >
+        <v-app-bar-nav-icon color="black" @click="menu=!menu"></v-app-bar-nav-icon>
+        
+        <div class="d-flex align-center">
+            <v-img
+            alt="UCAB lOGO"
+            class="shrink mt-1 hidden-sm-and-down"
+            contain
+            min-width="200"
+            src="https://du.ucab.edu.ve/images/LogoUCAB600x123.png"
+            width="255"
+            />
+        </div>
 
-                    <v-list-item-content>
-                        <v-list-item-title v-text="leccion.nombre"></v-list-item-title>
-                    </v-list-item-content>
+        <v-spacer></v-spacer>
+        
+        <v-btn icon color="black">
+            <v-icon>mdi-magnify</v-icon>
+        </v-btn>
+
+        <div v-if="!currentUser">
+            <router-link to="/login">
+            <v-btn
+                target="_blank"
+                text
+                color="black"
+            >
+                <span class="mr-2">Iniciar sesión</span>
+                <v-icon>mdi-account-outline</v-icon>
+            </v-btn>
+            </router-link>
+            
+            <router-link to="/signup">
+            <v-btn
+            target="_blank"
+            text
+            color="black"
+            >
+            <span class="mr-2">Regístrate</span>
+            <v-icon>mdi-pencil-box-outline</v-icon>
+            </v-btn>
+            </router-link>
+        </div>
+
+        <div v-if="currentUser">
+            <router-link to="/perfil">
+            <v-btn
+                target="_blank"
+                text
+                color="black"
+            >
+                <span class="mr-2">Mi Perfil</span>
+                <v-icon>mdi-account-outline</v-icon>
+            </v-btn>
+            </router-link>
+            
+            <router-link to="/mis-cursos">
+            <v-btn
+            target="_blank"
+            text
+            color="black"
+            >
+            <span class="mr-2">Mis Cursos</span>
+            <v-icon>mdi-pencil-box-outline</v-icon>
+            </v-btn>
+            </router-link>
+        </div>
+
+    </v-app-bar>
+
+        <v-navigation-drawer       
+            app 
+            v-model="menu" 
+            color="primary"   
+            >
+            <v-container>
+                <v-list
+                    dense
+                    nav
+                    class="py-0"
+                >
+                    <v-list-item two-line>
+                        <v-list-item-content>
+                            <v-list-item-title class="title">
+                                {{curso.nombre}}
+                            </v-list-item-title>
+                        </v-list-item-content>
                     </v-list-item>
-                </v-list-item-group>
-            </v-list>
-        </v-container>
-      </v-navigation-drawer>
+
+                    <v-divider></v-divider>
+
+                    <v-list-item class="py-4">
+                        <v-list-item-content>
+                            <v-select
+                                :items="modulos"
+                                v-model="moduloSeleccionado"
+                                label="Modulo"
+                                outlined
+                                color="success"
+                                @change="cambiarModulo($event)"
+                            ></v-select>
+                        </v-list-item-content>
+                    </v-list-item>
+
+                </v-list>
+
+                <v-list>
+                    <v-list-item-group  v-model="model" mandatory color="success">
+                        <v-list-item
+                            v-for="leccion in lecciones"
+                            :key="leccion.ID"
+                            @click="cambiarLeccion(leccion.ID)"
+                        >
+                        <v-list-item-icon>
+                            <v-icon v-text="icon"></v-icon>
+                        </v-list-item-icon>
+
+                        <v-list-item-content>
+                            <v-list-item-title v-text="leccion.nombre"></v-list-item-title>
+                        </v-list-item-content>
+                        </v-list-item>
+                    </v-list-item-group>
+                </v-list>
+            </v-container>
+        </v-navigation-drawer>
     </v-container>
-    </div>
 </template>
 
 <script>
@@ -134,6 +159,7 @@ import { mapGetters } from "vuex";
         },
     },
     created(){
+        console.log(this.curso);
         this.cargarModulos();
         this.cargarLecciones();
     },
