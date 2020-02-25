@@ -1,9 +1,10 @@
 <template>
-    <v-container>
+    <nav>
         <v-app-bar
-        app
-        color="primary"
-        dark
+            app
+            clipped-left
+            color="primary"
+            dark
         >
         <v-app-bar-nav-icon color="black" @click="menu=!menu"></v-app-bar-nav-icon>
         
@@ -71,13 +72,13 @@
             </v-btn>
             </router-link>
         </div>
-
     </v-app-bar>
 
         <v-navigation-drawer       
             app 
             v-model="menu" 
             color="primary"   
+            clipped
             >
             <v-container>
                 <v-list
@@ -129,7 +130,7 @@
                 </v-list>
             </v-container>
         </v-navigation-drawer>
-    </v-container>
+    </nav>
 </template>
 
 <script>
@@ -159,7 +160,6 @@ import { mapGetters } from "vuex";
         },
     },
     created(){
-        console.log(this.curso);
         this.cargarModulos();
         this.cargarLecciones();
     },
@@ -193,5 +193,7 @@ import { mapGetters } from "vuex";
 </script>
 
 <style>
-
+.v-navigation-drawer__border {
+  display: none
+}
 </style>

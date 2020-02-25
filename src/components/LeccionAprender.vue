@@ -1,5 +1,6 @@
 <template>
-  <v-container fluid fill-height>
+  <main 
+    class="px-5">
       <v-row>
           <v-col 
             sm="12"
@@ -24,7 +25,7 @@
                 <div><p>Para continuar con el curso por favor seleccione la lección del lado izquierdo</p></div>
           </v-col>
       </v-row>
-  </v-container>
+  </main>
 </template>
 
 <script>
