@@ -96,21 +96,21 @@
 
                     <v-divider color="#34B3E1"></v-divider>
 
-                    <v-list-item class="py-4">
-                        <v-list-item-content>
-                            <v-select
-                                :items="modulos"
-                                v-model="moduloSeleccionado"
-                                label="Modulo"
-                                outlined
-                                color="success"
-                                @change="cambiarModulo($event)"
-                            ></v-select>
-                        </v-list-item-content>
-                    </v-list-item>
+
 
                 </v-list>
-
+                <v-list class="pt-4" height="auto">
+                    <v-list-item >
+                        <v-select
+                            :items="modulos"
+                            v-model="moduloSeleccionado"
+                            label="Modulo"
+                            outlined
+                            color="success"
+                            @change="cambiarModulo($event)"
+                            ></v-select>
+                    </v-list-item>
+                </v-list>
                 <v-list>
                     <v-list-item-group  v-model="model" mandatory color="success">
                         <v-list-item
