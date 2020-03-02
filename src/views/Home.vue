@@ -17,6 +17,7 @@
             delimiter-icon="mdi-minus"
             height="300"
           >
+
             <v-carousel-item
               v-for="(slide, i) in slides"
               :key="i"

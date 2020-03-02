@@ -94,7 +94,7 @@
                         </v-list-item-content>
                     </v-list-item>
 
-                    <v-divider></v-divider>
+                    <v-divider color="#34B3E1"></v-divider>
 
                     <v-list-item class="py-4">
                         <v-list-item-content>
