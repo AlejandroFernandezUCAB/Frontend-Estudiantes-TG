@@ -88,7 +88,7 @@
 									:label="respuesta.respuesta"
                   :value="respuesta.id"
 									:key="respuesta.id"
-									color="black"
+									color="success"
                   multiple
 								></v-checkbox>
 
@@ -103,8 +103,9 @@
 										<v-radio
 											v-for="respuesta in pregunta.respuesta"
 											:label="respuesta.respuesta"
+                      :value="respuesta.respuesta"
 											:key="respuesta.id"
-											color="black"
+											color="success"
 										></v-radio>
 									</v-radio-group>
 
@@ -180,7 +181,62 @@ export default {
 			},
 			corregirEvaluacion(){
 
-			},
+        for (let i = 0; i < this.dataEvaluacion.preguntas.length; i++) {
+          const pregunta = this.dataEvaluacion.preguntas[i];
+          switch (pregunta.tipo_de_pregunta) {
+            case "Simple":
+              this.corregirSimple( pregunta.respuesta, this.form.respuestas[i]);
+              break;
+            case "Texto Simple":
+              this.corregirTextoSimple( pregunta.respuesta, this.form.respuestas[i]);
+              break;
+            case "Multiple":
+              this.corregirMultiple( pregunta.respuesta, this.form.respuestas[i]);
+              break;
+          }
+        }
+      },
+      corregirTextoSimple(  respuestas , respuestaUsuario){
+
+        if( respuestas[0].respuesta == respuestaUsuario){
+          console.log("hola");
+        }
+
+      },
+      corregirMultiple(respuestas , respuestaUsuario){
+        let respuestasCorrectaArray = [];
+        console.log(respuestas, respuestaUsuario);
+        for (const respuesta of respuestas) {
+          if(respuesta.correcta == "1"){
+            respuestasCorrectaArray.push(respuesta.id);
+          }
+        }
+
+        if( this.arraysEqual(respuestaUsuario, respuestasCorrectaArray)){
+          console.log("Correcta array");
+        }
+      },
+      corregirSimple( respuestas , respuestaUsuario ){
+        
+        for (const respuesta of respuestas) {
+          if( respuesta.correcta == 1 && respuesta.respuesta == respuestaUsuario){
+            console.log("Correcta");
+          }
+        }
+
+      },
+      //Extraido de https://stackoverflow.com/questions/3115982/how-to-check-if-two-arrays-are-equal-with-javascript
+      arraysEqual(a, b) {
+        if (a === b) return true;
+        if (a == null || b == null) return false;
+        if (a.length != b.length) return false;
+
+        for (var i = 0; i < a.length; ++i) {
+          if (a[i] !== b[i]) return false;
+        }
+        return true;
+        
+      }
     },
     components:{
       
