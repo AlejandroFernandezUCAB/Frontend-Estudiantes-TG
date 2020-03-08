@@ -67,7 +67,7 @@
 								<h2 class="subtitle-1"><strong>{{index + 1}}</strong> - {{pregunta.post_title}}</h2>
 
 								<v-text-field
-									v-model="form.padreForm[index]"
+									v-model="form.respuestas[index]"
 									:counter="10"
 									label="Respuesta"
 									color="success"
@@ -75,6 +75,7 @@
 								></v-text-field>
 
 							</section>
+
               <section 
 								v-if="pregunta.tipo_de_pregunta == 'Multiple'"
 							>
@@ -83,10 +84,12 @@
 
 								<v-checkbox
 									v-for="respuesta in pregunta.respuesta"
-									v-model="form.padreForm[index]"
+									v-model="form.respuestas[index]"
 									:label="respuesta.respuesta"
+                  :value="respuesta.id"
 									:key="respuesta.id"
 									color="black"
+                  multiple
 								></v-checkbox>
 
 							</section>
@@ -96,10 +99,9 @@
 								
 								<h2 class="subtitle-1"><strong>{{index + 1}}</strong> - {{pregunta.post_title}}</h2>
 
-								<v-radio-group v-model="form.padreForm[index]">
+								<v-radio-group v-model="form.respuestas[index]">
 										<v-radio
 											v-for="respuesta in pregunta.respuesta"
-											v-model="form.padreForm[index]"
 											:label="respuesta.respuesta"
 											:key="respuesta.id"
 											color="black"
@@ -108,7 +110,43 @@
 
 							</section>
             </section>
-						<v-btn :align="center" large color="success" @click="corregirEvaluacion()">Enviar</v-btn>
+            <!--Botones de enviar evaluacion y atras-->
+            <v-row>
+              <v-col
+                sm="6"
+                md="6"
+                xl="6"
+                lg="6"
+              >
+                <div align="center">
+                  <v-btn
+                    class="right" 
+                    large 
+                    color="success" 
+                    @click="evaluacion = !evaluacion"
+                  >
+                    Atras
+                  </v-btn>
+                </div>
+              </v-col>
+              <v-col
+                sm="6"
+                md="6"
+                xl="6"
+                lg="6"
+              >
+                <div align="center">
+                  <v-btn
+                    class="right" 
+                    large 
+                    color="success" 
+                    @click="corregirEvaluacion()"
+                  >
+                    Enviar
+                  </v-btn>
+                </div>
+              </v-col>
+            </v-row>
           </v-col>
       </v-row>
   </main>
@@ -119,31 +157,30 @@
 export default {
     props:["leccion", "curso"],
     created(){
-      console.log(this.leccion);
+
     },
     data:() => ({
 			evaluacion:false,
-			dataEvaluacion:null,
+      dataEvaluacion:null,
 			form:{
-				padreForm:[]
+				respuestas:[]
 			}
     }),
     methods:{
       cargarEvaluacion(){
-        console.log(this.leccion.evaluacion[0].ID);
+
         this.$http
           .get("/wp/v2/evaluacion/" + this.leccion.evaluacion[0].ID)
           .then(request => {
 						this.dataEvaluacion = request.data;
 						this.evaluacion = true;
-						console.log(this.dataEvaluacion);
           })
 					.catch(error => (console.log(error)));
 					
 			},
 			corregirEvaluacion(){
-				console.log(this.form.padreForm);
-			}	
+
+			},
     },
     components:{
       
