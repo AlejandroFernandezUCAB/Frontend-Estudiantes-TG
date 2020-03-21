@@ -133,7 +133,7 @@ export default {
     login() {
       // Se obtiene el token de usuario en base a las credenciales ingresadas
       this.$http
-        .post("http://aquilesypedrotesis.host/wp-json/jwt-auth/v1/token", {
+        .post("https://aquilesypedrotesis.host/wp-json/jwt-auth/v1/token", {
           username: this.username,
           password: this.contrasena
         })

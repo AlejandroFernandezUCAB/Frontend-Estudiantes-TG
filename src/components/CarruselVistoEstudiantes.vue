@@ -69,7 +69,7 @@
     methods: {
     cargarTags(){
       this.$http
-        .get("http://aquilesypedrotesis.host/wp-json/wp/v2/tags")
+        .get("https://aquilesypedrotesis.host/wp-json/wp/v2/tags")
         .then(request => {
           this.tags = request.data;
           this.tags.forEach(tag => {
@@ -85,7 +85,7 @@
     },
     cargarCursos(){
       this.$http
-        .get("http://aquilesypedrotesis.host/wp-json/wp/v2/curso")
+        .get("https://aquilesypedrotesis.host/wp-json/wp/v2/curso")
         .then(request => {
           this.cursos = request.data;
           this.cargarTags();
