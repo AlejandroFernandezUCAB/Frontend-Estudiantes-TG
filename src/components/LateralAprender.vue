@@ -29,6 +29,8 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
     props:[ "curso" ,"leccion"],
     created(){
@@ -57,8 +59,25 @@ export default {
             this.cargarLecciones();
         },
         cambiarLeccion(idLeccion){
-            this.$router.push("/cursos/"+this.curso.id+"/aprender/leccion/"+idLeccion);
-            this.$router.go();
+            setTimeout(function(){console.log("hola") }, 5000);
+            this.agregarUltimaLeccionVista(idLeccion);
+        },
+        agregarUltimaLeccionVista(idLeccion){
+            this.$http
+                .post("my_rest_server/v1/user/addLastLesson", 
+                { 
+                    username:currentUser,
+                    lessonID:idLeccion
+                    
+                }
+                )
+                .then(request => {
+                    console.log(request);
+                })
+		    .catch(error => (console.log(error)));
+        },
+        agregarLeccionVista(idLeccion){
+
         }
     },
     data: () => ({

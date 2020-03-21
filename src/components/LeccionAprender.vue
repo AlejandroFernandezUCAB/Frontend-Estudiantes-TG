@@ -74,6 +74,19 @@
 									required
 								></v-text-field>
 
+                <h4 
+                  class="font-italic font-weight-medium verde--text"
+                  v-if="respondio && form.correctas[index]"
+                  >
+                  Respuesta Correcta
+                </h4>
+                <h4 
+                  class="font-italic font-weight-medium red--text"
+                  v-if="respondio && (form.correctas[index] == false)"
+                  >
+                  Respuesta Incorrecta
+                </h4>
+
 							</section>
 
               <section 
@@ -92,6 +105,19 @@
                   multiple
 								></v-checkbox>
 
+                <h4 
+                  class="font-italic font-weight-medium verde--text"
+                  v-if="respondio && form.correctas[index]"
+                  >
+                  Respuesta Correcta
+                </h4>
+                <h4 
+                  class="font-italic font-weight-medium red--text"
+                  v-if="respondio && (form.correctas[index] == false)"
+                  >
+                  Respuesta Incorrecta
+                </h4>
+
 							</section>
               <section 
 								v-if="pregunta.tipo_de_pregunta == 'Simple'"
@@ -108,6 +134,19 @@
 											color="success"
 										></v-radio>
 									</v-radio-group>
+
+                <h4 
+                  class="font-italic font-weight-medium verde--text"
+                  v-if="respondio && form.correctas[index]"
+                  >
+                  Respuesta Correcta
+                </h4>
+                <h4 
+                  class="font-italic font-weight-medium red--text"
+                  v-if="respondio && (form.correctas[index] == false)"
+                  >
+                  Respuesta Incorrecta
+                </h4>
 
 							</section>
             </section>
@@ -164,8 +203,10 @@ export default {
 			evaluacion:false,
       dataEvaluacion:null,
 			form:{
-				respuestas:[]
-			}
+        respuestas:[],
+        correctas:[]
+      },
+      respondio:false
     }),
     methods:{
       cargarEvaluacion(){
@@ -173,54 +214,70 @@ export default {
         this.$http
           .get("/wp/v2/evaluacion/" + this.leccion.evaluacion[0].ID)
           .then(request => {
-						this.dataEvaluacion = request.data;
+            this.dataEvaluacion = request.data;
+            this.setearCorrectasForm();
 						this.evaluacion = true;
           })
 					.catch(error => (console.log(error)));
 					
-			},
+      },
+      setearCorrectasForm(){
+
+        for (let i = 0; i < this.dataEvaluacion.preguntas.length; i++) {
+          this.form.correctas[i] = null;
+        }
+
+      },
 			corregirEvaluacion(){
 
+        this.respondio = true;
         for (let i = 0; i < this.dataEvaluacion.preguntas.length; i++) {
           const pregunta = this.dataEvaluacion.preguntas[i];
           switch (pregunta.tipo_de_pregunta) {
             case "Simple":
-              this.corregirSimple( pregunta.respuesta, this.form.respuestas[i]);
+              this.corregirSimple( pregunta.respuesta, this.form.respuestas[i], i);
               break;
             case "Texto Simple":
-              this.corregirTextoSimple( pregunta.respuesta, this.form.respuestas[i]);
+              this.corregirTextoSimple( pregunta.respuesta, this.form.respuestas[i], i);
               break;
             case "Multiple":
-              this.corregirMultiple( pregunta.respuesta, this.form.respuestas[i]);
+              this.corregirMultiple( pregunta.respuesta, this.form.respuestas[i], i);
               break;
           }
         }
+        console.log(this.form.correctas);
       },
-      corregirTextoSimple(  respuestas , respuestaUsuario){
+      corregirTextoSimple(  respuestas , respuestaUsuario, posicion){
 
         if( respuestas[0].respuesta == respuestaUsuario){
-          console.log("hola");
+          this.form.correctas[posicion] = true;
+        }else{
+          this.form.correctas[posicion] = false;
         }
 
       },
-      corregirMultiple(respuestas , respuestaUsuario){
+      corregirMultiple(respuestas , respuestaUsuario, posicion){
         let respuestasCorrectaArray = [];
-        console.log(respuestas, respuestaUsuario);
+
         for (const respuesta of respuestas) {
           if(respuesta.correcta == "1"){
             respuestasCorrectaArray.push(respuesta.id);
           }
         }
-
         if( this.arraysEqual(respuestaUsuario, respuestasCorrectaArray)){
-          console.log("Correcta array");
+          this.form.correctas[posicion] = true;
+        }else{
+          this.form.correctas[posicion] = false;
         }
+
       },
-      corregirSimple( respuestas , respuestaUsuario ){
+      corregirSimple( respuestas , respuestaUsuario, posicion ){
         
         for (const respuesta of respuestas) {
           if( respuesta.correcta == 1 && respuesta.respuesta == respuestaUsuario){
-            console.log("Correcta");
+            this.form.correctas[posicion] = true;
+          }else if( respuesta.correcta == 1 && respuesta.respuesta != respuestaUsuario ){
+            this.form.correctas[posicion] = false;
           }
         }
 
