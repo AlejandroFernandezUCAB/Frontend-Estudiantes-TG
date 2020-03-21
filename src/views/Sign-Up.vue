@@ -219,7 +219,7 @@ export default {
                         password:this.contrasena
                     });
                 
-                    this.$http.post("http://172.23.0.3/wp-json/my_rest_server/v1/users/register", userM)
+                    this.$http.post("http://aquilesypedrotesis.host/wp-json/my_rest_server/v1/users/register", userM)
                         .then((response) => {
     
                             this.registroExitoso();

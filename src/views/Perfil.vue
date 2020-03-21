@@ -125,7 +125,7 @@ export default {
     beforeCreate(){
         let user = new UserM();
         this.$http
-            .get("http://172.23.0.3/wp-json/wp/v2/users/me")
+            .get("http://aquilesypedrotesis.host/wp-json/wp/v2/users/me")
             .then(request => {
                 this.userM = request.data;
                 this.find = true;
@@ -139,7 +139,7 @@ export default {
 
             if (this.$refs.form.validate()) {
                 this.$http
-                    .post("http://172.23.0.3/wp-json/wp/v2/users/" + this.userM.id, {
+                    .post("http://aquilesypedrotesis.host/wp-json/wp/v2/users/" + this.userM.id, {
                         nombre: this.userM.nombre,
                         apellido: this.userM.apellido,
                         compania_universidad: this.userM.compania_universidad,
