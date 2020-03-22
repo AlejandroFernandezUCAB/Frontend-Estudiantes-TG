@@ -62,14 +62,15 @@ export default {
             this.cargarLecciones();
         },
         cambiarLeccion(idLeccion){
-            setTimeout(function(){console.log("hola") }, 5000);
+            //setTimeout(function(){console.log("hola") }, 5000);
+            console.log(this.currentUser);
             this.agregarUltimaLeccionVista(idLeccion);
         },
         agregarUltimaLeccionVista(idLeccion){
             this.$http
                 .post("my_rest_server/v1/user/addLastLesson", 
                 { 
-                    username:currentUser,
+                    username:this.currentUser.username,
                     lessonID:idLeccion
                     
                 }
