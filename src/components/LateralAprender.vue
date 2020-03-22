@@ -33,6 +33,9 @@ import { mapGetters } from "vuex";
 
 export default {
     props:[ "curso" ,"leccion"],
+    computed: {
+    ...mapGetters({ currentUser: "currentUser" })
+    },
     created(){
         this.cargarModulos();
         this.cargarLecciones();
@@ -78,7 +81,8 @@ export default {
         },
         agregarLeccionVista(idLeccion){
 
-        }
+        },
+        
     },
     data: () => ({
         icon: "mdi-notebook",
