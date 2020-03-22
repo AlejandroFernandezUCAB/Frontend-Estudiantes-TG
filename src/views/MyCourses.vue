@@ -102,7 +102,7 @@ import ToolbarPrincipal from "../components/ToolbarPrincipal"
     methods: {
       ingresarCurso (idCurso) {
         this.loading = true
-        this.$router.push("/cursos/"z+idCurso);
+        this.$router.push("/cursos/"+idCurso);
       },
 
       getMyCourses(){
