@@ -102,7 +102,7 @@ import ToolbarPrincipal from "../components/ToolbarPrincipal"
     methods: {
       ingresarCurso (idCurso) {
         this.loading = true
-        this.$router.push("/cursos/"+idCurso);
+        this.$router.push("/cursos/"z+idCurso);
       },
 
       getMyCourses(){
@@ -141,6 +141,9 @@ import ToolbarPrincipal from "../components/ToolbarPrincipal"
                 this.$router.replace(this.$route.query.redirect || "/");
             }
         },
+    },
+    computed: {
+    ...mapGetters({ currentUser: "currentUser" })
     },
     components:{
         ToolbarPrincipal
