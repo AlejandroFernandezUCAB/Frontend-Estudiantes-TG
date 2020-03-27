@@ -1,19 +1,14 @@
 <template>
   <v-container fluid>
-      <v-row>
-          <v-col
-            sm="4"
-            lg="4"
-            xl="4"
-          >
+    
+    <toolbar-lecciones :curso="curso"></toolbar-lecciones>
 
-            <lateral-aprender v-if="loading" :curso="curso"></lateral-aprender>
+        <v-row>
 
-          </v-col>
           <v-col
-            sm="8"
-            lg="8"
-            xl="8"
+            sm="12"
+            lg="12"
+            xl="12"
           >
             <div align="center">
 
@@ -40,6 +35,7 @@
 
 <script>
 import LateralAprender from "../components/LateralAprender.vue"
+import ToolbarLecciones from "../components/ToolbarLecciones.vue"
 
 export default {
     created(){
@@ -64,7 +60,8 @@ export default {
         }
     },
     components:{
-        LateralAprender
+        LateralAprender,
+        ToolbarLecciones
     }
 }
 </script>

@@ -9,14 +9,16 @@
         <v-app-bar-nav-icon color="black" @click="menu=!menu"></v-app-bar-nav-icon>
         
         <div class="d-flex align-center">
-            <v-img
-            alt="UCAB lOGO"
-            class="shrink mt-1 hidden-sm-and-down"
-            contain
-            min-width="200"
-            src="https://du.ucab.edu.ve/images/LogoUCAB600x123.png"
-            width="255"
-            />
+            <router-link to="/">
+                <v-img
+                    alt="UCAB lOGO"
+                    class="shrink mt-1 hidden-sm-and-down"
+                    contain
+                    min-width="200"
+                    src="https://du.ucab.edu.ve/images/LogoUCAB600x123.png"
+                    width="255"
+                />
+            </router-link>
         </div>
 
         <v-spacer></v-spacer>
@@ -24,6 +26,17 @@
         <v-btn icon color="black">
             <v-icon>mdi-magnify</v-icon>
         </v-btn>
+
+      <router-link to="/">
+        <v-btn
+          target="_blank"
+          text
+          color="black"
+        >
+          <span class="mr-2">Inicio</span>
+
+        </v-btn>
+      </router-link>
 
         <div v-if="!currentUser">
             <router-link to="/login">
@@ -185,7 +198,7 @@ import { mapGetters } from "vuex";
             this.cargarLecciones();
         },
         cambiarLeccion(idLeccion){
-            this.$router.push("/cursos/"+this.curso.id+"/aprender/leccion/"+idLeccion);
+            this.$router.push("/cursos/"+this.curso.id+"/leccion/"+idLeccion+"/aprender");
             this.$router.go();
         }
     },

@@ -76,7 +76,7 @@ const routes = [
     component:Learn
   },
   {
-    path: '/cursos/:idCurso/aprender/leccion/:idLeccion',
+    path: '/cursos/:idCurso/leccion/:idLeccion/aprender',
     component:Leccion
   },
   {

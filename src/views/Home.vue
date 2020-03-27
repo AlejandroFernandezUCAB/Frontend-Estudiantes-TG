@@ -144,7 +144,7 @@ export default {
   methods: {
     cargarCategorias(){
       this.$http
-        .get("https://aquilesypedrotesis.host/wp-json/wp/v2/categories")
+        .get("wp/v2/categories")
         .then(request => {
           this.categorias = request.data;
         })
@@ -154,7 +154,7 @@ export default {
     },
     cargarCursos(){
       this.$http
-        .get("https://aquilesypedrotesis.host/wp-json/wp/v2/curso")
+        .get("wp/v2/curso")
         .then(request => {
           this.cursos = request.data;
         })
