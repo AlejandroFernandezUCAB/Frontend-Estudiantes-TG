@@ -68,11 +68,20 @@
                 <v-card-subtitle class="subtitle">{{curso.texto_inicial}}</v-card-subtitle>
                 <v-card-actions>
                     <v-btn
+                        v-if="!comprado"
                         color="success"
                         text
                         @click="comprarCurso(curso.id)"                            
                     >
                         Comprar
+                    </v-btn>
+                    <v-btn
+                        v-else
+                        color="success"
+                        text
+                        @click="verCurso(curso.id)"                            
+                    >
+                        Continuar   
                     </v-btn>
                 </v-card-actions>
             </v-card>
@@ -84,11 +93,13 @@
 <script>
 
 import ToolbarPrincipal from "../components/ToolbarPrincipal";
+import { mapGetters } from "vuex";
 
 export default {
     created(){
         this.idCurso = this.$route.params.id;
         this.getCurso(this.idCurso);
+        this.obtenerMisCursos();
     },
     computed: {
 
@@ -97,8 +108,13 @@ export default {
         idCurso:"",
         curso:null,
         cargado:false,
-        categorias:""
+        categorias:"",
+        cursosAdquiridosResponse:"",
+        comprado:null
     }),
+    computed: {
+        ...mapGetters({ currentUser: "currentUser" })
+    },
     methods:{
         getCurso(idCurso){
             this.$http
@@ -137,6 +153,37 @@ export default {
             })
             .catch(error => console.log(error));
 
+        },
+        obtenerMisCursos(){
+          
+            this.$http
+                .post("my_rest_server/v1/users/courses/user_inscribed_by_username", {
+                    username: this.currentUser.username
+                })
+                .then(request => { 
+                    this.cursosAdquiridosResponse = request.data
+                    this.validarSiYaCompro(this.cursosAdquiridosResponse);
+                    })
+                .catch((error) => { console.log(error)});
+
+        },
+        validarSiYaCompro(cursosAdquiridos){
+
+            for (const curso of cursosAdquiridos) {
+                
+                if(curso.id_curso == this.idCurso){
+                    this.comprado = true;
+                }
+         
+            }
+
+            if(this.comprado == null){
+                this.comprado = false;
+                console.log(this.comprado);
+            }
+        },
+        verCurso(idCurso){
+            this.$router.push("/cursos/"+idCurso+"/aprender");
         }
     },
     components:{
