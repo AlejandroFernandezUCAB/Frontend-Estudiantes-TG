@@ -142,7 +142,7 @@ export default {
                 });
             });
         },
-        comprarCurso( cursoId ){module
+        comprarCurso( cursoId ){
             this.$http
             .post("my_rest_server/v1/user-inscribed", {
                 username: localStorage.username,

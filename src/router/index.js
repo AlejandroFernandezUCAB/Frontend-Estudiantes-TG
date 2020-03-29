@@ -9,6 +9,7 @@ import Login from "../views/Login.vue";
 import Signup from "../views/Sign-Up.vue"
 import MyCourses from "../views/MyCourses.vue"
 import Course from "../views/Course.vue"
+import Courses from "../views/Courses.vue";
 import Learn from "../views/Learn.vue"
 import Leccion from "../views/Leccion.vue"
 import test from "../views/test.vue";
@@ -66,6 +67,11 @@ const routes = [
     path:'/mis-cursos',
     name: 'My Courses',
     component:MyCourses
+  },
+  {
+    path:"/catalogo/cursos/categorias/:idCategoria",
+    name:"Cursos",
+    component:Courses
   },
   { 
     path: '/cursos/:id', 
