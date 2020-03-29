@@ -10,7 +10,8 @@
             md="12"
         >
 
-            <h1 class="display-2">Cursos - {{categoria.name}}</h1>
+            <h1 class="display-2" v-if="categoriaId != 0">Cursos - {{categoria.name}}</h1>
+            <h1 class="display-2" v-else>Cursos</h1>
 
         </v-col>
 
@@ -21,7 +22,7 @@
             v-for="curso in cursos"
             :key="curso.id"
         >
-        
+
             <v-card
                 class="mx-auto"
                 max-width="600"
@@ -40,21 +41,21 @@
                 </v-card-text>
 
                 <v-card-actions>
-                <v-btn
-                    color="verde"
-                    text
-                    @click="ingresarCurso(curso.id)"      
-                >
-                    Ver detalle
-                </v-btn>
+                    <v-btn
+                        color="verde"
+                        text
+                        @click="ingresarCurso(curso.id)"      
+                    >
+                        Ver detalle
+                    </v-btn>
 
-                <v-btn
-                    color="verde"
-                    text
-                    @click="comprarCurso(curso.id)"
-                >
-                    Comprar
-                </v-btn>
+                    <v-btn
+                        color="verde"
+                        text
+                        @click="comprarCurso(curso.id)"
+                    >
+                        Comprar
+                    </v-btn>
                 </v-card-actions>
             </v-card>
 
@@ -71,18 +72,42 @@ import ToolbarPrincipal from "../components/ToolbarPrincipal";
 export default {
     created(){
         this.categoriaId = this.$route.params.idCategoria;
-        this.cargarCursos();
+
+        if (this.categoriaId == 0) {
+            
+            this.cargarCursosTodos();
+
+        }else{
+
+            this.cargarCursos();
+
+        }
+
         this.obtenerCategoria();
+
     },
     data () {
         return {
             data:"hola",
             categoria:"",
             categorias:[],
-            cursos:[]
+            cursos:[],
+            categoriaId:null
         }
     },
     methods:{
+        cargarCursosTodos(){
+            this.$http
+                .get("wp/v2/curso")
+                .then(request => {
+                    
+                    this.cursos = request.data;
+
+                })
+                .catch(() => {
+
+                });
+        },
         cargarCursos(){
             this.$http
                 .get("wp/v2/curso?categories="+this.categoriaId)
