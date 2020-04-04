@@ -33,6 +33,28 @@
 
         </v-btn>
       </router-link>
+      <v-menu open-on-hover bottom offset-y>
+        <template v-slot:activator="{ on }">
+          <v-btn
+            target="_blank"
+            text
+            color="black"
+            v-on="on"
+          >
+            <span class="mr-2">Cursos</span>
+            <v-icon>mdi-notebook-outline</v-icon>
+          </v-btn>
+        </template>
+
+        <v-list>
+          <v-list-item
+            v-for="(categoria, index) in categorias"
+            :key="index"
+          >
+              <v-list-item-title @click="irACategoria(categoria.id)">{{ categoria.name }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
 
       <div v-if="!currentUser">
         <router-link to="/login">
@@ -90,13 +112,23 @@ import { mapGetters } from "vuex";
 export default {
   
   name: 'App',
+  computed(){
 
+  },
+  created(){
+    this.obtenerCategorias();
+  },
   components: {
     
   },
-
   data: () => ({
-    //
+     items: [
+        { title: 'Click Me' },
+        { title: 'Click Me' },
+        { title: 'Click Me' },
+        { title: 'Click Me 2' },
+      ],
+      categorias:[]
   }),
   computed: {
     ...mapGetters({ currentUser: "currentUser" })
@@ -104,6 +136,23 @@ export default {
   watch: {
     $route(to, from) {
       document.title = to.meta.title || 'Some Default Title';
+    },
+  },
+  methods:{
+    irACategoria( idCategoria ){
+        this.$router.push("/catalogo/cursos/categorias/"+idCategoria);
+        this.$router.go();
+    },
+    obtenerCategorias(){
+      this.$http
+        .get("wp/v2/categories/")
+        .then(request => {
+          this.categorias = request.data;
+          console.log(this.categorias);
+        })
+        .catch(() => {
+
+         });
     },
   }
 };
