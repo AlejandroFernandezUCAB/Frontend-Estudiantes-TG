@@ -92,6 +92,7 @@
             v-model="menu" 
             color="primary"   
             clipped
+            width="25%"
             >
             <v-container>
                 <v-list
@@ -112,7 +113,7 @@
 
 
                 </v-list>
-                <v-list class="pt-4" height="auto">
+                <v-list class="pt-4" height="auto" width="">
                     <v-list-item >
                         <v-select
                             :items="modulos"
@@ -180,15 +181,15 @@ import { mapGetters } from "vuex";
         cargarModulos(){
 
             this.curso.modulo.forEach(modulo => {
-                this.modulos.push(modulo.post_name);
-                this.moduloSeleccionado = modulo.post_name;
+                this.modulos.push(modulo.post_title);
+                this.moduloSeleccionado = modulo.post_title;
             });    
             
         },
         cargarLecciones(){
             this.curso.modulo.forEach( modulo =>{
 
-                if(modulo.post_name == this.moduloSeleccionado){
+                if(modulo.post_title == this.moduloSeleccionado){
                     this.lecciones = modulo.leccion;
                 }
 

@@ -44,6 +44,7 @@ export default {
         cargarModulos(){
 
             this.curso.modulo.forEach(modulo => {
+                console.log(modulo);
                 this.modulos.push(modulo.post_name);
                 this.moduloSeleccionado = modulo.post_name;
             });    
