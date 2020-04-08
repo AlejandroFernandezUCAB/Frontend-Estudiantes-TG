@@ -9,8 +9,8 @@
             xl="12"
             >
               <section align="center" width="100%" height="auto">
-                <video width="89%" controls autoplay>
-                    <source :src="leccion.video.guid" type="video/mp4">
+                <video width="89%"  @contextmenu="handler($event)" controls autoplay controlsList="nodownload" :src="leccion.video.guid">
+      
                 </video>
               </section>
 
@@ -197,88 +197,92 @@
 export default {
     props:["leccion", "curso"],
     created(){
-
+		video = this.leccion.video.guid;
     },
     data:() => ({
-			evaluacion:false,
-      dataEvaluacion:null,
-			form:{
-        respuestas:[],
-        correctas:[]
-      },
-      respondio:false
+		video:"",
+		evaluacion:false,
+      	dataEvaluacion:null,
+		form:{
+        	respuestas:[],
+        	correctas:[]
+      	},
+      	respondio:false
     }),
     methods:{
-      cargarEvaluacion(){
+		handler(event){
+			event.preventDefault();
+		},
+      	cargarEvaluacion(){
 
-        this.$http
-          .get("/wp/v2/evaluacion/" + this.leccion.evaluacion[0].ID)
-          .then(request => {
-            this.dataEvaluacion = request.data;
-            this.setearCorrectasForm();
-						this.evaluacion = true;
-          })
-					.catch(error => (console.log(error)));
+			this.$http
+			.get("/wp/v2/evaluacion/" + this.leccion.evaluacion[0].ID)
+			.then(request => {
+				this.dataEvaluacion = request.data;
+				this.setearCorrectasForm();
+							this.evaluacion = true;
+			})
+						.catch(error => (console.log(error)));
 					
       },
-      setearCorrectasForm(){
+		setearCorrectasForm(){
 
-        for (let i = 0; i < this.dataEvaluacion.preguntas.length; i++) {
-          this.form.correctas[i] = null;
-        }
+			for (let i = 0; i < this.dataEvaluacion.preguntas.length; i++) {
+			this.form.correctas[i] = null;
+			}
 
-      },
-			corregirEvaluacion(){
+		},
+		corregirEvaluacion(){
+			this.respondio = true;
+			for (let i = 0; i < this.dataEvaluacion.preguntas.length; i++) {
+			const pregunta = this.dataEvaluacion.preguntas[i];
+			switch (pregunta.tipo_de_pregunta) {
+				case "Simple":
+				this.corregirSimple( pregunta.respuesta, this.form.respuestas[i], i);
+				break;
+				case "Texto Simple":
+				this.corregirTextoSimple( pregunta.respuesta, this.form.respuestas[i], i);
+				break;
+				case "Multiple":
+				this.corregirMultiple( pregunta.respuesta, this.form.respuestas[i], i);
+				break;
+			}
+			}
+			console.log(this.form.correctas);
+      	},
+		corregirTextoSimple(  respuestas , respuestaUsuario, posicion){
 
-        this.respondio = true;
-        for (let i = 0; i < this.dataEvaluacion.preguntas.length; i++) {
-          const pregunta = this.dataEvaluacion.preguntas[i];
-          switch (pregunta.tipo_de_pregunta) {
-            case "Simple":
-              this.corregirSimple( pregunta.respuesta, this.form.respuestas[i], i);
-              break;
-            case "Texto Simple":
-              this.corregirTextoSimple( pregunta.respuesta, this.form.respuestas[i], i);
-              break;
-            case "Multiple":
-              this.corregirMultiple( pregunta.respuesta, this.form.respuestas[i], i);
-              break;
-          }
-        }
-        console.log(this.form.correctas);
-      },
-      corregirTextoSimple(  respuestas , respuestaUsuario, posicion){
+			if( respuestas[0].respuesta == respuestaUsuario){
+			this.form.correctas[posicion] = true;
+			}else{
+			this.form.correctas[posicion] = false;
+			}
 
-        if( respuestas[0].respuesta == respuestaUsuario){
-          this.form.correctas[posicion] = true;
-        }else{
-          this.form.correctas[posicion] = false;
-        }
+		},
+		corregirMultiple(respuestas , respuestaUsuario, posicion){
+			let respuestasCorrectaArray = [];
 
-      },
-      corregirMultiple(respuestas , respuestaUsuario, posicion){
-        let respuestasCorrectaArray = [];
+			for (const respuesta of respuestas) {
+				if(respuesta.correcta == "1"){
+					respuestasCorrectaArray.push(respuesta.id);
+				}
+			}
+			
+			if( this.arraysEqual(respuestaUsuario, respuestasCorrectaArray)){
+				this.form.correctas[posicion] = true;
+			}else{
+				this.form.correctas[posicion] = false;
+			}
 
-        for (const respuesta of respuestas) {
-          if(respuesta.correcta == "1"){
-            respuestasCorrectaArray.push(respuesta.id);
-          }
-        }
-        if( this.arraysEqual(respuestaUsuario, respuestasCorrectaArray)){
-          this.form.correctas[posicion] = true;
-        }else{
-          this.form.correctas[posicion] = false;
-        }
-
-      },
+		},
       corregirSimple( respuestas , respuestaUsuario, posicion ){
         
         for (const respuesta of respuestas) {
-          if( respuesta.correcta == 1 && respuesta.respuesta == respuestaUsuario){
-            this.form.correctas[posicion] = true;
-          }else if( respuesta.correcta == 1 && respuesta.respuesta != respuestaUsuario ){
-            this.form.correctas[posicion] = false;
-          }
+			if( respuesta.correcta == 1 && respuesta.respuesta == respuestaUsuario){
+				this.form.correctas[posicion] = true;
+			}else if( respuesta.correcta == 1 && respuesta.respuesta != respuestaUsuario ){
+				this.form.correctas[posicion] = false;
+			}
         }
 
       },
