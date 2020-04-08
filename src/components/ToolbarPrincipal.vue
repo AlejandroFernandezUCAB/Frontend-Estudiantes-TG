@@ -51,7 +51,14 @@
             v-for="(categoria, index) in categorias"
             :key="index"
           >
-              <v-list-item-title @click="irACategoria(categoria.id)">{{ categoria.name }}</v-list-item-title>
+              <v-btn
+                target="_blank"
+                text
+                color="black"
+              >
+                <v-list-item-title @click="irACategoria(categoria.id)">{{ categoria.name }}</v-list-item-title>
+              </v-btn>
+
           </v-list-item>
         </v-list>
       </v-menu>
@@ -93,15 +100,24 @@
         </router-link>
         
         <router-link to="/mis-cursos">
+          <v-btn
+            target="_blank"
+            text
+            color="black"
+          >
+            <span class="mr-2">Mis Cursos</span>
+            <v-icon>mdi-pencil-box-outline</v-icon>
+          </v-btn>
+        </router-link>
         <v-btn
           target="_blank"
           text
           color="black"
         >
-          <span class="mr-2">Mis Cursos</span>
-          <v-icon>mdi-pencil-box-outline</v-icon>
+          <span class="mr-2">Cerrar Sesión</span>
+          <v-icon>mdi-close-box-outline</v-icon>
         </v-btn>
-        </router-link>
+
       </div>
     </v-app-bar>
 </template>
