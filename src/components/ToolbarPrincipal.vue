@@ -113,6 +113,7 @@
           target="_blank"
           text
           color="black"
+		  @click="cerrarSesion()"
         >
           <span class="mr-2">Cerrar Sesión</span>
           <v-icon>mdi-close-box-outline</v-icon>
@@ -169,7 +170,15 @@ export default {
         .catch(() => {
 
          });
-    },
+	},
+	cerrarSesion(){
+		// Se procede a hacer logout del usuario, y se borran las variables local que tenga
+		delete localStorage.token;
+		delete localStorage.username;
+		delete localStorage.email;
+		this.$store.dispatch("logout");
+		this.$router.push("/");
+	}
   }
 };
 </script>

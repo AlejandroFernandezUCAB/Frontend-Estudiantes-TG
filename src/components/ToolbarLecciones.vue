@@ -75,15 +75,25 @@
             </router-link>
             
             <router-link to="/mis-cursos">
-            <v-btn
-            target="_blank"
-            text
-            color="black"
-            >
-            <span class="mr-2">Mis Cursos</span>
-            <v-icon>mdi-pencil-box-outline</v-icon>
-            </v-btn>
+                <v-btn
+                    target="_blank"
+                    text
+                    color="black"
+                >
+                    <span class="mr-2">Mis Cursos</span>
+                    <v-icon>mdi-pencil-box-outline</v-icon>
+                </v-btn>
             </router-link>
+
+            <v-btn
+                target="_blank"
+                text
+                color="black"
+				@click="cerrarSesion()"
+            >
+                <span class="mr-2">Cerrar Sesión</span>
+                <v-icon>mdi-close-box-outline</v-icon>
+            </v-btn>
         </div>
     </v-app-bar>
 
@@ -201,7 +211,15 @@ import { mapGetters } from "vuex";
         cambiarLeccion(idLeccion){
             this.$router.push("/cursos/"+this.curso.id+"/leccion/"+idLeccion+"/aprender");
             this.$router.go();
-        }
+		},
+		cerrarSesion(){
+			// Se procede a hacer logout del usuario, y se borran las variables local que tenga
+			delete localStorage.token;
+			delete localStorage.username;
+			delete localStorage.email;
+			this.$store.dispatch("logout");
+			this.$router.push("/");
+		}
     },
   }
 </script>
