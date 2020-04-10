@@ -36,15 +36,20 @@
 <script>
 import LateralAprender from "../components/LateralAprender.vue"
 import ToolbarLecciones from "../components/ToolbarLecciones.vue"
+import { mapGetters } from "vuex";
 
 export default {
+    computed: {
+        ...mapGetters({ currentUser: "currentUser" })
+    },
     created(){
         this.curso = this.$route.params.id;
         this.obtenerCursoActual();
     },
     data: () => ({
         curso : "",
-        loading: false
+        loading: false,
+        leccionesVistas:[]
     }),
     methods:{
         obtenerCursoActual(){
@@ -54,9 +59,47 @@ export default {
                     this.curso = request.data;
                     console.log(this.curso);
                     this.loading = true;
+                    this.obtenerUltimaLeccionVista(this.curso)
                 })
             .catch((error) => { console.log(error)});
 
+        },
+        obtenerUltimaLeccionVista(curso){
+            this.$http
+                .post("my_rest_server/v1/user/getAllLessons?username="+this.currentUser.username+"&id_course="+curso.id)
+                .then (request => {
+                    this.leccionesVistas = request.data;
+                    console.log(this.leccionesVistas);
+                    this.pasarDeStringADate();
+                    this.ordenarArrayPorFechaDescenciente();
+                    this.reedireccionarLeccion();
+                })
+        },
+        pasarDeStringADate(){
+
+            for (let i = 0; i < this.leccionesVistas.length; i++) {
+                
+                const leccion = this.leccionesVistas[i];
+                this.leccionesVistas[i].reg_date = new Date(leccion.reg_date) ;
+                
+            }
+
+        },
+        ordenarArrayPorFechaDescenciente(){
+
+            this.leccionesVistas.sort(function (a, b) {
+                if (a.reg_date > b.reg_date) return -1;
+                if (a.reg_date < b.reg_date) return 1;
+                return 0;
+            });
+        },
+        reedireccionarLeccion(){
+            console.log(this.curso);
+            if(this.leccionesVistas.lenght != 0){
+                //console.log("/cursos/"+this.curso.id+"/leccion/"+this.leccionesVistas[0].id_course+"/aprender");
+                this.$router.push("/cursos/"+this.curso.id+"/leccion/"+this.leccionesVistas[0].id_lesson+"/aprender");
+            }
+            
         }
     },
     components:{
