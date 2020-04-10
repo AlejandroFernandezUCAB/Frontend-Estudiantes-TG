@@ -194,13 +194,23 @@
 
 <script>
 
+import { mapGetters } from "vuex";
+
 export default {
+	
     props:["leccion", "curso"],
     created(){
-		video = this.leccion.video.guid;
+		this.video = this.leccion.video.guid;
+		this.idCurso = this.$route.params.idCurso;
+		this.idLeccion = this.$route.params.idLeccion;
+		this.guardarNuevaLeccion(this.idCurso, this.idLeccion);
+	},
+    computed: {
+    ...mapGetters({ currentUser: "currentUser" })
     },
     data:() => ({
-		video:"",
+		idCurso:"",
+		idLeccion:"",
 		evaluacion:false,
       	dataEvaluacion:null,
 		form:{
@@ -297,7 +307,23 @@ export default {
         }
         return true;
         
-      }
+      },
+	  guardarNuevaLeccion(curso, leccion){
+            var self = this;
+		    setTimeout(function(){
+                self.$http
+					.post("my_rest_server/v1/user/addLesson",{
+						username: self.currentUser.username,
+						id_course: curso,
+						id_lesson: leccion
+					})
+					.then(request => {
+						console.log(request.data);
+					})
+					.catch(error => (console.log(error)));
+            }, 5000);
+
+	  }
     },
     components:{
       
