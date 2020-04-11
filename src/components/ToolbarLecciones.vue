@@ -136,19 +136,21 @@
                     </v-list-item>
                 </v-list>
                 <v-list>
-                    <v-list-item-group  v-model="model" mandatory color="success">
+                    <v-list-item-group  v-model="selector" mandatory color="success">
                         <v-list-item
                             v-for="leccion in lecciones"
                             :key="leccion.ID"
                             @click="cambiarLeccion(leccion.ID)"
+                            active-class="v-item--active"
+                            isActive="true"
                         >
-                        <v-list-item-icon>
-                            <v-icon v-text="icon"></v-icon>
-                        </v-list-item-icon>
+                            <v-list-item-icon>
+                                <v-icon v-text="icon"></v-icon>
+                            </v-list-item-icon>
 
-                        <v-list-item-content>
-                            <v-list-item-title v-text="leccion.nombre"></v-list-item-title>
-                        </v-list-item-content>
+                            <v-list-item-content>
+                                <v-list-item-title v-text="leccion.nombre"></v-list-item-title>
+                            </v-list-item-content>
                         </v-list-item>
                     </v-list-item-group>
                 </v-list>
@@ -170,7 +172,7 @@ import { mapGetters } from "vuex";
         moduloSeleccionado:"",
         modulos:[],
         lecciones:[],
-        model: 1,
+        selector: 0,
         idLeccion:""
     }),
     computed: {
@@ -215,14 +217,21 @@ import { mapGetters } from "vuex";
                 
                 var lecciones = Object.keys(leccionesObserver);
 
-                lecciones.forEach(key => {
+                var contador = 0;
 
+                lecciones.forEach(key => {
+                    
                     let leccion = leccionesObserver[key];
                     
                     if(leccion.id == this.idLeccion){
+
                         this.moduloSeleccionado = modulo.post_title;
                         this.lecciones = modulo.leccion;
+                        this.selector = contador;
+
                     }
+
+                    contador++;
 
                 })
 
