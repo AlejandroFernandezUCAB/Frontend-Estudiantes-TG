@@ -171,6 +171,7 @@ import { mapGetters } from "vuex";
         modulos:[],
         lecciones:[],
         model: 1,
+        idLeccion:""
     }),
     computed: {
         ...mapGetters({ currentUser: "currentUser" })
@@ -184,15 +185,15 @@ import { mapGetters } from "vuex";
         },
     },
     created(){
+        this.idLeccion = this.$route.params.idLeccion;
         this.cargarModulos();
-        this.cargarLecciones();
+        this.cargarLeccionActual();
     },
     methods:{
         cargarModulos(){
 
             this.curso.modulo.forEach(modulo => {
                 this.modulos.push(modulo.post_title);
-                this.moduloSeleccionado = modulo.post_title;
             });    
             
         },
@@ -204,6 +205,30 @@ import { mapGetters } from "vuex";
                 }
 
             });
+        },
+        cargarLeccionActual(){
+
+            for (const modulo of this.curso.modulo) {
+                
+                var leccionesObserver = modulo.leccion;
+                leccionesObserver =  JSON.parse(JSON.stringify(leccionesObserver));
+                
+                var lecciones = Object.keys(leccionesObserver);
+
+                lecciones.forEach(key => {
+
+                    let leccion = leccionesObserver[key];
+                    
+                    if(leccion.id == this.idLeccion){
+                        this.moduloSeleccionado = modulo.post_title;
+                        this.lecciones = modulo.leccion;
+                    }
+
+                })
+
+            }
+
+
         },
         cambiarModulo(event){
             this.cargarLecciones();
