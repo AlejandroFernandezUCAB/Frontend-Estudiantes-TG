@@ -72,6 +72,7 @@
 						label="Respuesta"
 						color="success"
 						required
+						:disabled="respondio"
 					></v-text-field>
 
 					<h4 
@@ -101,6 +102,7 @@
 							:label="respuesta.respuesta"
         				    :value="respuesta.id"
 							:key="respuesta.id"
+							:disabled="respondio"
 							color="success"
         			          multiple
 						></v-checkbox>
@@ -126,7 +128,7 @@
 					
 					<h2 class="subtitle-1"><strong>{{index + 1}}</strong> - {{pregunta.post_title}}</h2>
 
-					<v-radio-group v-model="form.respuestas[index]">
+					<v-radio-group v-model="form.respuestas[index]" :disabled="respondio">
 						<v-radio
 							v-for="respuesta in pregunta.respuesta"
 							:label="respuesta.respuesta"
@@ -137,15 +139,15 @@
 					</v-radio-group>
 
 					<h4 
-					class="font-italic font-weight-medium verde--text"
-					v-if="respondio && form.correctas[index]"
+						class="font-italic font-weight-medium verde--text"
+						v-if="respondio && form.correctas[index]"
 					>
 					Respuesta Correcta
 					</h4>
 
 					<h4 
-					class="font-italic font-weight-medium red--text"
-					v-if="respondio && (form.correctas[index] == false)"
+						class="font-italic font-weight-medium red--text"
+						v-if="respondio && (form.correctas[index] == false)"
 					>
 					Respuesta Incorrecta
 					</h4>
@@ -325,6 +327,9 @@ export default {
 					.catch(error => (console.log(error)));
             }, 5000);
 
+	  },
+	  guardarResultadoLeccion(){
+		  
 	  }
     },
     components:{
