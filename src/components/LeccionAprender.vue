@@ -54,101 +54,103 @@
             
             <!-- Evaluacion -->
             <section 
-							class="mt-5"
-							v-for="(pregunta, index) in dataEvaluacion.preguntas"
-							:key="pregunta.ID"
-							>
+				class="mt-5"
+				v-for="(pregunta, index) in dataEvaluacion.preguntas"
+				:key="pregunta.ID"
+			>
 
-							<!--Caso en que sea texto simple-->
-							<section 
-								v-if="pregunta.tipo_de_pregunta == 'Texto Simple'"
-							>
+				<!--Caso en que sea texto simple-->
+				<section 
+					v-if="pregunta.tipo_de_pregunta == 'Texto Simple'"
+					>
 								
-								<h2 class="subtitle-1"><strong>{{index + 1}}</strong> - {{pregunta.post_title}}</h2>
-
-								<v-text-field
-									v-model="form.respuestas[index]"
-									:counter="10"
-									label="Respuesta"
-									color="success"
-									required
-								></v-text-field>
-
-                <h4 
-                  class="font-italic font-weight-medium verde--text"
-                  v-if="respondio && form.correctas[index]"
-                  >
-                  Respuesta Correcta
-                </h4>
-                <h4 
-                  class="font-italic font-weight-medium red--text"
-                  v-if="respondio && (form.correctas[index] == false)"
-                  >
-                  Respuesta Incorrecta
-                </h4>
-
-							</section>
-
-              <section 
-								v-if="pregunta.tipo_de_pregunta == 'Multiple'"
-							>
+					<h2 class="subtitle-1"><strong>{{index + 1}}</strong> - {{pregunta.post_title}}</h2>
 								
-								<h2 class="subtitle-1"><strong>{{index + 1}}</strong> - {{pregunta.post_title}}</h2>
+					<v-text-field
+						v-model="form.respuestas[index]"
+						:counter="10"
+						label="Respuesta"
+						color="success"
+						required
+					></v-text-field>
 
-								<v-checkbox
-									v-for="respuesta in pregunta.respuesta"
-									v-model="form.respuestas[index]"
-									:label="respuesta.respuesta"
-                  :value="respuesta.id"
-									:key="respuesta.id"
-									color="success"
-                  multiple
-								></v-checkbox>
+					<h4 
+						class="font-italic font-weight-medium verde--text"
+						v-if="respondio && form.correctas[index]"
+					>
+						Respuesta Correcta
+					</h4>
+					<h4 
+						class="font-italic font-weight-medium red--text"
+						v-if="respondio && (form.correctas[index] == false)"
+					>
+						Respuesta Incorrecta
+					</h4>
 
-                <h4 
-                  class="font-italic font-weight-medium verde--text"
-                  v-if="respondio && form.correctas[index]"
-                  >
-                  Respuesta Correcta
-                </h4>
-                <h4 
-                  class="font-italic font-weight-medium red--text"
-                  v-if="respondio && (form.correctas[index] == false)"
-                  >
-                  Respuesta Incorrecta
-                </h4>
+				</section>
 
-							</section>
-              <section 
-								v-if="pregunta.tipo_de_pregunta == 'Simple'"
-							>
+              	<section 
+					v-if="pregunta.tipo_de_pregunta == 'Multiple'"
+					>
 								
-								<h2 class="subtitle-1"><strong>{{index + 1}}</strong> - {{pregunta.post_title}}</h2>
+					<h2 class="subtitle-1"><strong>{{index + 1}}</strong> - {{pregunta.post_title}}</h2>
 
-								<v-radio-group v-model="form.respuestas[index]">
-										<v-radio
-											v-for="respuesta in pregunta.respuesta"
-											:label="respuesta.respuesta"
-                      :value="respuesta.respuesta"
-											:key="respuesta.id"
-											color="success"
-										></v-radio>
-									</v-radio-group>
+						<v-checkbox
+							v-for="respuesta in pregunta.respuesta"
+							v-model="form.respuestas[index]"
+							:label="respuesta.respuesta"
+        				    :value="respuesta.id"
+							:key="respuesta.id"
+							color="success"
+        			          multiple
+						></v-checkbox>
 
-                <h4 
-                  class="font-italic font-weight-medium verde--text"
-                  v-if="respondio && form.correctas[index]"
-                  >
-                  Respuesta Correcta
-                </h4>
-                <h4 
-                  class="font-italic font-weight-medium red--text"
-                  v-if="respondio && (form.correctas[index] == false)"
-                  >
-                  Respuesta Incorrecta
-                </h4>
+					<h4 	
+						class="font-italic font-weight-medium verde--text"
+						v-if="respondio && form.correctas[index]"
+					>
+						Respuesta Correcta
+					</h4>
+					<h4 
+						class="font-italic font-weight-medium red--text"
+						v-if="respondio && (form.correctas[index] == false)"
+					>
+						Respuesta Incorrecta
+					</h4>
 
-							</section>
+				</section>
+
+              	<section 
+					v-if="pregunta.tipo_de_pregunta == 'Simple'"
+					>
+					
+					<h2 class="subtitle-1"><strong>{{index + 1}}</strong> - {{pregunta.post_title}}</h2>
+
+					<v-radio-group v-model="form.respuestas[index]">
+						<v-radio
+							v-for="respuesta in pregunta.respuesta"
+							:label="respuesta.respuesta"
+                			:value="respuesta.respuesta"
+							:key="respuesta.id"
+							color="success"
+						></v-radio>
+					</v-radio-group>
+
+					<h4 
+					class="font-italic font-weight-medium verde--text"
+					v-if="respondio && form.correctas[index]"
+					>
+					Respuesta Correcta
+					</h4>
+
+					<h4 
+					class="font-italic font-weight-medium red--text"
+					v-if="respondio && (form.correctas[index] == false)"
+					>
+					Respuesta Incorrecta
+					</h4>
+
+				</section>
             </section>
             <!--Botones de enviar evaluacion y atras-->
             <v-row>
@@ -206,7 +208,7 @@ export default {
 		this.guardarNuevaLeccion(this.idCurso, this.idLeccion);
 	},
     computed: {
-    ...mapGetters({ currentUser: "currentUser" })
+    	...mapGetters({ currentUser: "currentUser" })
     },
     data:() => ({
 		idCurso:"",
@@ -230,9 +232,9 @@ export default {
 			.then(request => {
 				this.dataEvaluacion = request.data;
 				this.setearCorrectasForm();
-							this.evaluacion = true;
+				this.evaluacion = true;
 			})
-						.catch(error => (console.log(error)));
+			.catch(error => (console.log(error)));
 					
       },
 		setearCorrectasForm(){
@@ -245,27 +247,27 @@ export default {
 		corregirEvaluacion(){
 			this.respondio = true;
 			for (let i = 0; i < this.dataEvaluacion.preguntas.length; i++) {
-			const pregunta = this.dataEvaluacion.preguntas[i];
-			switch (pregunta.tipo_de_pregunta) {
-				case "Simple":
-				this.corregirSimple( pregunta.respuesta, this.form.respuestas[i], i);
-				break;
-				case "Texto Simple":
-				this.corregirTextoSimple( pregunta.respuesta, this.form.respuestas[i], i);
-				break;
-				case "Multiple":
-				this.corregirMultiple( pregunta.respuesta, this.form.respuestas[i], i);
-				break;
-			}
+				const pregunta = this.dataEvaluacion.preguntas[i];
+				switch (pregunta.tipo_de_pregunta) {
+					case "Simple":
+					this.corregirSimple( pregunta.respuesta, this.form.respuestas[i], i);
+					break;
+					case "Texto Simple":
+					this.corregirTextoSimple( pregunta.respuesta, this.form.respuestas[i], i);
+					break;
+					case "Multiple":
+					this.corregirMultiple( pregunta.respuesta, this.form.respuestas[i], i);
+					break;
+				}
 			}
 			console.log(this.form.correctas);
       	},
 		corregirTextoSimple(  respuestas , respuestaUsuario, posicion){
 
 			if( respuestas[0].respuesta == respuestaUsuario){
-			this.form.correctas[posicion] = true;
+				this.form.correctas[posicion] = true;
 			}else{
-			this.form.correctas[posicion] = false;
+				this.form.correctas[posicion] = false;
 			}
 
 		},
