@@ -329,7 +329,29 @@ export default {
 
 	  },
 	  guardarResultadoLeccion(){
-		  
+		    this.$http
+            .post("my_rest_server/v1/add-user-evaluation", {
+                user: self.currentUser.username,
+                id_lesson: this.idLeccion,
+                id_evaluation: cursoId,
+                score: cursoId
+            })
+            .then(request => { 
+                  
+                })
+            .catch((error) => { console.log(error)});
+	  },
+	  obtenerEvaluacionUsuario(){
+		  this.$http
+            .post("my_rest_server/v1/get_evaluation_by_user", {
+                user: self.currentUser.username,
+                id_lesson: this.idLeccion,
+                id_evaluation: cursoId
+            })
+            .then(request => { 
+                  
+                })
+            .catch((error) => { console.log(error)});
 	  }
     },
     components:{
