@@ -153,7 +153,13 @@
 					</h4>
 
 				</section>
+
             </section>
+			
+			<section v-if="respondio">
+				Puntaje final: {{puntaje}}
+			</section>
+			
             <!--Botones de enviar evaluacion y atras-->
             <v-row>
               <v-col
@@ -183,10 +189,22 @@
                   <v-btn
                     class="right" 
                     large 
-                    color="success" 
+                    color="success"
+					v-if="!respondio"
                     @click="corregirEvaluacion()"
                   >
                     Enviar
+                  </v-btn>
+                </div>
+				<div align="center">
+                  <v-btn
+                    class="right" 
+                    large 
+                    color="success"
+					v-if="respondio"
+                    @click="siguienteLeccion()"
+                  >
+                    Siguiente Lección
                   </v-btn>
                 </div>
               </v-col>
@@ -221,14 +239,15 @@ export default {
         	respuestas:[],
         	correctas:[]
       	},
-      	respondio:false
+		respondio:false,
+		puntaje:0  
     }),
     methods:{
 		handler(event){
 			event.preventDefault();
 		},
       	cargarEvaluacion(){
-
+			this.obtenerEvaluacionUsuario();
 			this.$http
 			.get("/wp/v2/evaluacion/" + this.leccion.evaluacion[0].ID)
 			.then(request => {
@@ -252,21 +271,22 @@ export default {
 				const pregunta = this.dataEvaluacion.preguntas[i];
 				switch (pregunta.tipo_de_pregunta) {
 					case "Simple":
-					this.corregirSimple( pregunta.respuesta, this.form.respuestas[i], i);
+						this.corregirSimple( pregunta.respuesta, this.form.respuestas[i], i);
 					break;
 					case "Texto Simple":
-					this.corregirTextoSimple( pregunta.respuesta, this.form.respuestas[i], i);
+						this.corregirTextoSimple( pregunta.respuesta, this.form.respuestas[i], i);
 					break;
 					case "Multiple":
-					this.corregirMultiple( pregunta.respuesta, this.form.respuestas[i], i);
+						this.corregirMultiple( pregunta.respuesta, this.form.respuestas[i], i);
 					break;
 				}
 			}
-			console.log(this.form.correctas);
+			this.guardarResultadoLeccion()
       	},
 		corregirTextoSimple(  respuestas , respuestaUsuario, posicion){
 
 			if( respuestas[0].respuesta == respuestaUsuario){
+				this.puntaje = this.puntaje + parseFloat(respuestas[0].puntaje); 
 				this.form.correctas[posicion] = true;
 			}else{
 				this.form.correctas[posicion] = false;
@@ -275,14 +295,16 @@ export default {
 		},
 		corregirMultiple(respuestas , respuestaUsuario, posicion){
 			let respuestasCorrectaArray = [];
-
+			let puntaje = 0;
 			for (const respuesta of respuestas) {
 				if(respuesta.correcta == "1"){
+					puntaje = puntaje + parseFloat(respuesta.puntaje);
 					respuestasCorrectaArray.push(respuesta.id);
 				}
 			}
 			
 			if( this.arraysEqual(respuestaUsuario, respuestasCorrectaArray)){
+				this.puntaje = this.puntaje + puntaje;
 				this.form.correctas[posicion] = true;
 			}else{
 				this.form.correctas[posicion] = false;
@@ -293,6 +315,7 @@ export default {
         
         for (const respuesta of respuestas) {
 			if( respuesta.correcta == 1 && respuesta.respuesta == respuestaUsuario){
+				this.puntaje = this.puntaje + parseFloat(respuesta.puntaje);
 				this.form.correctas[posicion] = true;
 			}else if( respuesta.correcta == 1 && respuesta.respuesta != respuestaUsuario ){
 				this.form.correctas[posicion] = false;
@@ -331,27 +354,42 @@ export default {
 	  guardarResultadoLeccion(){
 		    this.$http
             .post("my_rest_server/v1/add-user-evaluation", {
-                user: self.currentUser.username,
+                user: this.currentUser.username,
                 id_lesson: this.idLeccion,
-                id_evaluation: cursoId,
-                score: cursoId
+                id_evaluation: this.leccion.evaluacion[0].ID,
+                score: this.puntaje
             })
             .then(request => { 
                   
-                })
+            })
             .catch((error) => { console.log(error)});
 	  },
 	  obtenerEvaluacionUsuario(){
 		  this.$http
-            .post("my_rest_server/v1/get_evaluation_by_user", {
-                user: self.currentUser.username,
+            .post("my_rest_server/v1/user-evaluation", {
+                user: this.currentUser.username,
                 id_lesson: this.idLeccion,
-                id_evaluation: cursoId
+                id_evaluation: this.leccion.evaluacion[0].ID
             })
             .then(request => { 
-                  
-                })
+				
+				this.presentoEvaluacion( request.data );
+				 
+            })
             .catch((error) => { console.log(error)});
+	  },
+	  siguienteLeccion(){
+		  console.log(this.curso);
+	  },
+	  presentoEvaluacion( evaluaciones ){
+
+		  evaluaciones.forEach(evaluacion => {
+				if(evaluacion.id_evaluation == this.leccion.evaluacion[0].ID){
+					this.respondio = true;
+					this.puntaje = evaluacion.puntaje;
+				}
+		  });
+
 	  }
     },
     components:{
