@@ -379,7 +379,31 @@ export default {
             .catch((error) => { console.log(error)});
 	  },
 	  siguienteLeccion(){
-		  console.log(this.curso);
+
+			let modulos = this.curso.modulo;
+			let leccionContenedor = null;
+			let leccionAnterior = null;
+
+			for (const modulo of modulos) {
+				
+                var leccionesObserver = modulo.leccion;
+                leccionesObserver =  JSON.parse(JSON.stringify(leccionesObserver));
+                
+                var lecciones = Object.keys(leccionesObserver);
+
+                lecciones.forEach(key => {
+					
+					if(this.idLeccion == leccionAnterior){
+						this.$router.push("/cursos/"+this.curso.id+"/leccion/"+key+"/aprender");
+						this.$router.go();
+					}
+
+					leccionAnterior = key;
+
+				});
+
+			}
+
 	  },
 	  presentoEvaluacion( evaluaciones ){
 
