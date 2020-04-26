@@ -157,7 +157,7 @@
             </section>
 			
 			<section v-if="respondio">
-				Puntaje final: {{puntaje}}
+				Puntaje final: {{puntajeFinal}}
 			</section>
 			
             <!--Botones de enviar evaluacion y atras-->
@@ -240,7 +240,7 @@ export default {
         	correctas:[]
       	},
 		respondio:false,
-		puntaje:0  
+		puntajeFinal:0  
     }),
     methods:{
 		handler(event){
@@ -286,7 +286,7 @@ export default {
 		corregirTextoSimple(  respuestas , respuestaUsuario, posicion){
 
 			if( respuestas[0].respuesta == respuestaUsuario){
-				this.puntaje = this.puntaje + parseFloat(respuestas[0].puntaje); 
+				this.puntajeFinal = this.puntajeFinal + parseFloat(respuestas[0].puntaje); 
 				this.form.correctas[posicion] = true;
 			}else{
 				this.form.correctas[posicion] = false;
@@ -304,7 +304,7 @@ export default {
 			}
 			
 			if( this.arraysEqual(respuestaUsuario, respuestasCorrectaArray)){
-				this.puntaje = this.puntaje + puntaje;
+				this.puntajeFinal = this.puntajeFinal + puntaje;
 				this.form.correctas[posicion] = true;
 			}else{
 				this.form.correctas[posicion] = false;
@@ -315,7 +315,7 @@ export default {
         
         for (const respuesta of respuestas) {
 			if( respuesta.correcta == 1 && respuesta.respuesta == respuestaUsuario){
-				this.puntaje = this.puntaje + parseFloat(respuesta.puntaje);
+				this.puntajeFinal = this.puntajeFinal + parseFloat(respuesta.puntaje);
 				this.form.correctas[posicion] = true;
 			}else if( respuesta.correcta == 1 && respuesta.respuesta != respuestaUsuario ){
 				this.form.correctas[posicion] = false;
@@ -357,7 +357,7 @@ export default {
                 user: this.currentUser.username,
                 id_lesson: this.idLeccion,
                 id_evaluation: this.leccion.evaluacion[0].ID,
-                score: this.puntaje
+                score: this.puntajeFinal
             })
             .then(request => { 
                   
@@ -386,7 +386,7 @@ export default {
 		  evaluaciones.forEach(evaluacion => {
 				if(evaluacion.id_evaluation == this.leccion.evaluacion[0].ID){
 					this.respondio = true;
-					this.puntaje = evaluacion.puntaje;
+					this.puntajeFinal = evaluacion.puntaje;
 				}
 		  });
 

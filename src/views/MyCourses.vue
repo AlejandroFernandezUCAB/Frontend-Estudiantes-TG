@@ -22,7 +22,7 @@
                 <v-card
                     :loading="loading"
                     class="mx-auto"
-                    max-width="374"
+                    max-width="auto"
                 >
                     <v-img
                         height="200"
