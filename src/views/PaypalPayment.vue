@@ -1,88 +1,100 @@
 <template>
-    <v-container fluid>
+  <div>
+    <div v-if="!paidFor">
+      <h1>Buy this Curso - to ${{ monto }}</h1>
 
-    <toolbar-principal></toolbar-principal>
+      <p>{{ product.description }}</p>
 
-<h1>En stripe curso {{idCurso}} </h1>
+    </div>
 
-    </v-container>
+    <div v-if="paidFor">
+      <h1>Noice, you bought a beautiful lamp!</h1>
+    </div>
+
+    <div ref="paypal"></div>
+  </div>
 </template>
 
 <script>
-import ToolbarPrincipal from "../components/ToolbarPrincipal";
+
 import { mapGetters } from "vuex";
+// import image from "../assets/lamp.png"
 export default {
-    created(){
-        this.categoriaId = this.$route.params.idCategoria;
-        this.idCurso = this.$route.params.id;
-
-        if (this.categoriaId == 0) {
-            
-            this.cargarCursosTodos();
-
-        }else{
-
-            this.cargarCursos();
-
-        }
-
-        this.obtenerCategoria();
+  name: "HelloWorld",
+created(){
+        this.idCurso = this.$route.params.idCurso;
+        this.monto = this.$route.params.monto;
+    },
+  data: function() {
+    return {
+      loaded: false,
+      paidFor: false,
+      idCurso:"",
+      monto:0,
+      medallas:"",
+      idMedallaPrimerCurso:"",
+      product: {
+        description: "Curso"
+      }
+    };
+  },
+    
+  computed: {
+        ...mapGetters({ currentUser: "currentUser" })
+    },
+  mounted: function() {
+    const script = document.createElement("script");
+    script.src =
+      "https://www.paypal.com/sdk/js?client-id=AYsB9nY_rzThPLvq0rM7HF8uquDQDEBKk7QVls6qAzX-8CifZ5OHPkdQd8lexM4XhT8kVYo7r8DKi6FR&currency=USD";
+    script.addEventListener("load", this.setLoaded);
+    document.body.appendChild(script);
+  },
+  methods: {
+    setLoaded: function() {
+      this.loaded = true;
+      window.paypal
+        .Buttons({
+          createOrder: (data, actions) => {
+            return actions.order.create({
+              purchase_units: [
+                {
+                  description: this.product.description,
+                  amount: {
+                    currency_code: "USD",
+                    value: this.monto
+                  }
+                }
+              ]
+            });
+          },
+          onApprove: async (data, actions) => {
+            const order = await actions.order.capture();
+            this.paidFor = true;
+            console.log(order);
+            this.registrarPago(order);
+          },
+          onError: err => {
+            console.log(err);
+          }
+        })
+        .render(this.$refs.paypal);
+    },
+    
+    registrarPago(order){
+         this.$http
+            .post("my_rest_server/v1/paypal/registerPayment", {
+                username: localStorage.username,
+                id_course: this.idCurso,
+                id_transaction:order.id,
+                monto:order.purchase_units[0].amount.value,
+            })
+            .then(request => {
+               this.comprarCurso(this.idCurso)
+            })
+            .catch(error => console.log(error));
 
     },
-    computed: {
-    	...mapGetters({ currentUser: "currentUser" })
-    },
-    data () {
-        return {
-            data:"hola",
-            categoria:"",
-            categorias:[],
-            cursos:[],
-            categoriaId:null,
-            medallas:"",
-            idMedallaPrimerCurso:"",
-        }
-    },
-    methods:{
-        cargarCursosTodos(){
-            this.$http
-                .get("wp/v2/curso")
-                .then(request => {
-                    
-                    this.cursos = request.data;
-
-                })
-                .catch(() => {
-
-                });
-        },
-        cargarCursos(){
-            this.$http
-                .get("wp/v2/curso?categories="+this.categoriaId)
-                .then(request => {
-                    this.cursos = request.data;
-                    console.log(this.cursos);
-                })
-                .catch(() => {
-
-                });
-        },
-        obtenerCategoria(){
-            this.$http
-                .get("wp/v2/categories/" + this.categoriaId)
-                .then(request => {
-                    this.categoria = request.data;
-                    console.log(this.cursos);
-                })
-                .catch(() => {
-
-                });
-        },
-        ingresarCurso (idCurso) {
-            this.loading = true
-            this.$router.push("/cursos/"+idCurso);
-        },
-        comprarCurso( cursoId ){
+    comprarCurso( cursoId ){
             this.$http
             .post("my_rest_server/v1/user-inscribed", {
                 username: localStorage.username,
@@ -142,14 +154,6 @@ export default {
                 })
             .catch((error) => { console.log(error)});
 	  }
-    },
-    components:{
-        ToolbarPrincipal
-    }
-
-}
+  }
+};
 </script>
-
-<style>
-
-</style>

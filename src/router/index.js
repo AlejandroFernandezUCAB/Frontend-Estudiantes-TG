@@ -14,6 +14,7 @@ import Courses from "../views/Courses.vue";
 import Learn from "../views/Learn.vue"
 import Leccion from "../views/Leccion.vue"
 import StripePayment from "../views/StripePayment.vue"
+import PaypalPayment from "../views/PaypalPayment.vue"
 import test from "../views/test.vue";
 
 
@@ -97,6 +98,11 @@ const routes = [
     path:'/stripePayment/:idCurso/:monto',
     name: 'Stripe Payment',
     component:StripePayment
+  },
+  {
+    path:'/paypalPayment/:idCurso/:monto',
+    name: 'Paypal Payment',
+    component:PaypalPayment
   },
   {
     path:'/test',

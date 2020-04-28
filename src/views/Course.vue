@@ -95,6 +95,14 @@
                         Comprar con Stripe
                     </v-btn>
                     <v-btn
+                        v-if="!comprado"
+                        color="success"
+                        text
+                        @click="comprarCursoPaypal(curso.id)"                            
+                    >
+                        Comprar con Paypal
+                    </v-btn>
+                    <v-btn
                         v-else
                         color="success"
                         text
@@ -179,6 +187,10 @@ export default {
         },
         comprarCursoStripe( cursoId ){
             this.$router.push("/stripePayment/"+cursoId);
+
+        },
+        comprarCursoPaypal( cursoId ){
+            this.$router.push("/paypalPayment/"+cursoId);
 
         },
        checkBadgesActive(){
