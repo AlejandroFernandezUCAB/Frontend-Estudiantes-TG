@@ -157,9 +157,32 @@
             </section>
 			
 			<section v-if="respondio">
+				<h4 
+					class="font-italic font-weight-medium">
 				Puntaje final: {{puntajeFinal}}
+				</h4>
 			</section>
 			
+			<section v-if="respondio">
+				<h4 
+					class="font-italic font-weight-medium">
+					Puntaje total: {{puntajeTotal}}
+				</h4>
+			</section>
+
+			<section v-if="respondio && aprobo">
+				<h4 
+					class="font-italic font-weight-medium green--text">
+					Ha aprobado esta evaluación
+				</h4>
+			</section>
+
+			<section v-if="respondio && !aprobo">
+				<h4 
+					class="font-italic font-weight-medium red--text">
+					No ha aprobado esta evaluación
+				</h4>
+			</section>
             <!--Botones de enviar evaluacion y atras-->
             <v-row>
               <v-col
@@ -240,9 +263,36 @@ export default {
         	correctas:[]
       	},
 		respondio:false,
-		puntajeFinal:0  
+		puntajeFinal:0,
+		puntajeTotal:0,
+		aprobo:null  
     }),
     methods:{
+		calcularPuntuacionTotal(){
+			for (let i = 0; i < this.dataEvaluacion.preguntas.length; i++) {
+				
+				let respuestas = this.dataEvaluacion.preguntas[i].respuesta;
+
+				for (const respuesta of respuestas) {
+					this.puntajeTotal = this.puntajeTotal + parseFloat(respuesta.puntaje);
+				}
+			}
+		},
+		calcularSiAproboElUsuario(){
+			
+			let puntajeAprobar = this.puntajeTotal/2;
+
+			if( this.puntajeFinal >= puntajeAprobar ){
+
+				this.aprobo = true;
+
+			}else{
+
+				this.aprobo = false;
+
+			}
+
+		},
 		handler(event){
 			event.preventDefault();
 		},
@@ -252,6 +302,7 @@ export default {
 			.get("/wp/v2/evaluacion/" + this.leccion.evaluacion[0].ID)
 			.then(request => {
 				this.dataEvaluacion = request.data;
+				this.calcularPuntuacionTotal();
 				this.setearCorrectasForm();
 				this.evaluacion = true;
 			})
@@ -261,7 +312,7 @@ export default {
 		setearCorrectasForm(){
 
 			for (let i = 0; i < this.dataEvaluacion.preguntas.length; i++) {
-			this.form.correctas[i] = null;
+				this.form.correctas[i] = null;
 			}
 
 		},
@@ -281,6 +332,7 @@ export default {
 					break;
 				}
 			}
+			this.calcularSiAproboElUsuario();
 			this.guardarResultadoLeccion()
       	},
 		corregirTextoSimple(  respuestas , respuestaUsuario, posicion){
@@ -407,10 +459,12 @@ export default {
 	  },
 	  presentoEvaluacion( evaluaciones ){
 
+
 		  evaluaciones.forEach(evaluacion => {
 				if(evaluacion.id_evaluation == this.leccion.evaluacion[0].ID){
 					this.respondio = true;
 					this.puntajeFinal = evaluacion.puntaje;
+					this.calcularSiAproboElUsuario();
 				}
 		  });
 
