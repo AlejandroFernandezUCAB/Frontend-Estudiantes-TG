@@ -68,7 +68,7 @@
 
 <script>
 import ToolbarPrincipal from "../components/ToolbarPrincipal";
-
+import { mapGetters } from "vuex";
 export default {
     created(){
         this.categoriaId = this.$route.params.idCategoria;
@@ -86,13 +86,18 @@ export default {
         this.obtenerCategoria();
 
     },
+    computed: {
+    	...mapGetters({ currentUser: "currentUser" })
+    },
     data () {
         return {
             data:"hola",
             categoria:"",
             categorias:[],
             cursos:[],
-            categoriaId:null
+            categoriaId:null,
+            medallas:"",
+            idMedallaPrimerCurso:"",
         }
     },
     methods:{
@@ -141,11 +146,59 @@ export default {
                 courseID: cursoId
             })
             .then(request => {
+                this.checkBadgesActive();
                 this.$router.push("/mis-cursos");
             })
             .catch(error => console.log(error));
 
-        }
+        },
+         checkBadgesActive(){
+ 			this.$http
+            .get("wp/v2/medalla")
+            .then(request => {
+                this.medallas=request.data;
+                console.log(this.medallas);
+				this.searchCondition("Primer Curso Adquirido");
+            })
+               .catch((error) => { console.log(error)});
+        },
+        searchCondition(condition){
+		
+			for (let i = 0; i < this.medallas.length; i++) {
+				const element = this.medallas[i];
+				if( element.condicion[0].includes(condition)){
+					console.log(condition);
+					this.idMedallaPrimerCurso=element.id;
+		 	 		this.checkFirstCourseBadge(condition);
+		 	 		break;
+        			}
+      			}
+		},
+        checkFirstCourseBadge(condition){
+             this.$http
+            .post("my_rest_server/v1/users/courses/user_inscribed_by_username", {
+                    username: this.currentUser.username
+                })
+            .then(request => { 
+				if(request.data.length==1){
+					this.addBadgeFirstLesson(condition);
+				}
+                  console.log(request.data)
+            })
+            .catch((error) => { console.log(error)});
+        },
+          addBadgeFirstLesson(condition){
+   		 this.$http
+            .post("my_rest_server/v1/badges/addUserBadges", {
+				username: this.currentUser.username,
+				id_badge:this.idMedallaPrimerCurso
+            })
+            .then(request => { 
+				alert("Obtuvo la medalla "+condition)
+                console.log(request.data)
+                })
+            .catch((error) => { console.log(error)});
+	  }
     },
     components:{
         ToolbarPrincipal

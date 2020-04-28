@@ -12,11 +12,11 @@
                 light          
             >
 
-                <v-img
+                <!-- <v-img
                     :src="curso.banner.guid"
                     height="100"
                     class="grey darken-4"
-                ></v-img>
+                ></v-img> -->
 
                 <v-card-title class="headline">{{curso.nombre}}</v-card-title>
 
@@ -66,7 +66,8 @@
                 ></v-img>
                 <v-card-title class="title">{{curso.nombre}}</v-card-title>
                 <v-card-subtitle class="subtitle">{{curso.texto_inicial}}</v-card-subtitle>
-                <v-card-actions>
+                
+                <v-card-actions v-if="curso.gratis==1">
                     <v-btn
                         v-if="!comprado"
                         color="success"
@@ -74,6 +75,32 @@
                         @click="comprarCurso(curso.id)"                            
                     >
                         Comprar
+                    </v-btn>
+                    <v-btn
+                        v-else
+                        color="success"
+                        text
+                        @click="verCurso(curso.id)"                            
+                    >
+                        Continuar   
+                    </v-btn>
+                </v-card-actions>
+                <v-card-actions v-if="curso.gratis==0">
+                    <v-btn
+                        v-if="!comprado"
+                        color="success"
+                        text
+                        @click="comprarCursoStripe(curso.id)"                            
+                    >
+                        Comprar con Stripe
+                    </v-btn>
+                    <v-btn
+                        v-if="!comprado"
+                        color="success"
+                        text
+                        @click="comprarCursoPaypal(curso.id)"                            
+                    >
+                        Comprar con Paypal
                     </v-btn>
                     <v-btn
                         v-else
@@ -110,6 +137,9 @@ export default {
         cargado:false,
         categorias:"",
         cursosAdquiridosResponse:"",
+        medallas:"",
+        idMedallaPrimerCurso:"",
+
         comprado:null
     }),
     computed: {
@@ -149,11 +179,67 @@ export default {
                 courseID: cursoId
             })
             .then(request => {
+                this.checkBadgesActive();
                 this.$router.push("/mis-cursos");
             })
             .catch(error => console.log(error));
 
         },
+        comprarCursoStripe( cursoId ){
+            this.$router.push("/stripePayment/"+cursoId);
+
+        },
+        comprarCursoPaypal( cursoId ){
+            this.$router.push("/paypalPayment/"+cursoId);
+
+        },
+       checkBadgesActive(){
+ 			this.$http
+            .get("wp/v2/medalla")
+            .then(request => {
+                this.medallas=request.data;
+                console.log(this.medallas);
+				this.searchCondition("Primer Curso Adquirido");
+            })
+               .catch((error) => { console.log(error)});
+        },
+        searchCondition(condition){
+		
+			for (let i = 0; i < this.medallas.length; i++) {
+				const element = this.medallas[i];
+				if( element.condicion[0].includes(condition)){
+					console.log(condition);
+					this.idMedallaPrimerCurso=element.id;
+		 	 		this.checkFirstCourseBadge(condition);
+		 	 		break;
+        			}
+      			}
+		},
+        checkFirstCourseBadge(condition){
+             this.$http
+            .post("my_rest_server/v1/users/courses/user_inscribed_by_username", {
+                    username: this.currentUser.username
+                })
+            .then(request => { 
+				if(request.data.length==1){
+					this.addBadgeFirstLesson(condition);
+				}
+                  console.log(request.data)
+            })
+            .catch((error) => { console.log(error)});
+        },
+          addBadgeFirstLesson(condition){
+   		 this.$http
+            .post("my_rest_server/v1/badges/addUserBadges", {
+				username: this.currentUser.username,
+				id_badge:this.idMedallaPrimerCurso
+            })
+            .then(request => { 
+				alert("Obtuvo la medalla "+condition)
+                console.log(request.data)
+                })
+            .catch((error) => { console.log(error)});
+	  },
         obtenerMisCursos(){
           
             this.$http
