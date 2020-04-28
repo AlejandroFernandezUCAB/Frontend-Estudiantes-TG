@@ -225,7 +225,9 @@ export default {
 		this.video = this.leccion.video.guid;
 		this.idCurso = this.$route.params.idCurso;
 		this.idLeccion = this.$route.params.idLeccion;
+		this.checkBadgesActive();
 		this.guardarNuevaLeccion(this.idCurso, this.idLeccion);
+		//alert("Aqui")
 	},
     computed: {
     	...mapGetters({ currentUser: "currentUser" })
@@ -233,6 +235,8 @@ export default {
     data:() => ({
 		idCurso:"",
 		idLeccion:"",
+		medallas:"",
+		idMedallaPrimeraLeccion:"",
 		evaluacion:false,
       	dataEvaluacion:null,
 		form:{
@@ -246,6 +250,57 @@ export default {
 		handler(event){
 			event.preventDefault();
 		},
+
+		checkBadgesActive(){
+ 			this.$http
+            .get("wp/v2/medalla")
+            .then(request => {
+				this.medallas=request.data;
+				this.searchCondition("Primera Lección Vista");
+            })
+               .catch((error) => { console.log(error)});
+		},
+		searchCondition(condition){
+		
+			for (let i = 0; i < this.medallas.length; i++) {
+				const element = this.medallas[i];
+				if( element.condicion[0].includes(condition)){
+					console.log(condition);
+					this.idMedallaPrimeraLeccion=element.id;
+		 	 		this.checkFirstLessonBadge(this.idCurso,condition);
+		 	 		break;
+        			}
+
+      			}
+		},
+		checkFirstLessonBadge(curso,condition){
+
+		  this.$http
+            .post("my_rest_server/v1/user/getAllLessons", {
+                username: this.currentUser.username,
+                id_course: curso,
+            })
+            .then(request => { 
+				if(request.data.length==0){
+					this.addBadgeFirstLesson(condition);
+				}
+                  console.log(request.data)
+            })
+            .catch((error) => { console.log(error)});
+
+	  },
+	  addBadgeFirstLesson(condition){
+   		 this.$http
+            .post("my_rest_server/v1/badges/addUserBadges", {
+				username: this.currentUser.username,
+				id_badge:this.idMedallaPrimeraLeccion
+            })
+            .then(request => { 
+				alert("Obtuvo la medalla "+condition)
+                console.log(request.data)
+                })
+            .catch((error) => { console.log(error)});
+	  },
       	cargarEvaluacion(){
 			this.obtenerEvaluacionUsuario();
 			this.$http
@@ -334,7 +389,8 @@ export default {
         }
         return true;
         
-      },
+	  },
+	  
 	  guardarNuevaLeccion(curso, leccion){
             var self = this;
 		    setTimeout(function(){

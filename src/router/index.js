@@ -8,11 +8,14 @@ import CarruselVistoEstudiantes from "../components/CarruselVistoEstudiantes.vue
 import Login from "../views/Login.vue";
 import Signup from "../views/Sign-Up.vue"
 import MyCourses from "../views/MyCourses.vue"
+import MyBadges from "../views/MyBadges.vue"
 import Course from "../views/Course.vue"
 import Courses from "../views/Courses.vue";
 import Learn from "../views/Learn.vue"
 import Leccion from "../views/Leccion.vue"
+import StripePayment from "../views/StripePayment.vue"
 import test from "../views/test.vue";
+
 
 Vue.use(VueRouter)
 
@@ -69,6 +72,11 @@ const routes = [
     component:MyCourses
   },
   {
+    path:'/mis-medallas',
+    name: 'My Badges',
+    component:MyBadges
+  },
+  {
     path:"/catalogo/cursos/categorias/:idCategoria",
     name:"Cursos",
     component:Courses
@@ -84,6 +92,11 @@ const routes = [
   {
     path: '/cursos/:idCurso/leccion/:idLeccion/aprender',
     component:Leccion
+  },
+  {
+    path:'/stripePayment/:idCurso/:monto',
+    name: 'Stripe Payment',
+    component:StripePayment
   },
   {
     path:'/test',
