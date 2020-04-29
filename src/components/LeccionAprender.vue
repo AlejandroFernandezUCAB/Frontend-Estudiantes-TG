@@ -248,7 +248,7 @@ export default {
 		this.video = this.leccion.video.guid;
 		this.idCurso = this.$route.params.idCurso;
 		this.idLeccion = this.$route.params.idLeccion;
-		this.checkBadgesActive();
+		this.checkBadgesActive("Primera Lección Vista");
 		this.guardarNuevaLeccion(this.idCurso, this.idLeccion);
 		//alert("Aqui")
 	},
@@ -260,6 +260,7 @@ export default {
 		idLeccion:"",
 		medallas:"",
 		idMedallaPrimeraLeccion:"",
+		idMedallaPrimeraEvaluacion:"",
 		evaluacion:false,
       	dataEvaluacion:null,
 		form:{
@@ -289,6 +290,7 @@ export default {
 			if( this.puntajeFinal >= puntajeAprobar ){
 
 				this.aprobo = true;
+				checkBadgesActive("Primera Evaluación Aprobada")
 
 			}else{
 
@@ -301,12 +303,12 @@ export default {
 			event.preventDefault();
 		},
 
-		checkBadgesActive(){
+		checkBadgesActive(condition){
  			this.$http
             .get("wp/v2/medalla")
             .then(request => {
 				this.medallas=request.data;
-				this.searchCondition("Primera Lección Vista");
+				this.searchCondition(condition);
             })
                .catch((error) => { console.log(error)});
 		},
@@ -316,13 +318,35 @@ export default {
 				const element = this.medallas[i];
 				if( element.condicion[0].includes(condition)){
 					console.log(condition);
-					this.idMedallaPrimeraLeccion=element.id;
-		 	 		this.checkFirstLessonBadge(this.idCurso,condition);
+					if(condition=="Primera Lección Vista"){
+						this.idMedallaPrimeraLeccion=element.id;
+						this.checkFirstLessonBadge(this.idCurso,condition);
+					}
+					if(condition=="Primera Evaluación Aprobada"){
+						this.idMedallaPrimeraEvaluacion=element.id;
+						this.checkFirstLessonBadge(condition);
+					}
+					
 		 	 		break;
         			}
 
       			}
 		},
+		 CheckFirstEvaluationUser(condition){
+		  this.$http
+            .post("my_rest_server/v1/get_user_first_evaluation", {
+				user: this.currentUser.username,
+				id_course: this.idCurso
+            })
+            .then(request => { 
+				if(request.data.cantidad==0){
+					this.addBadgeFirstEvaluation(condition);
+				}
+                  console.log(request.data)
+				 
+            })
+            .catch((error) => { console.log(error)});
+	  },
 		checkFirstLessonBadge(curso,condition){
 
 		  this.$http
@@ -344,6 +368,18 @@ export default {
             .post("my_rest_server/v1/badges/addUserBadges", {
 				username: this.currentUser.username,
 				id_badge:this.idMedallaPrimeraLeccion
+            })
+            .then(request => { 
+				alert("Obtuvo la medalla "+condition)
+                console.log(request.data)
+                })
+            .catch((error) => { console.log(error)});
+	  },
+	  addBadgeFirstEvaluation(condition){
+   		 this.$http
+            .post("my_rest_server/v1/badges/addUserBadges", {
+				username: this.currentUser.username,
+				id_badge:this.idMedallaPrimeraEvaluacion
             })
             .then(request => { 
 				alert("Obtuvo la medalla "+condition)
@@ -462,7 +498,8 @@ export default {
 	  guardarResultadoLeccion(){
 		    this.$http
             .post("my_rest_server/v1/add-user-evaluation", {
-                user: this.currentUser.username,
+				user: this.currentUser.username,
+				id_course:this.idCurso,
                 id_lesson: this.idLeccion,
                 id_evaluation: this.leccion.evaluacion[0].ID,
                 score: this.puntajeFinal
@@ -475,7 +512,8 @@ export default {
 	  obtenerEvaluacionUsuario(){
 		  this.$http
             .post("my_rest_server/v1/user-evaluation", {
-                user: this.currentUser.username,
+				user: this.currentUser.username,
+				id_course: this.idCurso,
                 id_lesson: this.idLeccion,
                 id_evaluation: this.leccion.evaluacion[0].ID
             })
@@ -486,6 +524,7 @@ export default {
             })
             .catch((error) => { console.log(error)});
 	  },
+	 
 	  siguienteLeccion(){
 
 			let modulos = this.curso.modulo;

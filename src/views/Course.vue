@@ -90,17 +90,17 @@
                         v-if="!comprado"
                         color="success"
                         text
-                        @click="comprarCursoStripe(curso.id)"                            
+                        @click="comprarCursoStripe(curso.id,curso.costo)"                            
                     >
-                        Comprar con Stripe
+                        Comprar con Stripe costo - ${{curso.costo}}
                     </v-btn>
                     <v-btn
                         v-if="!comprado"
                         color="success"
                         text
-                        @click="comprarCursoPaypal(curso.id)"                            
+                        @click="comprarCursoPaypal(curso.id,curso.costo)"                            
                     >
-                        Comprar con Paypal
+                        Comprar con Paypal - ${{curso.costo}}
                     </v-btn>
                     <v-btn
                         v-else
@@ -139,7 +139,6 @@ export default {
         cursosAdquiridosResponse:"",
         medallas:"",
         idMedallaPrimerCurso:"",
-
         comprado:null
     }),
     computed: {
@@ -185,12 +184,12 @@ export default {
             .catch(error => console.log(error));
 
         },
-        comprarCursoStripe( cursoId ){
-            this.$router.push("/stripePayment/"+cursoId);
+        comprarCursoStripe( cursoId, costo ){
+            this.$router.push("/stripePayment/"+cursoId+"/"+costo);
 
         },
-        comprarCursoPaypal( cursoId ){
-            this.$router.push("/paypalPayment/"+cursoId);
+        comprarCursoPaypal( cursoId,costo ){
+            this.$router.push("/paypalPayment/"+cursoId+"/"+costo);
 
         },
        checkBadgesActive(){

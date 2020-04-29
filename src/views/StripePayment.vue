@@ -8,7 +8,7 @@
       @loading="loading = $event"
     >
     </stripe-elements>
-    <button @click="submit">Pay ${{monto / 100}}</button>
+    <button @click="submit">Pay ${{monto}}</button>
   </div>
 </template>
  
@@ -46,7 +46,7 @@ export default {
       // for additional charge objects go to https://stripe.com/docs/api/charges/object
       this.charge = {
         source: token.id,
-        amount: this.amount, // the amount you want to charge the customer in cents. $100 is 1000 (it is strongly recommended you use a product id and quantity and get calculate this on the backend to avoid people manipulating the cost)
+        amount: this.monto*100, // the amount you want to charge the customer in cents. $100 is 1000 (it is strongly recommended you use a product id and quantity and get calculate this on the backend to avoid people manipulating the cost)
         description: this.description // optional description that will show up on stripe when looking at payments
       }
       this.sendTokenToServer(this.charge);
@@ -56,7 +56,7 @@ export default {
         this.$http
             .post("my_rest_server/v1/stripe/addCharge", {
                 token: charge.source,
-                monto: this.monto
+                monto: this.monto*100
             })
             .then(request => {
                 console.log(request);
