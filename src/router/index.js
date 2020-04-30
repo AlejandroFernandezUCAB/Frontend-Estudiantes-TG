@@ -16,7 +16,7 @@ import Leccion from "../views/Leccion.vue"
 import StripePayment from "../views/StripePayment.vue"
 import PaypalPayment from "../views/PaypalPayment.vue"
 import test from "../views/test.vue";
-
+import Forum from "../views/Forum.vue";
 
 Vue.use(VueRouter)
 
@@ -107,6 +107,10 @@ const routes = [
   {
     path:'/test',
     component:test
+  },
+  {
+    path:"/forum",
+    component:Forum
   }
 
 
