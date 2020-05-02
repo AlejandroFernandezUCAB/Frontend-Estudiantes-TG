@@ -17,6 +17,7 @@ import StripePayment from "../views/StripePayment.vue"
 import PaypalPayment from "../views/PaypalPayment.vue"
 import test from "../views/test.vue";
 import Forum from "../views/Forum.vue";
+import Topico from "../views/Topico.vue";
 
 Vue.use(VueRouter)
 
@@ -109,8 +110,12 @@ const routes = [
     component:test
   },
   {
-    path:"/forum",
+    path:"/cursos/:idCurso/foro",
     component:Forum
+  },
+  {
+    path:"/cursos/:idCurso/foro/topico/:idTopico",
+    component:Topico
   }
 
 

@@ -96,7 +96,6 @@ export default {
         reedireccionarLeccion(){
             console.log(this.curso);
             if(this.leccionesVistas.lenght != 0){
-                //console.log("/cursos/"+this.curso.id+"/leccion/"+this.leccionesVistas[0].id_course+"/aprender");
                 this.$router.push("/cursos/"+this.curso.id+"/leccion/"+this.leccionesVistas[0].id_lesson+"/aprender");
             }
             
