@@ -175,7 +175,6 @@ export default {
         .get("wp/v2/categories/")
         .then(request => {
           this.categorias = request.data;
-          console.log(this.categorias);
         })
         .catch(() => {
 

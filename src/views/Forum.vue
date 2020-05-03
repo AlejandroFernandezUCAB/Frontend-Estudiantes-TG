@@ -21,7 +21,17 @@
                     <v-row justify="center">
                         <v-dialog v-model="agregarCurso" persistent max-width="600px">
                         <template v-slot:activator="{ on }">
-                            <v-btn color="success" v-on="on">Agregar tópico</v-btn>
+                                <v-btn
+                                    color="verde"
+                                    dark
+                                    absolute
+                                    bottom
+                                    right
+                                    fab
+                                    v-on="on"
+                                >
+                                    <v-icon>mdi-plus</v-icon>
+                                </v-btn>
                         </template>
                         <v-card>
                             <v-card-title>
@@ -101,6 +111,7 @@
                 </v-card>
 
             </v-col>
+
         </v-row>
     </v-container>
 </template>
