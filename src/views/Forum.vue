@@ -1,5 +1,5 @@
 <template>
-    <v-container fluid v-if="loading">
+    <v-container v-if="loading">
       <toolbar-principal></toolbar-principal>
         <v-row>
             <v-col
