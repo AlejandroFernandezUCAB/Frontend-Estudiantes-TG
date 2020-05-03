@@ -94,6 +94,16 @@
             <v-icon>mdi-pencil-box-outline</v-icon>
           </v-btn>
         </router-link>
+        <router-link to="/mis-certificados">
+          <v-btn
+            target="_blank"
+            text
+            color="black"
+          >
+            <span class="mr-2">Mis certificados</span>
+            <v-icon>mdi-pencil-box-outline</v-icon>
+          </v-btn>
+        </router-link>
 
             <v-btn
                 target="_blank"
@@ -271,5 +281,10 @@ import { mapGetters } from "vuex";
 <style>
 .v-navigation-drawer__border {
   display: none
+}
+
+.v-btn:not(.v-btn--round).v-size--default {
+    
+    padding: 0 0px !important;
 }
 </style>
