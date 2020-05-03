@@ -66,7 +66,32 @@
                 md="12"
             >
                 <section>
+                    <template v-for="(respuesta, index) in respuestas">
+                        <v-card
+                            :key="index"
+                            class="my-5"
+                        >
+                            <v-card-text>
+                                {{respuesta.answer}}
+                            </v-card-text>
 
+                            <v-card-actions>
+
+                                <p class="mx-5">Por: {{respuesta.creator_user}}</p>
+                                
+                            <v-spacer></v-spacer>
+                            
+                            <v-btn
+                                text
+                                color="verde"
+                                class="mx-5"
+                                @click=""
+                            >
+                                Responder
+                            </v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </template>
                 </section>
 
             </v-col>
@@ -78,7 +103,7 @@
                 bottom
                 right
                 fab
-                 @click="agregarRespuesta = true"
+                @click="agregarRespuesta = true"
             >
                 <v-icon>mdi-plus</v-icon>
             </v-btn>
@@ -121,7 +146,7 @@ export default {
     },
     methods:{
         obtenerRespuestasTopico(){
-
+            this.respuestas = [];
              this.$http
                 .post("my_rest_server/v1/forum/topic/getAnswers?id_topic="+this.idTopico)
                 .then(request => { 
@@ -179,6 +204,7 @@ export default {
                 })
                 .then(request => { 
                     this.agregarCurso = false;
+                    this.obtenerRespuestasTopico();
                 })
                 .catch((error) => {
                         this.snackbar = true; 
