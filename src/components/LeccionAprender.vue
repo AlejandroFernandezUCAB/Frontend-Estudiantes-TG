@@ -318,11 +318,12 @@ export default {
 				const element = this.medallas[i];
 				if( element.condicion[0].includes(condition)){
 					console.log(condition);
-					if(condition=="Primera Lección Vista"){
+					if(condition==="Primera Lección Vista"){
+					
 						this.idMedallaPrimeraLeccion=element.id;
 						this.checkFirstLessonBadge(this.idCurso,condition);
 					}
-					if(condition=="Primera Evaluación Aprobada"){
+					if(condition==="Primera Evaluación Aprobada"){
 						this.idMedallaPrimeraEvaluacion=element.id;
 						this.checkFirstLessonBadge(condition);
 					}
@@ -502,7 +503,8 @@ export default {
 				id_course:this.idCurso,
                 id_lesson: this.idLeccion,
                 id_evaluation: this.leccion.evaluacion[0].ID,
-                score: this.puntajeFinal
+				score: this.puntajeFinal,
+				approve: this.aprobo
             })
             .then(request => { 
                   

@@ -15,6 +15,7 @@ import Learn from "../views/Learn.vue"
 import Leccion from "../views/Leccion.vue"
 import StripePayment from "../views/StripePayment.vue"
 import PaypalPayment from "../views/PaypalPayment.vue"
+import MyCertificates from "../views/MyCertificates.vue"
 import test from "../views/test.vue";
 import Forum from "../views/Forum.vue";
 import Topico from "../views/Topico.vue";
@@ -104,6 +105,11 @@ const routes = [
     path:'/paypalPayment/:idCurso/:monto',
     name: 'Paypal Payment',
     component:PaypalPayment
+  },
+  {
+    path:'/mis-certificados',
+    name: 'My Certificates',
+    component:MyCertificates
   },
   {
     path:'/test',
