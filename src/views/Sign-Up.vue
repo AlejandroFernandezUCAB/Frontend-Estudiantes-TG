@@ -73,7 +73,7 @@
 
                 <v-text-field
                     v-model="contrasenaVef"
-                    :rules="contrasenaRules"
+                    :rules="[contrasenaRules,passwordConfirmationRule]"
                     label="Confirma la contraseña"
                     required
                     color="success"
@@ -140,6 +140,11 @@ import ToolbarPrincipal from '../components/ToolbarPrincipal';
 import UserM from "../models/UserM";
 
 export default {
+     computed: {
+    passwordConfirmationRule() { 
+        return (this.contrasena === this.contrasenaVef) || 'Password must match' 
+        }
+  },
     data () {
         return {
             snackbar: false,
@@ -157,7 +162,7 @@ export default {
             emailRepetido:false,
             contrasenaRules:[
                 v => !!v || 'Este campo es obligatorio',
-                v => v.length >= 8 || 'Este campo debe tener minimo 4 caracteres',
+                v => v.length >= 8 || 'Este campo debe tener minimo 8 caracteres',
             ],
             profesion:"",
             nombreRules: [

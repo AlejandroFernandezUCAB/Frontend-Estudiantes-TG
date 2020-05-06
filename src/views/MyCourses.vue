@@ -16,7 +16,7 @@
                 lg="4"
                 cols="4"
                 v-for="curso in cursosAdquiridos"
-                :key="curso.id"
+                :key="curso.data.id"
                 >
 
                 <v-card
@@ -26,10 +26,10 @@
                 >
                     <v-img
                         height="200"
-                        :src="curso.imagen_curso.guid"
+                        :src="curso.data.imagen_curso.guid"
                     ></v-img>
 
-                    <v-card-title>{{curso.nombre}}</v-card-title>
+                    <v-card-title>{{curso.data.nombre}}</v-card-title>
 
                     <v-card-text>
                     <v-row
@@ -49,28 +49,28 @@
                     </v-row>
                     </v-card-text>
                     <v-card-text>
-                        <strong>Porcentaje completado 10%</strong>
+                        <strong>Porcentaje completado {{curso.porcentaje}}%</strong>
                     </v-card-text>
                     
                     <v-progress-linear
                         class="mx-auto"
                         color="verde"
                         buffer-value="0"     
-                        value="10"
+                        :value="curso.porcentaje"
                         stream
                     ></v-progress-linear>
                     <v-card-actions>
                         <v-btn
                             color="success"
                             text
-                            @click="ingresarCurso(curso.id)"                            
+                            @click="ingresarCurso(curso.data.id)"                            
                         >
                             Ver Detalle
                         </v-btn>
                         <v-btn
                             color="success"
                             text
-                            @click="verContenido(curso.id)"
+                            @click="verContenido(curso.data.id)"
                             
                         >
                             Continuar
@@ -97,6 +97,7 @@ import ToolbarPrincipal from "../components/ToolbarPrincipal"
       loading: false,
       selection: 1,
       cursosAdquiridos:[],
+      modulos:[],
       cursosAdquiridosResponse:[]
     }),
     methods: {
@@ -113,6 +114,7 @@ import ToolbarPrincipal from "../components/ToolbarPrincipal"
             })
             .then(request => { ;
                 this.cursosAdquiridosResponse = request.data
+                console.log(this.cursosAdquiridosResponse);
                 this.getDetailCourse(this.cursosAdquiridosResponse);
                 })
             .catch((error) => { console.log(error)});
@@ -123,18 +125,47 @@ import ToolbarPrincipal from "../components/ToolbarPrincipal"
       },
       getDetailCourse(cursos){
 
-          cursos.forEach(curso => {
-              
+       
+        
+        cursos.forEach(curso => {
+
+
+            var totalLeccionesCurso=0;
+            var leccionesVistas;
+           //Verifico el total de lecciones vistas en ese curso
+            this.$http
+            .post("my_rest_server/v1/user/getAllLessons", {
+                username: this.currentUser.username,
+                id_course: curso.id_curso
+            })
+            .then(request => { 
+                leccionesVistas=request.data.length;
+                })
+            .catch((error) => { console.log(error)});
+        
+            //obtengo informacion del curso
             this.$http
             .get("wp/v2/curso/"+curso.id_curso)
             .then(request => { 
-                this.cursosAdquiridos.push( request.data );
-                console.log(request.data);
-                })
+                this.modulos= request.data.modulo;
+
+                this.modulos.forEach(modulo => {
+                totalLeccionesCurso= totalLeccionesCurso + Object.keys(modulo.leccion).length;
+                });
+                var promedioLecciones=(leccionesVistas*100)/totalLeccionesCurso;
+                var cursoObject ={
+                    data:request.data,
+                    porcentaje:this.round(promedioLecciones,0)
+                }
+                this.cursosAdquiridos.push(cursoObject);
+            })
             .catch((error) => { console.log(error)});
           });
 
       },
+        round(value, decimals) {
+            return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+        },
         checkCurrentLogin() {
         // Verifica si el usuario se encuentra login, de no ser asi, lo redirige al home
             if (this.currentUser) {

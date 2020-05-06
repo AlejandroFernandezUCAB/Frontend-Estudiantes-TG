@@ -69,10 +69,15 @@
 <script>
 import { mapGetters } from "vuex";
 import UserM from "../models/UserM";
-import ToolbarPrincipal from "../components/ToolbarPrincipal";
+import ToolbarPrincipal from "../components/ToolbarPrincipal"
 
-export default {
-    
+  export default {
+       created(){
+        this.getMyData();
+    },
+    computed: {
+    ...mapGetters({ currentUser: "currentUser" })
+    },
     name: 'perfil',
     data:() => ({
         userM:{
@@ -122,19 +127,19 @@ export default {
 "Tunisia", "Turkey", "Turkmenistan", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States",
 "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"],
     }),
-    beforeCreate(){
+    methods: {
+        getMyData(){
         let user = new UserM();
         this.$http
-            .get("wp/v2/users/me")
+            .get("wp/v2/users?slug="+this.currentUser.username)
             .then(request => {
-                this.userM = request.data;
+                this.userM = request.data[0];
                 this.find = true;
                 console.log(this.userM);
-                console.log(request.data.imagen_usuario);
+                console.log(request.data);
             })
             .catch(error => console.log(error));
     },
-    methods:{
         validate () {
 
             if (this.$refs.form.validate()) {
@@ -163,13 +168,17 @@ export default {
         },
         resetValidation () {
             this.$refs.form.resetValidation()
-        },
+        }
+    },
+    computed: {
+    ...mapGetters({ currentUser: "currentUser" })
     },
     components:{
         ToolbarPrincipal
     }
-}
+  }
 </script>
+
 
 <style scoped>
     .no-padding{
