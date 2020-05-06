@@ -121,6 +121,7 @@ export default {
         this.idTopico = this.$route.params.idTopico;
         this.idCurso = this.$route.params.idCurso;
         this.obtenerCursoConForo();
+        this.obtenerRespuestasTopico();
     },
     data:() => ({
         loading:false,

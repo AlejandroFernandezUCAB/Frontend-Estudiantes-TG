@@ -23,23 +23,26 @@
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
       
-      <router-link to="/">
+      <router-link to="/" >
         <v-btn
           target="_blank"
           text
           color="black"
+		  class="mx-3"
         >
           <span class="mr-2">Inicio</span>
 
         </v-btn>
       </router-link>
-      <v-menu open-on-hover bottom offset-y>
-        <template v-slot:activator="{ on }">
+
+      <v-menu open-on-hover bottom offset-y class="mx-3">
+        <template v-slot:activator="{ on }" >
           <v-btn
             target="_blank"
             text
             color="black"
             v-on="on"
+			class="mx-3"
           >
             <span class="mr-2">Cursos</span>
             <v-icon>mdi-notebook-outline</v-icon>
@@ -63,83 +66,109 @@
         </v-list>
       </v-menu>
 
-      <div v-if="!currentUser">
-        <router-link to="/login">
-          <v-btn
-            target="_blank"
-            text
-            color="black"
-          >
-            <span class="mr-2">Iniciar sesión</span>
-            <v-icon>mdi-account-outline</v-icon>
-          </v-btn>
-        </router-link>
-        
-        <router-link to="/signup">
-        <v-btn
-          target="_blank"
-          text
-          color="black"
-        >
-          <span class="mr-2">Regístrate</span>
-          <v-icon>mdi-pencil-box-outline</v-icon>
-        </v-btn>
-        </router-link>
-      </div>
+      	<div v-if="!currentUser">
+			<router-link to="/login">
+				<v-btn
+					target="_blank"
+					text
+					color="black"
+					class="mx-3"
+				>
+					<span class="mr-2">Iniciar sesión</span>
+					<v-icon>mdi-account-outline</v-icon>
+				</v-btn>
+			</router-link>
+			
+			<router-link to="/signup">
+				<v-btn
+				target="_blank"
+				text
+				color="black"
+				class="mx-3"
+				>
+					<span class="mr-2">Regístrate</span>
+					<v-icon>mdi-pencil-box-outline</v-icon>
+				</v-btn>
+			</router-link>
+      	</div>
+        <v-menu open-on-hover bottom offset-y v-if="currentUser">
+			<template v-slot:activator="{ on }">
+				<v-btn
+					target="_blank"
+					text
+					color="black"
+					v-on="on"
+					class="mx-3"
+				>
+					<span class="mr-2">Mi Cuenta</span>
+					<v-icon>mdi-account-outline</v-icon>
+				</v-btn>
+			</template>
 
-      <div v-if="currentUser">
-        <router-link to="/perfil">
-          <v-btn
-            target="_blank"
-            text
-            color="black"
-          >
-            <span class="mr-2">Mi Perfil</span>
-            <v-icon>mdi-account-outline</v-icon>
-          </v-btn>
-        </router-link>
-        
-        <router-link to="/mis-cursos">
-          <v-btn
-            target="_blank"
-            text
-            color="black"
-          >
-            <span class="mr-2">Mis Cursos</span>
-            <v-icon>mdi-pencil-box-outline</v-icon>
-          </v-btn>
-        </router-link>
-        <router-link to="/mis-medallas">
-          <v-btn
-            target="_blank"
-            text
-            color="black"
-          >
-            <span class="mr-2">Mis Medallas</span>
-            <v-icon>mdi-pencil-box-outline</v-icon>
-          </v-btn>
-        </router-link>
-         <router-link to="/mis-certificados">
-          <v-btn
-            target="_blank"
-            text
-            color="black"
-          >
-            <span class="mr-2">Mis certificados</span>
-            <v-icon>mdi-pencil-box-outline</v-icon>
-          </v-btn>
-        </router-link>
-        <v-btn
-          target="_blank"
-          text
-          color="black"
-		  @click="cerrarSesion()"
-        >
-          <span class="mr-2">Cerrar Sesión</span>
-          <v-icon>mdi-close-box-outline</v-icon>
-        </v-btn>
+			<v-list class="text-center">
+				<v-list-item
+				>
+					<router-link to="/perfil">
+						<v-btn
+							target="_blank"
+							text
+							color="black"
+						>
+							<span class="mr-2">Mi Perfil</span>
+							<v-icon>mdi-account-outline</v-icon>
+						</v-btn>
+					</router-link>
 
-      </div>
+				</v-list-item>
+				<v-list-item>
+					<router-link to="/mis-cursos">
+					<v-btn
+						target="_blank"
+						text
+						color="black"
+					>
+						<span class="mr-2">Mis Cursos</span>
+						<v-icon>mdi-pencil-box-outline</v-icon>
+					</v-btn>
+					</router-link>
+				</v-list-item>
+				<v-list-item>
+					<router-link to="/mis-medallas">
+						<v-btn
+							target="_blank"
+							text
+							color="black"
+						>
+							<span class="mr-2">Mis Medallas</span>
+							<v-icon>mdi-pencil-box-outline</v-icon>
+						</v-btn>
+					</router-link>
+					</v-list-item>
+				<v-list-item>
+					<router-link to="/mis-certificados">
+						<v-btn
+							target="_blank"
+							text
+							color="black"
+						>
+							<span class="mr-2">Mis certificados</span>
+						<v-icon>mdi-pencil-box-outline</v-icon>
+					</v-btn>
+					</router-link>
+				</v-list-item>
+				<v-list-item>
+					<v-btn
+						target="_blank"
+						text
+						color="black"
+						@click="cerrarSesion()"
+					>
+						<span class="mr-2">Cerrar Sesión</span>
+						<v-icon>mdi-close-box-outline</v-icon>
+					</v-btn>
+				</v-list-item>
+			</v-list>
+      </v-menu>
     </v-app-bar>
 </template>
 
