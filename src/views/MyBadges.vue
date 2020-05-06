@@ -16,7 +16,7 @@
                 lg="4"
                 cols="4"
                 v-for="medallas in medallasAdquiridas"
-                :key="medallas.id"
+                :key="medallas.data.id"
                 >
 
                 <v-card
@@ -25,13 +25,15 @@
                     max-width="auto"
                 >
                     <v-img
-                        height="200"
-                        :src="medallas.imagen.guid"
+                        height="385"
+                        width="350"
+                        :src="medallas.data.imagen.guid"
                     ></v-img>
 
-                    <v-card-title>{{medallas.nombre}}</v-card-title>
+                    <v-card-title>{{medallas.data.nombre}}</v-card-title>
+                    <v-card-subtitle>x{{medallas.repeat}}</v-card-subtitle>
                     <v-card-text>
-                        <strong>{{medallas.texto}}</strong>
+                        <strong>{{medallas.data.texto}}</strong>
                     </v-card-text>
                 
                 </v-card>
@@ -60,7 +62,7 @@ import ToolbarPrincipal from "../components/ToolbarPrincipal"
     methods: {
       getMyBadges(){
         this.$http
-            .post("my_rest_server/v1/badges/getByUser", {
+            .post("my_rest_server/v1/badges/getAll", {
                 username: this.currentUser.username
             })
             .then(request => { ;
@@ -76,20 +78,13 @@ import ToolbarPrincipal from "../components/ToolbarPrincipal"
             this.$http
             .get("wp/v2/medalla/"+medallas.id_badge)
             .then(request => { 
-                let findRepeat=false;
-                // for (let i = 0; i < this.medallasAdquiridas.length; i++) {
-                //     if(this.medallasAdquiridas[i].id_badge===medallas.id_badge){
-                       
-                //         findRepeat=true;
-                //     }
-                    
-                // }
 
-                // if(!findRepeat){
-                //     this.medallasAdquiridas.push( request.data );
-                // }
+                  var medallasObject ={
+                    data:request.data,
+                    repeat:medallas.total
+                }
 
-                this.medallasAdquiridas.push( request.data );
+                this.medallasAdquiridas.push( medallasObject );
                
                 })
             .catch((error) => { console.log(error)});
