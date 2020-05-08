@@ -37,16 +37,19 @@
 
       <v-menu open-on-hover bottom offset-y class="mx-3">
         <template v-slot:activator="{ on }" >
-          <v-btn
-            target="_blank"
-            text
-            color="black"
-            v-on="on"
-			class="mx-3"
-          >
-            <span class="mr-2">Cursos</span>
-            <v-icon>mdi-notebook-outline</v-icon>
-          </v-btn>
+		
+				<v-btn
+					target="_blank"
+					text
+					color="black"
+					v-on="on"
+					class="mx-3"
+					@click="irACategoria(0)"
+				>
+					<span class="mr-2">Cursos</span>
+					<v-icon>mdi-notebook-outline</v-icon>
+				</v-btn>
+	
         </template>
 
         <v-list>
@@ -213,7 +216,8 @@ export default {
       this.$http
         .get("wp/v2/categories/")
         .then(request => {
-          this.categorias = request.data;
+		  this.categorias = request.data;
+		
         })
         .catch(() => {
 
