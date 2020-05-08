@@ -49,14 +49,6 @@
                   <v-btn
                     color="#34B3E1"
                     text
-                    @click="comprarCurso(curso.id)"
-                  >
-                    Comprar
-                  </v-btn>
-
-                  <v-btn
-                    color="#34B3E1"
-                    text
                     @click="verContenido(curso.id)"
                   >
                     Ver contenido

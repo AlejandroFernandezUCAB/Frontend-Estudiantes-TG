@@ -33,13 +33,6 @@
                     color="#34B3E1"
                     text
                   >
-                    Comprar
-                  </v-btn>
-
-                  <v-btn
-                    color="#34B3E1"
-                    text
-                  >
                     Ver contenido
                   </v-btn>
                 </v-card-actions>
