@@ -1,5 +1,5 @@
 <template>
-    <v-container fill-height>
+    <v-container>
         <toolbar-principal></toolbar-principal>
         <v-row>
             <v-col 
@@ -11,73 +11,89 @@
                 <h1>Mis Cursos</h1>
             </v-col>
 
-            <v-col              
-                sm="4"
-                lg="4"
-                cols="4"
-                v-for="curso in cursosAdquiridos"
-                :key="curso.data.id"
-                >
-
-                <v-card
-                    :loading="loading"
-                    class="mx-auto"
-                    max-width="auto"
-                >
-                    <v-img
-                        height="200"
-                        :src="curso.data.imagen_curso.guid"
-                    ></v-img>
-
-                    <v-card-title>{{curso.data.nombre}}</v-card-title>
-
-                    <v-card-text>
-                    <v-row
-                        
-                        class="mx-0"
+            <section v-if="noHayCursos == false" >
+                <v-col
+                                
+                    sm="4"
+                    lg="4"
+                    cols="4"
+                    v-for="curso in cursosAdquiridos"
+                    :key="curso.data.id"
                     >
-                        <v-rating
-                        :value="4.5"
-                        color="amber"
-                        dense
-                        half-increments
-                        readonly
-                        size="14"
-                        ></v-rating>
 
-                        <div class="grey--text ml-4">4.5 (413)</div>
-                    </v-row>
-                    </v-card-text>
-                    <v-card-text>
-                        <strong>Porcentaje completado {{curso.porcentaje}}%</strong>
-                    </v-card-text>
-                    
-                    <v-progress-linear
+                    <v-card
+                        :loading="loading"
                         class="mx-auto"
-                        color="verde"
-                        buffer-value="0"     
-                        :value="curso.porcentaje"
-                        stream
-                    ></v-progress-linear>
-                    <v-card-actions>
-                        <v-btn
-                            color="success"
-                            text
-                            @click="ingresarCurso(curso.data.id)"                            
-                        >
-                            Ver Detalle
-                        </v-btn>
-                        <v-btn
-                            color="success"
-                            text
-                            @click="verContenido(curso.data.id)"
+                        max-width="auto"
+                    >
+                        <v-img
+                            height="200"
+                            :src="curso.data.imagen_curso.guid"
+                        ></v-img>
+
+                        <v-card-title>{{curso.data.nombre}}</v-card-title>
+
+                        <v-card-text>
+                        <v-row
                             
+                            class="mx-0"
                         >
-                            Continuar
-                        </v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-col>
+                            <v-rating
+                            :value="4.5"
+                            color="amber"
+                            dense
+                            half-increments
+                            readonly
+                            size="14"
+                            ></v-rating>
+
+                            <div class="grey--text ml-4">4.5 (413)</div>
+                        </v-row>
+                        </v-card-text>
+                        <v-card-text>
+                            <strong>Porcentaje completado {{curso.porcentaje}}%</strong>
+                        </v-card-text>
+                        
+                        <v-progress-linear
+                            class="mx-auto"
+                            color="verde"
+                            buffer-value="0"     
+                            :value="curso.porcentaje"
+                            stream
+                        ></v-progress-linear>
+                        <v-card-actions>
+                            <v-btn
+                                color="success"
+                                text
+                                @click="ingresarCurso(curso.data.id)"                            
+                            >
+                                Ver Detalle
+                            </v-btn>
+                            <v-btn
+                                color="success"
+                                text
+                                @click="verContenido(curso.data.id)"
+                                
+                            >
+                                Continuar
+                            </v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-col>
+            </section>
+            <section  v-if="noHayCursos == true">
+                
+                <v-col
+                               
+                    sm="12"
+                    lg="12"
+                    cols="12"
+                    >
+                <h2 class="text-center">
+                    Usted aún no ha adquirido cursos
+                </h2>
+                </v-col>
+            </section>
         </v-row>
     </v-container>
 </template>
@@ -91,14 +107,15 @@ import ToolbarPrincipal from "../components/ToolbarPrincipal"
         this.getMyCourses();
     },
     computed: {
-    ...mapGetters({ currentUser: "currentUser" })
+        ...mapGetters({ currentUser: "currentUser" })
     },
     data: () => ({
       loading: false,
       selection: 1,
       cursosAdquiridos:[],
       modulos:[],
-      cursosAdquiridosResponse:[]
+      cursosAdquiridosResponse:[],
+      noHayCursos:true
     }),
     methods: {
       ingresarCurso (idCurso) {
@@ -113,9 +130,18 @@ import ToolbarPrincipal from "../components/ToolbarPrincipal"
                 username: this.currentUser.username
             })
             .then(request => { ;
-                this.cursosAdquiridosResponse = request.data
-                console.log(this.cursosAdquiridosResponse);
-                this.getDetailCourse(this.cursosAdquiridosResponse);
+                    this.cursosAdquiridosResponse = request.data
+                    
+                    if(this.cursosAdquiridosResponse.length == 0){
+
+                        this.noHayCursos = true;
+
+                    }else{
+
+                        this.noHayCursos = false;
+                        this.getDetailCourse(this.cursosAdquiridosResponse);
+
+                    }
                 })
             .catch((error) => { console.log(error)});
       },
