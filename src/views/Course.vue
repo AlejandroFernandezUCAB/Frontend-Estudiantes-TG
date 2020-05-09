@@ -124,12 +124,19 @@ import { mapGetters } from "vuex";
 
 export default {
     created(){
+
         this.idCurso = this.$route.params.id;
         this.getCurso(this.idCurso);
-        this.obtenerMisCursos();
+
+        if(this.currentUser != null){
+        
+            this.obtenerMisCursos();
+
+        }
+
     },
     computed: {
-
+    	...mapGetters({ currentUser: "currentUser" })
     },
     data: () => ({
         idCurso:"",
@@ -150,7 +157,6 @@ export default {
                 .get("wp/v2/curso/"+idCurso)
                 .then(request => {
                     this.curso = request.data;
-                    console.log(this.curso);
                     this.getCategorias(this.curso.categories);
                 })
                 .catch(() => {
@@ -158,7 +164,7 @@ export default {
                 });
         },
         getCategorias( categorias ){
-            console.log(categorias);
+
             categorias.forEach(categoria => {
                 this.$http
                 .get("wp/v2/categories/"+categoria)
@@ -185,19 +191,27 @@ export default {
 
         },
         comprarCursoStripe( cursoId, costo ){
-            this.$router.push("/stripePayment/"+cursoId+"/"+costo);
-
+			
+            if( this.currentUser != null){
+            	this.$router.push("/stripePayment/"+cursoId+"/"+costo);
+			}else{
+				this.$router.push("/login");
+				this.$router.go();
+			}
         },
         comprarCursoPaypal( cursoId,costo ){
-            this.$router.push("/paypalPayment/"+cursoId+"/"+costo);
-
+			if( this.currentUser != null){
+            	this.$router.push("/paypalPayment/"+cursoId+"/"+costo);
+			}else{
+				this.$router.push("/login");
+				this.$router.go();
+			}
         },
-       checkBadgesActive(){
+       	checkBadgesActive(){
  			this.$http
             .get("wp/v2/medalla")
             .then(request => {
                 this.medallas=request.data;
-                console.log(this.medallas);
 				this.searchCondition("Primer Curso Adquirido");
             })
                .catch((error) => { console.log(error)});
@@ -207,7 +221,7 @@ export default {
 			for (let i = 0; i < this.medallas.length; i++) {
 				const element = this.medallas[i];
 				if( element.condicion[0].includes(condition)){
-					console.log(condition);
+
 					this.idMedallaPrimerCurso=element.id;
 		 	 		this.checkFirstCourseBadge(condition);
 		 	 		break;
@@ -223,7 +237,7 @@ export default {
 				if(request.data.length==1){
 					this.addBadgeFirstLesson(condition);
 				}
-                  console.log(request.data)
+                  
             })
             .catch((error) => { console.log(error)});
         },

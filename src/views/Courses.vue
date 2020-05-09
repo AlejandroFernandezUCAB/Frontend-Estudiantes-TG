@@ -48,14 +48,6 @@
                     >
                         Ver detalle
                     </v-btn>
-
-                    <v-btn
-                        color="verde"
-                        text
-                        @click="comprarCurso(curso.id)"
-                    >
-                        Comprar
-                    </v-btn>
                 </v-card-actions>
             </v-card>
 
