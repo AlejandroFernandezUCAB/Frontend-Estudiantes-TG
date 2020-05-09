@@ -85,22 +85,30 @@
                         Continuar   
                     </v-btn>
                 </v-card-actions>
-                <v-card-actions v-if="curso.gratis==0">
+                <v-card-actions class="mx-auto" v-if="curso.gratis==0">
                     <v-btn
                         v-if="!comprado"
                         color="success"
+						x-large
                         text
                         @click="comprarCursoStripe(curso.id,curso.costo)"                            
                     >
-                        Comprar con Stripe costo - ${{curso.costo}}
+                        Stripe - ${{curso.costo}}
                     </v-btn>
+					<v-divider
+						v-if="!comprado"
+						class="mx-4"
+						inset
+						vertical
+					></v-divider>
                     <v-btn
                         v-if="!comprado"
                         color="success"
                         text
+						x-large
                         @click="comprarCursoPaypal(curso.id,curso.costo)"                            
                     >
-                        Comprar con Paypal - ${{curso.costo}}
+                        Paypal - ${{curso.costo}}
                     </v-btn>
                     <v-btn
                         v-else
