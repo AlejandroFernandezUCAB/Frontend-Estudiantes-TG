@@ -29,7 +29,10 @@
                     <br>
                     <br>
                     Información del profesor: {{curso.informacion_profesor}}
-                    
+                    <br>
+                    <br>
+                    <valoracion :idCurso="idCurso">
+                    </valoracion>
                 </v-card-text>
 
                 <v-expansion-panels focusable>
@@ -129,6 +132,7 @@
 
 import ToolbarPrincipal from "../components/ToolbarPrincipal";
 import { mapGetters } from "vuex";
+import Valoracion from "../components/Valoracion";
 
 export default {
     created(){
@@ -294,7 +298,8 @@ export default {
         }
     },
     components:{
-        ToolbarPrincipal
+        ToolbarPrincipal,
+        Valoracion
     }
 }
 </script>

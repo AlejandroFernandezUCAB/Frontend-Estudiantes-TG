@@ -12,74 +12,72 @@
             </v-col>
 
             <section v-if="noHayCursos == false" >
-                <v-col
-                                
-                    sm="4"
-                    lg="4"
-                    cols="4"
-                    v-for="curso in cursosAdquiridos"
-                    :key="curso.data.id"
-                    >
+				<v-row>
+					<v-col
+									
+						sm="4"
+						lg="4"
+						cols="4"
+						v-for="curso in cursosAdquiridos"
+						:key="curso.data.id"
+						>
 
-                    <v-card
-                        :loading="loading"
-                        class="mx-auto"
-                        max-width="auto"
-                    >
-                        <v-img
-                            height="200"
-                            :src="curso.data.imagen_curso.guid"
-                        ></v-img>
+						<v-card
+							:loading="loading"
+							class="mx-auto"
+							max-width="auto"
+						>
+							<v-img
+								height="200"
+								:src="curso.data.imagen_curso.guid"
+							></v-img>
 
-                        <v-card-title>{{curso.data.nombre}}</v-card-title>
+							<v-card-title>{{curso.data.nombre}}</v-card-title>
 
-                        <v-card-text>
-                        <v-row
-                            
-                            class="mx-0"
-                        >
-                            <v-rating
-                            :value="4.5"
-                            color="amber"
-                            dense
-                            half-increments
-                            readonly
-                            size="14"
-                            ></v-rating>
+							
 
-                            <div class="grey--text ml-4">4.5 (413)</div>
-                        </v-row>
-                        </v-card-text>
-                        <v-card-text>
-                            <strong>Porcentaje completado {{curso.porcentaje}}%</strong>
-                        </v-card-text>
-                        
-                        <v-progress-linear
-                            class="mx-auto"
-                            color="verde"
-                            buffer-value="0"     
-                            :value="curso.porcentaje"
-                            stream
-                        ></v-progress-linear>
-                        <v-card-actions>
-                            <v-btn
-                                color="success"
-                                text
-                                @click="ingresarCurso(curso.data.id)"                            
-                            >
-                                Ver Detalle
-                            </v-btn>
-                            <v-btn
-                                color="success"
-                                text
-                                @click="verContenido(curso.data.id)"
-                                
-                            >
-                                Continuar
-                            </v-btn>
-                        </v-card-actions>
-                    </v-card>
-                </v-col>
+							<v-card-text>
+							<v-row
+								
+								class="mx-0"
+							>
+								<valoracion 
+								:idCurso="curso.data.id">
+
+								</valoracion>
+							</v-row>
+							</v-card-text>
+							<v-card-text>
+								<strong>Porcentaje completado {{curso.porcentaje}}%</strong>
+							</v-card-text>
+							
+							<v-progress-linear
+								class="mx-auto"
+								color="verde"
+								buffer-value="0"     
+								:value="curso.porcentaje"
+								stream
+							></v-progress-linear>
+							<v-card-actions>
+								<v-btn
+									color="success"
+									text
+									@click="ingresarCurso(curso.data.id)"                            
+								>
+									Ver Detalle
+								</v-btn>
+								<v-btn
+									color="success"
+									text
+									@click="verContenido(curso.data.id)"
+									
+								>
+									Continuar
+								</v-btn>
+							</v-card-actions>
+						</v-card>
+					</v-col>
+				</v-row>
             </section>
             <section  v-if="noHayCursos == true">
                 
@@ -100,7 +98,8 @@
 
 <script>
 import { mapGetters } from "vuex";
-import ToolbarPrincipal from "../components/ToolbarPrincipal"
+import ToolbarPrincipal from "../components/ToolbarPrincipal";
+import Valoracion from "../components/Valoracion";
 
   export default {
     created(){
@@ -203,7 +202,8 @@ import ToolbarPrincipal from "../components/ToolbarPrincipal"
     ...mapGetters({ currentUser: "currentUser" })
     },
     components:{
-        ToolbarPrincipal
+		ToolbarPrincipal,
+		Valoracion
     }
   }
 </script>
