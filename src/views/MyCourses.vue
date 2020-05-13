@@ -1,7 +1,7 @@
 <template>
-    <v-container>
+    <v-container > 
         <toolbar-principal></toolbar-principal>
-        <v-row>
+        <v-row v-if="!loading">
             <v-col 
                 sm="12"
                 lg="12"
@@ -93,7 +93,14 @@
                 </v-col>
             </section>
         </v-row>
+        <div v-else>
+            <v-overlay style="z-index: 9999" :value="overlay">
+                <v-progress-circular color="yellow" indeterminate size="64"></v-progress-circular>
+            </v-overlay>
+        </div>
+        
     </v-container>
+    
 </template>
 
 <script>
@@ -109,7 +116,7 @@ import Valoracion from "../components/Valoracion";
         ...mapGetters({ currentUser: "currentUser" })
     },
     data: () => ({
-      loading: false,
+      loading: true,
       selection: 1,
       cursosAdquiridos:[],
       modulos:[],
@@ -143,6 +150,7 @@ import Valoracion from "../components/Valoracion";
                     }
                 })
             .catch((error) => { console.log(error)});
+            
       },
       verContenido(cursoId){
         this.loading = true
@@ -184,8 +192,9 @@ import Valoracion from "../components/Valoracion";
                 }
                 this.cursosAdquiridos.push(cursoObject);
             })
-            .catch((error) => { console.log(error)});
+            .catch((error) => { console.log(error)})
           });
+           this.loading = false;
 
       },
         round(value, decimals) {
@@ -209,5 +218,7 @@ import Valoracion from "../components/Valoracion";
 </script>
 
 <style>
-
+[v-cloak] {
+  display: none;
+}
 </style>

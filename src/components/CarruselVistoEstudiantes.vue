@@ -1,40 +1,43 @@
 <template>
   <v-carousel class="vertical-center-carousel" hide-delimiters light>
     <v-carousel-item
-      v-for="i in 3" 
+      v-for="i in 6" 
       :key="i" 
     >
         <v-row
         >
           <v-col 
-            v-for="curso in cursosTags"
-            :key="curso.name" sm="4"
+            v-for="curso in cursos"
+            :key="curso.name"
+            sm="4"
+            lg="4"
+            md="4"
           >
               <v-card
                 class="mx-auto"
-                max-width="400"
+                max-width="600"
                 >
                 <v-img
                   class="white--text align-end"
                   height="200px"
-                  src="https://i.ytimg.com/vi/7TezZ2JbvZs/maxresdefault.jpg"
+                  :src="curso.imagen_curso.guid"
                 >
                 </v-img>
-                <v-card-title class="background-shape">Programación en Java</v-card-title>
+                <v-card-title class="background-shape">{{curso.nombre}}</v-card-title>
   
-                <v-card-subtitle class="pb-0">Básico</v-card-subtitle>
 
                 <v-card-text class="text--primary">
-                  <div><p>Este curso es dedicado para los nuevos en Java</p></div>
+                  <div><p>{{curso.texto_inicial}}</p></div>
                 </v-card-text>
 
                 <v-card-actions>
-                  <v-btn
-                    color="#34B3E1"
-                    text
-                  >
-                    Ver contenido
-                  </v-btn>
+                   <v-btn
+                      color="verde"
+                      text
+                      @click="ingresarCurso(curso.id)"      
+                        >
+                            Ver contenido
+                        </v-btn>
                 </v-card-actions>
               </v-card>
             </v-col>
@@ -48,18 +51,23 @@
   export default  {
     name: 'carrusel-cursos',
     created(){
-      this.cargarCursos();
+      this.masVistos();
     },
     data () {
       return {
         cursos:[],
         tags:[],
+        cursosMasVistos:[],
         cursosTags:[],
         tab: null,
         destacadoId:null     
       }
     },
     methods: {
+      ingresarCurso (idCurso) {
+            this.loading = true
+            this.$router.push("/cursos/"+idCurso);
+        },
     cargarTags(){
       this.$http
         .get("wp/v2/tags")
@@ -76,16 +84,32 @@
 
         });
     },
-    cargarCursos(){
-      this.$http
-        .get("wp/v2/curso")
+    masVistos(){
+       this.$http
+        .post("my_rest_server/v1/user/getMoreViewed")
         .then(request => {
-          this.cursos = request.data;
-          this.cargarTags();
+          this.cursosMasVistos= request.data;
+          this.cargarCursos(this.cursosMasVistos);
         })
         .catch(() => {
 
         });
+    },
+    cargarCursos(vistos){
+
+      let keys = Object.keys(vistos);
+      keys.forEach(key => {
+      let item = vistos[key];
+      this.$http
+        .get("wp/v2/curso/"+item.id_curso)
+        .then(request => {
+          this.cursos.push( request.data );
+        })
+        .catch(() => {
+
+        });
+    })
+      console.log(this.cursos);
     },
     cursosTagsFiltro( iterador ){
       
@@ -129,8 +153,5 @@
     height: 400px !important;
   }
 
-  .background-shape{
-
-  }
 
 </style>

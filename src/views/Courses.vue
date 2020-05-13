@@ -3,58 +3,62 @@
 
     <toolbar-principal></toolbar-principal>
 
-    <v-row>
-        <v-col
-            sm="12"
-            lg="12"
-            md="12"
-        >
-
-            <h1 class="display-2" v-if="categoriaId != 0">Cursos - {{categoria.name}}</h1>
-            <h1 class="display-2" v-else>Cursos</h1>
-
-        </v-col>
-
-        <v-col
-            sm="4"
-            lg="4"
-            md="4"
-            v-for="curso in cursos"
-            :key="curso.id"
-        >
-
-            <v-card
-                class="mx-auto"
-                max-width="600"
+        <v-row v-if="!loading">
+            <v-col
+                sm="12"
+                lg="12"
+                md="12"
             >
 
-                <v-img
-                    class="white--text align-end"
-                    height="200px"
-                    :src="curso.imagen_curso.guid"
+                <h1 class="display-2" v-if="categoriaId != 0">Cursos - {{categoria.name}}</h1>
+                <h1 class="display-2" v-else>Cursos</h1>
+
+            </v-col>
+
+            <v-col
+                sm="4"
+                lg="4"
+                md="4"
+                v-for="curso in cursos"
+                :key="curso.id"
+            >
+
+                <v-card
+                    class="mx-auto"
+                    max-width="600"
                 >
-                    <v-card-title>{{curso.nombre}}</v-card-title>
-                </v-img>
 
-                <v-card-text class="text--primary">
-                    <p>{{curso.texto_inicial}}</p>
-                </v-card-text>
-
-                <v-card-actions>
-                    <v-btn
-                        color="verde"
-                        text
-                        @click="ingresarCurso(curso.id)"      
+                    <v-img
+                        class="white--text align-end"
+                        height="200px"
+                        :src="curso.imagen_curso.guid"
                     >
-                        Ver detalle
-                    </v-btn>
-                </v-card-actions>
-            </v-card>
+                        <v-card-title>{{curso.nombre}}</v-card-title>
+                    </v-img>
 
-        </v-col>
+                    <v-card-text class="text--primary">
+                        <p>{{curso.texto_inicial}}</p>
+                    </v-card-text>
 
-    </v-row>
+                    <v-card-actions>
+                        <v-btn
+                            color="verde"
+                            text
+                            @click="ingresarCurso(curso.id)"      
+                        >
+                            Ver detalle
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
 
+            </v-col>
+
+        </v-row>
+        <div v-else>
+            <v-overlay style="z-index: 9999" :value="overlay">
+                <v-progress-circular color="yellow" indeterminate size="64"></v-progress-circular>
+            </v-overlay>
+        </div>
     </v-container>
 </template>
 
@@ -90,6 +94,7 @@ export default {
             categoriaId:null,
             medallas:"",
             idMedallaPrimerCurso:"",
+            loading: true
         }
     },
     methods:{
@@ -99,7 +104,7 @@ export default {
                 .then(request => {
                     
                     this.cursos = request.data;
-
+                    this.loading = false;
                 })
                 .catch(() => {
 
@@ -111,6 +116,7 @@ export default {
                 .then(request => {
                     this.cursos = request.data;
                     console.log(this.cursos);
+                    this.loading = false;
                 })
                 .catch(() => {
 
@@ -122,6 +128,7 @@ export default {
                 .then(request => {
                     this.categoria = request.data;
                     console.log(this.cursos);
+                    this.loading = false;
                 })
                 .catch(() => {
 

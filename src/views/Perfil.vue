@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <toolbar-principal></toolbar-principal>
-    <v-row no-gutters>
+    <v-row no-gutters v-if="!loading">
         <v-col md="4" sm="12" xs="12">
             <section class="py-2">
                 <h1 class="display-2 text-center">Perfil</h1>
@@ -63,6 +63,11 @@
             </section>
         </v-col>
     </v-row>
+    <div v-else>
+            <v-overlay style="z-index: 9999" :value="overlay">
+                <v-progress-circular color="yellow" indeterminate size="64"></v-progress-circular>
+            </v-overlay>
+    </div>
   </v-container>
 </template>
 
@@ -91,6 +96,7 @@ import ToolbarPrincipal from "../components/ToolbarPrincipal"
             pais: "",
             imagen_usuario: ""
         },
+        loading: true,
         valid: true,
         campoRequerido: [
             v => !!v || 'Este campo es requerido'
@@ -135,6 +141,7 @@ import ToolbarPrincipal from "../components/ToolbarPrincipal"
             .then(request => {
                 this.userM = request.data[0];
                 this.find = true;
+                this.loading = false;
                 console.log(this.userM);
                 console.log(request.data);
             })

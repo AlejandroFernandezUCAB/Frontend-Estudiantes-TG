@@ -131,13 +131,18 @@ export default {
       }
     },
     login() {
+      console.log("antes del login");
       // Se obtiene el token de usuario en base a las credenciales ingresadas
       this.$http
         .post("jwt-auth/v1/token", {
           username: this.username,
           password: this.contrasena
         })
-        .then(request => this.loginExitoso(request))
+        .then(request => {
+        console.log("en login");
+        this.loginExitoso(request)
+        }
+        )
         .catch(() => this.loginFallido());
     },
     loginExitoso(req) {
