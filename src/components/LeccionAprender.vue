@@ -170,17 +170,10 @@
 				</h4>
 			</section>
 
-			<section v-if="respondio && aprobo">
-				<h4 
-					class="font-italic font-weight-medium green--text">
-					Ha aprobado esta evaluación
-				</h4>
-			</section>
-
-			<section v-if="respondio && !aprobo">
+			<section v-if="respondio && !aprobo && segundosParaEvaluacion > 0">
 				<h4 
 					class="font-italic font-weight-medium red--text">
-					No ha aprobado esta evaluación
+					No ha aprobado esta evaluación, deberá esperar {{ 600 - segundosParaEvaluacion }} segundos para volverla a presentar
 				</h4>
 			</section>
             <!--Botones de enviar evaluacion y atras-->
@@ -213,7 +206,7 @@
                     class="right" 
                     large 
                     color="success"
-					v-if="!respondio"
+					v-if="!respondio && volverResponder"
                     @click="corregirEvaluacion()"
                   >
                     Enviar
@@ -224,7 +217,7 @@
                     class="right" 
                     large 
                     color="success"
-					v-if="respondio"
+					v-if="respondio && !volverResponder"
                     @click="siguienteLeccion()"
                   >
                     Siguiente Lección
@@ -270,9 +263,41 @@ export default {
 		respondio:false,
 		puntajeFinal:0,
 		puntajeTotal:0,
-		aprobo:null  
+		aprobo:null,
+		volverResponder:true,
+		resultadoUsuario:null,
+		segundosParaEvaluacion:0  
     }),
     methods:{
+		calcularTiempoParaResponder(){
+
+			this.resultadoUsuario.forEach(respuesta => {
+					console.log("test");
+					let inicioTiempo = new Date(respuesta.reg_date);
+				  	let endTime = new Date();
+					var timeDiff = endTime - inicioTiempo; //in ms
+					// strip the ms
+					timeDiff /= 1000;
+
+					// get seconds 
+					this.segundosParaEvaluacion = Math.round(timeDiff);
+
+					if( this.segundosParaEvaluacion >= 600){
+
+						this.volverResponder = true;
+						this.respondio = false;
+						this.puntajeFinal = 0;
+						this.puntajeTotal = 0;
+						
+					}else{
+
+						this.respondio = true;
+						this.volverResponder = false;
+
+					}
+
+			});
+		},
 		calcularPuntuacionTotal(){
 			for (let i = 0; i < this.dataEvaluacion.preguntas.length; i++) {
 				
@@ -284,18 +309,19 @@ export default {
 			}
 		},
 		calcularSiAproboElUsuario(){
-			
 			let puntajeAprobar = this.puntajeTotal/2;
+			console.log( this.puntajeFinal , puntajeAprobar);
 
-			if( this.puntajeFinal >= puntajeAprobar ){
+			if( this.puntajeFinal >= puntajeAprobar && this.puntajeFinal != 0 ){
 
 				this.aprobo = true;
-				checkBadgesActive("Primera Evaluación Aprobada")
-
+				this.checkBadgesActive("Primera Evaluación Aprobada")
+				this.volverResponder = false;
+				
 			}else{
 
 				this.aprobo = false;
-
+				
 			}
 
 		},
@@ -389,6 +415,8 @@ export default {
             .catch((error) => { console.log(error)});
 	  },
       	cargarEvaluacion(){
+			this.puntajeTotal = 0;
+			this.puntajeFinal = 0;
 			this.obtenerEvaluacionUsuario();
 			this.$http
 			.get("/wp/v2/evaluacion/" + this.leccion.evaluacion[0].ID)
@@ -425,7 +453,7 @@ export default {
 				}
 			}
 			this.calcularSiAproboElUsuario();
-			this.guardarResultadoLeccion()
+			this.guardarResultadoLeccion();
       	},
 		corregirTextoSimple(  respuestas , respuestaUsuario, posicion){
 
@@ -522,7 +550,9 @@ export default {
             .then(request => { 
 				
 				this.presentoEvaluacion( request.data );
-				 
+				this.resultadoUsuario = request.data;
+				this.calcularTiempoParaResponder();
+
             })
             .catch((error) => { console.log(error)});
 	  },
