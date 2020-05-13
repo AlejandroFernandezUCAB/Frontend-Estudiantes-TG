@@ -1,7 +1,7 @@
 <template>
   <main 
     class="px-5">
-      <v-row>
+      <v-row v-if="!loading">
           <v-col 
             v-if="!evaluacion"
             sm="12"
@@ -25,11 +25,11 @@
                 </div>
               </section>
 
-              <section>
+              <section v-if="leccion.evaluacion">
                 <h1 class="title">Evaluación</h1>
                 <v-divider color="#34B3E1"></v-divider>
                 <p class="mt-4">Para presentar el quiz pulse comenzar</p>
-                <div class="my-2" align="center">
+                <div class="my-2" align="center" >
                   <v-btn large color="success" @click="cargarEvaluacion()">Comenzar</v-btn>
                 </div>
               </section>
@@ -227,6 +227,11 @@
             </v-row>
           </v-col>
       </v-row>
+	  <div v-else>
+            <v-overlay style="z-index: 9999" :value="overlay">
+                <v-progress-circular color="yellow" indeterminate size="64"></v-progress-circular>
+            </v-overlay>
+      </div>
   </main>
 </template>
 
@@ -241,6 +246,7 @@ export default {
 		this.video = this.leccion.video.guid;
 		this.idCurso = this.$route.params.idCurso;
 		this.idLeccion = this.$route.params.idLeccion;
+		this.checkLessonEvaluation =
 		this.checkBadgesActive("Primera Lección Vista");
 		this.guardarNuevaLeccion(this.idCurso, this.idLeccion);
 		//alert("Aqui")
@@ -249,6 +255,7 @@ export default {
     	...mapGetters({ currentUser: "currentUser" })
     },
     data:() => ({
+		loading:true,
 		idCurso:"",
 		idLeccion:"",
 		medallas:"",
@@ -304,16 +311,23 @@ export default {
 				let respuestas = this.dataEvaluacion.preguntas[i].respuesta;
 
 				for (const respuesta of respuestas) {
+					console.log(respuesta)
 					this.puntajeTotal = this.puntajeTotal + parseFloat(respuesta.puntaje);
+					
 				}
 			}
+			
 		},
 		calcularSiAproboElUsuario(){
-			let puntajeAprobar = this.puntajeTotal/2;
+			console.log(this.puntajeTotal)
+			let puntajeAprobar = 0;
+			puntajeAprobar=this.puntajeTotal/2;
 			console.log( this.puntajeFinal , puntajeAprobar);
 
-			if( this.puntajeFinal >= puntajeAprobar && this.puntajeFinal != 0 ){
-
+			if( this.puntajeFinal >= puntajeAprobar && puntajeAprobar != 0 ){
+				
+				console.log("entre")
+				console.log(puntajeAprobar)
 				this.aprobo = true;
 				this.checkBadgesActive("Primera Evaluación Aprobada")
 				this.volverResponder = false;
@@ -509,7 +523,8 @@ export default {
 	  },
 	  
 	  guardarNuevaLeccion(curso, leccion){
-            var self = this;
+			var self = this;
+			this.loading=false;
 		    setTimeout(function(){
                 self.$http
 					.post("my_rest_server/v1/user/addLesson",{
@@ -519,6 +534,7 @@ export default {
 					})
 					.then(request => {
 						console.log(request.data);
+						this.loading=false;
 					})
 					.catch(error => (console.log(error)));
             }, 5000);
@@ -540,6 +556,7 @@ export default {
             .catch((error) => { console.log(error)});
 	  },
 	  obtenerEvaluacionUsuario(){
+		  console.log(this.leccion)
 		  this.$http
             .post("my_rest_server/v1/user-evaluation", {
 				user: this.currentUser.username,

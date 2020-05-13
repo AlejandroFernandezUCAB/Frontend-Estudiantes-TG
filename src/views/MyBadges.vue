@@ -1,7 +1,7 @@
 <template>
     <v-container fill-height>
         <toolbar-principal></toolbar-principal>
-        <v-row>
+        <v-row v-if="!loading">
             <v-col 
                 sm="12"
                 lg="12"
@@ -39,6 +39,12 @@
                 </v-card>
             </v-col>
         </v-row>
+
+         <div v-else>
+            <v-overlay style="z-index: 9999" :value="overlay">
+                <v-progress-circular color="yellow" indeterminate size="64"></v-progress-circular>
+            </v-overlay>
+        </div>
     </v-container>
 </template>
 
@@ -54,7 +60,7 @@ import ToolbarPrincipal from "../components/ToolbarPrincipal"
     ...mapGetters({ currentUser: "currentUser" })
     },
     data: () => ({
-      loading: false,
+      loading: true,
       selection: 1,
       medallasAdquiridas:[],
       medallasAdquiridasResponse:[]
@@ -89,7 +95,7 @@ import ToolbarPrincipal from "../components/ToolbarPrincipal"
                 })
             .catch((error) => { console.log(error)});
           });
-
+        this.loading=false;
       },
         checkCurrentLogin() {
         // Verifica si el usuario se encuentra login, de no ser asi, lo redirige al home

@@ -4,7 +4,7 @@
 
     <toolbar-principal></toolbar-principal>
     
-    <v-row no-gutters>
+    <v-row no-gutters v-if="!loading">
       <v-col cols="12" sm="12" md="12" lg="12">
         <v-card>
           <v-system-bar lights-out></v-system-bar>
@@ -19,22 +19,23 @@
           >
 
             <v-carousel-item
-              v-for="(slide, i) in slides"
-              :key="i"
+              v-for="curso in cursosValorados"
+              :key="curso.id"
+              :src="curso.imagen_curso.guid"
+              reverse-transition="fade-transition"
+              transition="fade-transition"
             >
-              <v-sheet
-                class="background"
-                height="100%"
-                tile
-              >
                 <v-row
                   class="fill-height"
                   align="center"
                   justify="center"
                 >
-                  <div class="display-3">{{ slide }}</div>
+                  <div class="display-3" >
+                    <v-btn color="green" dark large @click="ingresarCurso(curso.id)">
+                      {{ curso.nombre }}
+                    </v-btn>
+                  </div>
                 </v-row>
-              </v-sheet>
             </v-carousel-item>
           </v-carousel>
           <v-list two-line>
@@ -99,6 +100,11 @@
         </v-row>
       </v-col>
     </v-row>
+    <div v-else>
+            <v-overlay style="z-index: 9999" :value="overlay">
+                <v-progress-circular color="yellow" indeterminate size="64"></v-progress-circular>
+            </v-overlay>
+        </div>
   </v-container>
 </template>
 
@@ -114,6 +120,7 @@ export default {
     
   },
   created(){
+    this.masValorados();
     this.cargarCategorias();
     this.cargarCursos();
   },
@@ -126,6 +133,8 @@ export default {
           'orange darken-1',
         ],
         cycle: false,
+        masValoradosTotal:[],
+        cursosValorados:[],
         slides: [
           'Primer curso',
           'Segundo Curso',
@@ -139,9 +148,40 @@ export default {
         ],
         text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
         categorias: [],
-        cursos:[]
+        cursos:[],
+        loading: true
   }),
   methods: {
+    
+    masValorados(){
+      console.log("entre")
+       this.$http
+        .post("my_rest_server/v1/valoration/getValorationAllCourses")
+        .then(request => {
+          this.masValoradosTotal= request.data;
+          console.log(this.masValoradosTotal)
+          this.cargarCursosValorados(this.masValoradosTotal);
+        })
+        .catch((error) => { console.log(error)});
+    },
+    cargarCursosValorados(valorados){
+      console.log(valorados)
+      let keys = Object.keys(valorados);
+      keys.forEach(key => {
+      let item = valorados[key];
+      this.$http
+        .get("wp/v2/curso/"+item.id_course)
+        .then(request => {
+          this.cursosValorados.push( request.data );
+        })
+        .catch((error) => { console.log(error)});
+    })
+      console.log(this.cursosValorados);
+    },
+     ingresarCurso (idCurso) {
+            this.loading = true
+            this.$router.push("/cursos/"+idCurso);
+        },
     cargarCategorias(){
       this.$http
         .get("wp/v2/categories")
@@ -157,6 +197,7 @@ export default {
         .get("wp/v2/curso")
         .then(request => {
           this.cursos = request.data;
+          this.loading = false;
         })
         .catch(() => {
 

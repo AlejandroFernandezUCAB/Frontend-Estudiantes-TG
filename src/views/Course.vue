@@ -1,7 +1,7 @@
 <template>
   <v-container>
       <toolbar-principal></toolbar-principal>
-      <v-row>
+      <v-row v-if="!loading">
         <v-col
             sm="8"
             lg="8"
@@ -125,6 +125,11 @@
             </v-card>
         </v-col>
       </v-row>
+     <div v-else>
+            <v-overlay style="z-index: 9999" :value="overlay">
+                <v-progress-circular color="yellow" indeterminate size="64"></v-progress-circular>
+            </v-overlay>
+     </div>
   </v-container>
 </template>
 
@@ -158,7 +163,8 @@ export default {
         cursosAdquiridosResponse:"",
         medallas:"",
         idMedallaPrimerCurso:"",
-        comprado:null
+        comprado:null,
+        loading: true
     }),
     computed: {
         ...mapGetters({ currentUser: "currentUser" })
@@ -170,6 +176,7 @@ export default {
                 .then(request => {
                     this.curso = request.data;
                     this.getCategorias(this.curso.categories);
+
                 })
                 .catch(() => {
 
@@ -182,7 +189,7 @@ export default {
                 .get("wp/v2/categories/"+categoria)
                 .then(request => {
                     this.categorias = this.categorias + request.data.name
-                    
+                    this.loading = false;
                 })
                 .catch(() => {
 
