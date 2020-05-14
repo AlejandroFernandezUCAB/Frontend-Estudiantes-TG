@@ -1,37 +1,54 @@
 <template>
-  <div>
+<v-container > 
+   <toolbar-principal></toolbar-principal>
+  <div v-if="!load">
     <div v-if="!paidFor">
-      <h1>Buy this Curso - to ${{ monto }}</h1>
+      <h1>Comprar el Curso {{curso.nombre}}- to ${{ monto }}</h1>
 
       <p>{{ product.description }}</p>
 
     </div>
 
     <div v-if="paidFor">
-      <h1>Noice, you bought a beautiful lamp!</h1>
+      <h1>Gracias por comprar el Curso!</h1>
     </div>
 
     <div ref="paypal"></div>
   </div>
+   <div v-else>
+            <v-overlay style="z-index: 9999" :value="overlay">
+                <v-progress-circular color="yellow" indeterminate size="64"></v-progress-circular>
+            </v-overlay>
+        </div>
+  </v-container > 
+   
 </template>
 
 <script>
 
 import { mapGetters } from "vuex";
+import ToolbarPrincipal from "../components/ToolbarPrincipal";
 // import image from "../assets/lamp.png"
 export default {
   name: "HelloWorld",
+    components: {
+    ToolbarPrincipal
+  },
 created(){
         this.idCurso = this.$route.params.idCurso;
-        this.monto = this.$route.params.monto;
+       // this.monto = this.$route.params.monto;
+       this.getMonto(this.idCurso);
+       //this.load=false;
     },
   data: function() {
     return {
       loaded: false,
       paidFor: false,
+      load:true,
       idCurso:"",
       monto:0,
       medallas:"",
+      curso:[],
       idMedallaPrimerCurso:"",
       product: {
         description: "Curso"
@@ -43,13 +60,33 @@ created(){
         ...mapGetters({ currentUser: "currentUser" })
     },
   mounted: function() {
+    // const script = document.createElement("script");
+    // script.src =
+    //   "https://www.paypal.com/sdk/js?client-id=AYsB9nY_rzThPLvq0rM7HF8uquDQDEBKk7QVls6qAzX-8CifZ5OHPkdQd8lexM4XhT8kVYo7r8DKi6FR&currency=USD";
+    // script.addEventListener("load", this.setLoaded);
+    // document.body.appendChild(script);
+  },
+  methods: {
+    getMonto(idCurso){
+      this.$http
+      .get("wp/v2/curso/"+idCurso)
+      .then(request => {
+        this.curso = request.data;
+        console.log(this.curso);
+        this.monto=request.data.costo;
+        this.init();
+        this.load=false;
+
+        })
+      .catch((error) => { console.log(error)});
+    },
+    init(){
     const script = document.createElement("script");
     script.src =
       "https://www.paypal.com/sdk/js?client-id=AYsB9nY_rzThPLvq0rM7HF8uquDQDEBKk7QVls6qAzX-8CifZ5OHPkdQd8lexM4XhT8kVYo7r8DKi6FR&currency=USD";
     script.addEventListener("load", this.setLoaded);
     document.body.appendChild(script);
-  },
-  methods: {
+    },
     setLoaded: function() {
       this.loaded = true;
       window.paypal

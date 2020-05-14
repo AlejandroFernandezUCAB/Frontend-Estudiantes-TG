@@ -16,6 +16,7 @@ import Leccion from "../views/Leccion.vue"
 import StripePayment from "../views/StripePayment.vue"
 import PaypalPayment from "../views/PaypalPayment.vue"
 import MyCertificates from "../views/MyCertificates.vue"
+import GeneratePhysical from "../views/CertificatePhysical.vue"
 import test from "../views/test.vue";
 import Forum from "../views/Forum.vue";
 import Topic from "../views/Topic.vue";
@@ -97,12 +98,12 @@ const routes = [
     component:Leccion
   },
   {
-    path:'/stripePayment/:idCurso/:monto',
+    path:'/stripePayment/:idCurso',
     name: 'Stripe Payment',
     component:StripePayment
   },
   {
-    path:'/paypalPayment/:idCurso/:monto',
+    path:'/paypalPayment/:idCurso',
     name: 'Paypal Payment',
     component:PaypalPayment
   },
@@ -110,6 +111,11 @@ const routes = [
     path:'/mis-certificados',
     name: 'My Certificates',
     component:MyCertificates
+  },
+  {
+    path:'/generar-fisico/:idCurso',
+    name: 'Generar Fisico',
+    component:GeneratePhysical
   },
   {
     path:'/test',

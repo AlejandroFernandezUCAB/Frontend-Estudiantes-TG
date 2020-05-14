@@ -137,8 +137,11 @@ import ToolbarPrincipal from "../components/ToolbarPrincipal"
         getMyData(){
         let user = new UserM();
         this.$http
-            .get("wp/v2/users?slug="+this.currentUser.username)
+        .post("my_rest_server/v1/user/getByUsername", {
+                username: this.currentUser.username
+            })
             .then(request => {
+                console.log(request)
                 this.userM = request.data[0];
                 this.find = true;
                 this.loading = false;

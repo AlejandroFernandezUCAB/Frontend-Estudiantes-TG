@@ -48,7 +48,7 @@
                     color="success"
                 ></v-text-field>
 
-                <v-checkbox
+                <!-- <v-checkbox
                 v-model="checkbox"
                 :rules="[v => !!v || 'You must agree to continue!']"
                 label="¿Recordar contraseña?"
@@ -61,7 +61,7 @@
                 @click="reset"
                 >
                 Olvíde la contraseña
-                </v-btn>
+                </v-btn> -->
 
                 <v-btn
                     color="verde"
