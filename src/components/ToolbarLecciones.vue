@@ -177,7 +177,7 @@
       </v-menu>
     </v-app-bar>
 
-        <v-navigation-drawer       
+        <v-navigation-drawer v-if="!loading"      
             app 
             v-model="menu" 
             color="primary"   
@@ -233,9 +233,19 @@
                             </v-list-item-content>
                         </v-list-item>
                     </v-list-item-group>
+                    <v-row v-if="showGenerate">
+                        <v-btn v-if="!generado" large color="success mt-10" @click="generarCertificadoDigital(curso.id)">Generar Certificado Digital</v-btn>
+                        <v-btn v-if="generado" large color="success mt-10" @click="verCertificados()">Ver Certificado Digital</v-btn>
+                        <v-btn v-if="!generadoFisico" large color="success mt-10" @click="generarCertificadoFisico(curso.id)">Generar Certificado Fisico</v-btn>
+                    </v-row>
                 </v-list>
             </v-container>
         </v-navigation-drawer>
+        <div v-else>
+            <v-overlay style="z-index: 9999" :value="overlay">
+                <v-progress-circular color="yellow" indeterminate size="64"></v-progress-circular>
+            </v-overlay>
+        </div>
     </nav>
 </template>
 
@@ -247,13 +257,19 @@ import { mapGetters } from "vuex";
     data: () => ({
         drawer: false,
         group: null,
+        generado:false,
+        generadoFisico:false,
         menu:true,
         icon: "mdi-notebook",
         moduloSeleccionado:"",
         modulos:[],
         lecciones:[],
         selector: 0,
-        idLeccion:""
+        idLeccion:"",
+        loading:true,
+        showGenerate:false,
+        totalEvaluation:0,
+        totalAprobado:0
     }),
     computed: {
         ...mapGetters({ currentUser: "currentUser" })
@@ -270,8 +286,109 @@ import { mapGetters } from "vuex";
         this.idLeccion = this.$route.params.idLeccion;
         this.cargarModulos();
         this.cargarLeccionActual();
+        this.checkShowGenerate();
+        this.checkGenerateCertificate();
+        this.checkGenerateCertificatePhysical();
     },
     methods:{
+        generarCertificadoFisico (idCurso) {
+            this.$router.push("/generar-fisico/"+idCurso);
+        },
+        checkShowGenerate(){
+            this.searchTotalEvaluation(this.curso.id);
+        },
+        searchTotalEvaluation(idCurso){
+             this.$http
+                .get("wp/v2/curso/"+idCurso)
+                .then(request => {
+                    
+
+                     request.data.modulo.forEach(modulo => {
+                         let keys = Object.keys(modulo.leccion);
+                         keys.forEach(key => {
+                             if(modulo.leccion[key].evaluacion){
+                                this.totalEvaluation++;
+                            }
+                         })
+                     })
+                     console.log(this.totalEvaluation);
+                     this.checkTotalAprobado();
+                })
+                .catch((error) => { console.log(error)});
+        },
+        checkTotalAprobado(){
+            var porcentaje;
+            this.$http
+            .post("my_rest_server/v1/certificate/totalApprove", {
+                username: this.currentUser.username,
+                id_course: this.curso.id
+            })
+            .then(request => { 
+                console.log(request.data)
+                this.totalAprobado= request.data[0].cantidadAprobado;
+                porcentaje = (this.totalAprobado*100)/this.totalEvaluation;
+                console.log(porcentaje);
+                if(porcentaje>=80){
+                    this.showGenerate=true;
+                }
+                this.loading=false;
+            })
+            .catch((error) => { console.log(error)});
+        },
+        checkGenerateCertificate(){
+
+            this.$http
+            .post("my_rest_server/v1/certificate/findByCourse", {
+                username: this.currentUser.username,
+                id_course: this.curso.id
+            })
+            .then(request => { 
+                console.log(request.data.length);
+                if(request.data.length==1){
+                    this.generado=true;
+                }else{
+                    this.generado=false;
+                }
+                
+                })
+            .catch((error) => { console.log(error)});
+        },
+        checkGenerateCertificatePhysical(){
+
+            this.$http
+            .post("my_rest_server/v1/certificate/findByCoursePhysical", {
+                username: this.currentUser.username,
+                id_course: this.curso.id
+            })
+            .then(request => { 
+                console.log(request.data.length);
+                if(request.data.length==1){
+                    this.generado=true;
+                }else{
+                    this.generado=false;
+                }
+                
+                })
+            .catch((error) => { console.log(error)});
+        },
+        generarCertificadoDigital(idCurso){
+            console.log("en generar"+idCurso)
+            this.$http
+            .post("my_rest_server/v1/certificate/generate", {
+                username: this.currentUser.username,
+                id_course: idCurso
+            })
+            .then(request => { 
+                console.log(request);
+                alert("Se genero el certificado digital")
+                this.verCertificados();
+                })
+            .catch((error) => { console.log(error)});
+        },
+        verCertificados(){
+        
+        this.$router.push("/mis-certificados");
+      },
         cargarModulos(){
 
             this.curso.modulo.forEach(modulo => {

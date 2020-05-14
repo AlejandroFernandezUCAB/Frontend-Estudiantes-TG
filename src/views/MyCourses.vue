@@ -172,7 +172,10 @@ import Valoracion from "../components/Valoracion";
                 id_course: curso.id_curso
             })
             .then(request => { 
-                leccionesVistas=request.data.length;
+                console.log(request.data)
+                if(request.data!==""){
+                    leccionesVistas=request.data.length;
+                }
                 })
             .catch((error) => { console.log(error)});
         

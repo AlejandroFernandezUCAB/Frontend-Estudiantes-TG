@@ -365,7 +365,7 @@ export default {
 					}
 					if(condition==="Primera Evaluación Aprobada"){
 						this.idMedallaPrimeraEvaluacion=element.id;
-						this.checkFirstLessonBadge(condition);
+						this.CheckFirstEvaluationUser(condition);
 					}
 					
 		 	 		break;
@@ -380,7 +380,7 @@ export default {
 				id_course: this.idCurso
             })
             .then(request => { 
-				if(request.data.cantidad==0){
+				if(request.data[0].Cantidad==="1"){
 					this.addBadgeFirstEvaluation(condition);
 				}
                   console.log(request.data)

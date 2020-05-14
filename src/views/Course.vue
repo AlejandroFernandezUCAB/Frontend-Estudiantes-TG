@@ -94,7 +94,7 @@
                         color="success"
 						x-large
                         text
-                        @click="comprarCursoStripe(curso.id,curso.costo)"                            
+                        @click="comprarCursoStripe(curso.id)"                            
                     >
                         Stripe - ${{curso.costo}}
                     </v-btn>
@@ -109,7 +109,7 @@
                         color="success"
                         text
 						x-large
-                        @click="comprarCursoPaypal(curso.id,curso.costo)"                            
+                        @click="comprarCursoPaypal(curso.id)"                            
                     >
                         Paypal - ${{curso.costo}}
                     </v-btn>
@@ -176,11 +176,10 @@ export default {
                 .then(request => {
                     this.curso = request.data;
                     this.getCategorias(this.curso.categories);
+                    this.loading = false;
 
                 })
-                .catch(() => {
-
-                });
+                 .catch((error) => { console.log(error)});
         },
         getCategorias( categorias ){
 
@@ -209,18 +208,18 @@ export default {
             .catch(error => console.log(error));
 
         },
-        comprarCursoStripe( cursoId, costo ){
+        comprarCursoStripe( cursoId ){
 			
             if( this.currentUser != null){
-            	this.$router.push("/stripePayment/"+cursoId+"/"+costo);
+            	this.$router.push("/stripePayment/"+cursoId);
 			}else{
 				this.$router.push("/login");
 				this.$router.go();
 			}
         },
-        comprarCursoPaypal( cursoId,costo ){
+        comprarCursoPaypal( cursoId ){
 			if( this.currentUser != null){
-            	this.$router.push("/paypalPayment/"+cursoId+"/"+costo);
+            	this.$router.push("/paypalPayment/"+cursoId);
 			}else{
 				this.$router.push("/login");
 				this.$router.go();
