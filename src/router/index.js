@@ -98,16 +98,6 @@ const routes = [
     component:Leccion
   },
   {
-    path:'/stripePayment/:idCurso',
-    name: 'Stripe Payment',
-    component:StripePayment
-  },
-  {
-    path:'/paypalPayment/:idCurso',
-    name: 'Paypal Payment',
-    component:PaypalPayment
-  },
-  {
     path:'/mis-certificados',
     name: 'My Certificates',
     component:MyCertificates

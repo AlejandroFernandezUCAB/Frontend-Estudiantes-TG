@@ -89,32 +89,50 @@
                     </v-btn>
                 </v-card-actions>
                 <v-card-actions class="mx-auto" v-if="curso.gratis==0">
-                    <v-btn
-                        v-if="!comprado"
-                        color="success"
-						x-large
-                        text
-                        @click="comprarCursoStripe(curso.id)"                            
+                    <v-dialog
+                        v-model="dialogStripe"
+                        width="500"
                     >
-                        Stripe - ${{curso.costo}}
-                    </v-btn>
+                        <template v-slot:activator="{ on }">
+                            <v-btn
+                                v-if="!comprado"
+                                color="success"
+                                x-large
+                                text
+                                v-on="on"                     
+                            >
+                                Stripe - ${{curso.costo}}
+                            </v-btn>
+                        </template>
+                        <stripe-payment :idCurso="idCurso"></stripe-payment>
+                    </v-dialog>
+
 					<v-divider
 						v-if="!comprado"
 						class="mx-4"
 						inset
 						vertical
 					></v-divider>
-                    <v-btn
-                        v-if="!comprado"
-                        color="success"
-                        text
-						x-large
-                        @click="comprarCursoPaypal(curso.id)"                            
+                    <v-dialog
+                        v-model="dialogPaypal"
+                        width="500"
                     >
-                        Paypal - ${{curso.costo}}
-                    </v-btn>
+                        <template v-slot:activator="{ on }">
+                            <v-btn
+                                v-if="!comprado"
+                                color="success"
+                                text
+                                x-large
+                                v-on="on"                           
+                            >
+                                Paypal - ${{curso.costo}}
+                            </v-btn>
+                        </template>
+                        <paypal-payment :idCurso="idCurso"></paypal-payment>
+                    </v-dialog>
+
                     <v-btn
-                        v-else
+                        v-if="comprado"
                         color="success"
                         text
                         @click="verCurso(curso.id)"                            
@@ -125,21 +143,7 @@
             </v-card>
         </v-col>
 
-        <v-dialog
-        v-model="dialog"
-        width="500"
-        >
-        <template v-slot:activator="{ on }">
-            <v-btn
-            color="red lighten-2"
-            dark
-            v-on="on"
-            >
-            Click Me
-            </v-btn>
-        </template>
-            <stripe-payment :idCurso="idCurso"></stripe-payment>
-        </v-dialog>
+
       </v-row>
      <div v-else>
             <v-overlay style="z-index: 9999" :value="overlay">
@@ -156,6 +160,7 @@ import ToolbarPrincipal from "../components/ToolbarPrincipal";
 import { mapGetters } from "vuex";
 import Valoracion from "../components/Valoracion";
 import StripePayment from "../components/StripePayment";
+import PaypalPayment from "../components/PaypalPayment";
 
 export default {
     created(){
@@ -174,6 +179,8 @@ export default {
     	...mapGetters({ currentUser: "currentUser" })
     },
     data: () => ({
+        dialogStripe:false,
+        dialogPaypal:false,
         idCurso:"",
         curso:null,
         cargado:false,
@@ -341,7 +348,8 @@ export default {
     components:{
         ToolbarPrincipal,
         Valoracion,
-        StripePayment
+        StripePayment,
+        PaypalPayment
     }
 }
 </script>

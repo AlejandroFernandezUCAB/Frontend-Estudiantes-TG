@@ -1,20 +1,21 @@
 <template>
-<v-container > 
-   <toolbar-principal></toolbar-principal>
-  <div v-if="!load">
-    <div v-if="!paidFor">
-      <h1>Comprar el Curso {{curso.nombre}}- to ${{ monto }}</h1>
+<v-container class="pa-0"> 
+  <v-card v-if="!load">
+    <v-card-title v-if="!paidFor">
+      Comprar el Curso {{curso.nombre}}- por ${{ monto }}
+	</v-card-title>
+	<v-card-text v-if="!paidFor">
+		Ud está comprando el curso: <strong>{{this.curso.nombre}}</strong> por un monto de <strong>${{monto}}</strong>
+		<br>
+		Seleccione el tipo de pago:
+	</v-card-text>
 
-      <p>{{ product.description }}</p>
+    <v-card-text v-if="paidFor">
+      ¡Gracias por comprar el Curso!
+    </v-card-text>
 
-    </div>
-
-    <div v-if="paidFor">
-      <h1>Gracias por comprar el Curso!</h1>
-    </div>
-
-    <div ref="paypal"></div>
-  </div>
+    <div class="mx-5" ref="paypal" v-if="!paidFor"></div>
+  </v-card>
    <div v-else>
             <v-overlay style="z-index: 9999" :value="overlay">
                 <v-progress-circular color="yellow" indeterminate size="64"></v-progress-circular>
@@ -30,13 +31,15 @@ import { mapGetters } from "vuex";
 import ToolbarPrincipal from "../components/ToolbarPrincipal";
 // import image from "../assets/lamp.png"
 export default {
-  name: "HelloWorld",
-    components: {
-    ToolbarPrincipal
-  },
-created(){
-        this.idCurso = this.$route.params.idCurso;
-       // this.monto = this.$route.params.monto;
+	props:["idCurso"],
+	name: "HelloWorld",
+		components: {
+		ToolbarPrincipal,
+	},
+	created(){
+    	//this.idCurso = this.$route.params.idCurso;
+	   // this.monto = this.$route.params.monto;
+	   console.log("test")
        this.getMonto(this.idCurso);
        //this.load=false;
     },
