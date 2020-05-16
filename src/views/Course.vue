@@ -77,7 +77,7 @@
                         text
                         @click="comprarCurso(curso.id)"                            
                     >
-                        Comprar
+                        Obtener
                     </v-btn>
                     <v-btn
                         v-else
@@ -124,6 +124,22 @@
                 </v-card-actions>
             </v-card>
         </v-col>
+
+        <v-dialog
+        v-model="dialog"
+        width="500"
+        >
+        <template v-slot:activator="{ on }">
+            <v-btn
+            color="red lighten-2"
+            dark
+            v-on="on"
+            >
+            Click Me
+            </v-btn>
+        </template>
+            <stripe-payment :idCurso="idCurso"></stripe-payment>
+        </v-dialog>
       </v-row>
      <div v-else>
             <v-overlay style="z-index: 9999" :value="overlay">
@@ -131,6 +147,7 @@
             </v-overlay>
      </div>
   </v-container>
+  
 </template>
 
 <script>
@@ -138,6 +155,7 @@
 import ToolbarPrincipal from "../components/ToolbarPrincipal";
 import { mapGetters } from "vuex";
 import Valoracion from "../components/Valoracion";
+import StripePayment from "../components/StripePayment";
 
 export default {
     created(){
@@ -322,7 +340,8 @@ export default {
     },
     components:{
         ToolbarPrincipal,
-        Valoracion
+        Valoracion,
+        StripePayment
     }
 }
 </script>

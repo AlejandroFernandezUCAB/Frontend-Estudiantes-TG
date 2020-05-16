@@ -1,24 +1,39 @@
 <template>
-  <v-container > 
-   
-    <toolbar-principal></toolbar-principal>
-    <div v-if="!load">
-    <stripe-elements
-      ref="elementsRef"
-      :pk="publishableKey"
-      :amount="amount"
-      @token="tokenCreated"
-      @loading="loading = $event"
-    >
-    </stripe-elements>
-    <button @click="submit">Pay ${{monto}}</button>
-    </div>
-     <div v-else>
-            <v-overlay style="z-index: 9999" :value="overlay">
-                <v-progress-circular color="yellow" indeterminate size="64"></v-progress-circular>
-            </v-overlay>
-        </div>
-  </v-container > 
+  <section>
+	<v-container class="pa-0"> 
+		<div v-if="!load">
+			<v-card>
+
+				<v-card-title>
+					Compra con Stripe
+				</v-card-title>
+				<v-card-text>
+					Coloque los datos de su tarjeta de crédito internacional para continuar con la compra
+					<br>
+					<br>
+					<stripe-elements
+						ref="elementsRef"
+						:pk="publishableKey"
+						:amount="amount"
+						@token="tokenCreated"
+						@loading="loading = $event"
+					>
+					</stripe-elements>
+					Ud está comprando el curso: <strong>{{this.curso.nombre}}</strong> por un monto de <strong>${{monto}}</strong>
+				</v-card-text>
+				<v-card-actions class="text-right">
+					<v-spacer></v-spacer>
+					<v-btn class="text-center" large color="success" @click="submit">Pagar ${{monto}}</v-btn>
+				</v-card-actions>
+			</v-card>
+		</div>
+		<div v-else>
+			<v-overlay style="z-index: 9999" :value="overlay">
+				<v-progress-circular color="yellow" indeterminate size="64"></v-progress-circular>
+			</v-overlay>
+		</div>
+	</v-container>
+  </section> 
 </template>
  
 <script>
@@ -26,12 +41,13 @@ import { StripeElements } from 'vue-stripe-checkout';
 import ToolbarPrincipal from "../components/ToolbarPrincipal";
 import { mapGetters } from "vuex";
 export default {
-  components: {
-    StripeElements,
-    ToolbarPrincipal
-  },
+	props:["idCurso"],
+	components: {
+		StripeElements,
+		ToolbarPrincipal
+	},
    created(){
-        this.idCurso = this.$route.params.idCurso;
+
         this.getMonto(this.idCurso);
         //this.monto = this.$route.params.monto;
     },
@@ -39,7 +55,6 @@ export default {
         ...mapGetters({ currentUser: "currentUser" })
     },
   data: () => ({
-    idCurso:"",
     monto:0,
     loading: false,
     load: true,

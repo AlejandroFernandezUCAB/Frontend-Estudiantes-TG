@@ -13,8 +13,8 @@ import Course from "../views/Course.vue"
 import Courses from "../views/Courses.vue";
 import Learn from "../views/Learn.vue"
 import Leccion from "../views/Leccion.vue"
-import StripePayment from "../views/StripePayment.vue"
-import PaypalPayment from "../views/PaypalPayment.vue"
+import StripePayment from "../components/StripePayment.vue"
+import PaypalPayment from "../components/PaypalPayment.vue"
 import MyCertificates from "../views/MyCertificates.vue"
 import GeneratePhysical from "../views/CertificatePhysical.vue"
 import test from "../views/test.vue";
