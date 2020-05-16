@@ -262,6 +262,8 @@ export default {
 		idMedallaPrimeraLeccion:"",
 		idMedallaPrimeraEvaluacion:"",
 		evaluacion:false,
+		medallaRepetida:false,
+		medallasAdquiridasResponse:[],
       	dataEvaluacion:null,
 		form:{
         	respuestas:[],
@@ -326,7 +328,7 @@ export default {
 
 			if( this.puntajeFinal >= puntajeAprobar && puntajeAprobar != 0 ){
 				
-				console.log("entre")
+				console.log("entre en aprobo evaluacion")
 				console.log(puntajeAprobar)
 				this.aprobo = true;
 				this.checkBadgesActive("Primera Evaluación Aprobada")
@@ -359,9 +361,29 @@ export default {
 				if( element.condicion[0].includes(condition)){
 					console.log(condition);
 					if(condition==="Primera Lección Vista"){
-					
-						this.idMedallaPrimeraLeccion=element.id;
-						this.checkFirstLessonBadge(this.idCurso,condition);
+						this.$http
+						.post("my_rest_server/v1/badges/getAll", {
+							username: this.currentUser.username
+						})
+						.then(request => { 
+							console.log(request.data)
+							this.medallasAdquiridasResponse = request.data;
+							 this.medallasAdquiridasResponse.forEach(medalla => {
+								if(medalla.id_badge == element.id){
+									console.log("entre en repetida")
+									this.medallaRepetida=true;
+								}
+							});
+							if(!this.medallaRepetida){
+							console.log(this.medallaRepetida)
+							this.idMedallaPrimeraLeccion=element.id;
+							this.checkFirstLessonBadge(this.idCurso,condition);
+						}
+						
+						})
+						.catch((error) => { console.log(error)});
+						
+						
 					}
 					if(condition==="Primera Evaluación Aprobada"){
 						this.idMedallaPrimeraEvaluacion=element.id;
@@ -380,6 +402,7 @@ export default {
 				id_course: this.idCurso
             })
             .then(request => { 
+				console.log(request.data[0].Cantidad);
 				if(request.data[0].Cantidad==="1"){
 					this.addBadgeFirstEvaluation(condition);
 				}
@@ -396,10 +419,11 @@ export default {
                 id_course: curso,
             })
             .then(request => { 
-				if(request.data.length==0){
+				console.log(request.data)
+				if(request.data.length==1){
 					this.addBadgeFirstLesson(condition);
 				}
-                  console.log(request.data)
+               
             })
             .catch((error) => { console.log(error)});
 

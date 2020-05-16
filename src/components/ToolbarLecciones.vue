@@ -363,9 +363,9 @@ import { mapGetters } from "vuex";
             .then(request => { 
                 console.log(request.data.length);
                 if(request.data.length==1){
-                    this.generado=true;
+                    this.generadoFisico=true;
                 }else{
-                    this.generado=false;
+                    this.generadoFisico=false;
                 }
                 
                 })

@@ -141,6 +141,7 @@ import Valoracion from "../components/Valoracion";
                     if(this.cursosAdquiridosResponse.length == 0){
 
                         this.noHayCursos = true;
+                        this.loading=false;
 
                     }else{
 

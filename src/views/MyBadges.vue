@@ -2,16 +2,17 @@
     <v-container fill-height>
         <toolbar-principal></toolbar-principal>
         <v-row v-if="!loading">
-            <v-col 
+            
+                <v-col 
                 sm="12"
                 lg="12"
                 cols="12"
                 
-            >
+                >
                 <h1>Mis Medallas</h1>
-            </v-col>
-
-            <v-col              
+                 </v-col>
+        <section v-if="noHayMedallas == false">
+                <v-col              
                 sm="4"
                 lg="4"
                 cols="4"
@@ -38,6 +39,20 @@
                 
                 </v-card>
             </v-col>
+            </section>
+            <section  v-if="noHayMedallas == true">
+                
+                <v-col
+                               
+                    sm="12"
+                    lg="12"
+                    cols="12"
+                    >
+                <h2 class="text-center">
+                    Usted aún no ha adquirido medallas
+                </h2>
+                </v-col>
+            </section>
         </v-row>
 
          <div v-else>
@@ -63,7 +78,8 @@ import ToolbarPrincipal from "../components/ToolbarPrincipal"
       loading: true,
       selection: 1,
       medallasAdquiridas:[],
-      medallasAdquiridasResponse:[]
+      medallasAdquiridasResponse:[],
+      noHayMedallas:true
     }),
     methods: {
       getMyBadges(){
@@ -71,10 +87,21 @@ import ToolbarPrincipal from "../components/ToolbarPrincipal"
             .post("my_rest_server/v1/badges/getAll", {
                 username: this.currentUser.username
             })
-            .then(request => { ;
+            .then(request => { 
                 this.medallasAdquiridasResponse = request.data
                 //console.log(this.medallasAdquiridasResponse)
-                this.getDetailBadges(this.cursosAdquiridosResponse);
+                if(this.medallasAdquiridasResponse.length == 0){
+
+                    this.noHayMedallas = true;
+                    this.loading=false;
+
+                }else{
+
+                    this.noHayMedallas = false;
+                    this.getDetailBadges(this.cursosAdquiridosResponse);
+
+                }
+            
                 })
             .catch((error) => { console.log(error)});
       },

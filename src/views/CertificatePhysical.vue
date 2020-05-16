@@ -198,7 +198,7 @@ export default {
     },
     registrarPagoStripe(request){
          this.$http
-            .post("my_rest_server/v1/stripe/registerPayment", {
+            .post("my_rest_server/v1/stripe/registerPaymentPhysical", {
                 username: localStorage.username,
                 id_course: this.idCurso,
                 id_transaction:request.data.id,
@@ -213,7 +213,7 @@ export default {
     },
      registrarPagoPaypal(order){
          this.$http
-            .post("my_rest_server/v1/paypal/registerPayment", {
+            .post("my_rest_server/v1/paypal/registerPaymentPhysical", {
                 username: localStorage.username,
                 id_course: this.idCurso,
                 id_transaction:order.id,

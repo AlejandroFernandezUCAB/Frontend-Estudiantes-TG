@@ -196,6 +196,7 @@ export default {
             });
         },
         comprarCurso( cursoId ){
+            this.verificarLogin();
             this.$http
             .post("my_rest_server/v1/user-inscribed", {
                 username: localStorage.username,
@@ -209,7 +210,7 @@ export default {
 
         },
         comprarCursoStripe( cursoId ){
-			
+			this.verificarLogin();
             if( this.currentUser != null){
             	this.$router.push("/stripePayment/"+cursoId);
 			}else{
@@ -218,6 +219,7 @@ export default {
 			}
         },
         comprarCursoPaypal( cursoId ){
+            this.verificarLogin();
 			if( this.currentUser != null){
             	this.$router.push("/paypalPayment/"+cursoId);
 			}else{
@@ -284,6 +286,21 @@ export default {
                 .catch((error) => { console.log(error)});
 
         },
+        verificarLogin(){
+
+			if(this.currentUser == null){
+
+				this.$router.push("/login");
+				this.$router.go();
+				return false;
+
+			}else{
+
+				return true; 
+
+			}
+
+		},
         validarSiYaCompro(cursosAdquiridos){
 
             for (const curso of cursosAdquiridos) {
