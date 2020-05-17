@@ -170,6 +170,13 @@
 				</h4>
 			</section>
 
+			<section v-if="completarEvaluacion">
+				<h4 
+					class="font-italic font-weight-medium red--text">
+					Por favor responda todas las preguntas
+				</h4>
+			</section>
+
 			<section v-if="respondio && !aprobo && segundosParaEvaluacion > 0">
 				<h4 
 					class="font-italic font-weight-medium red--text">
@@ -275,7 +282,8 @@ export default {
 		aprobo:null,
 		volverResponder:true,
 		resultadoUsuario:null,
-		segundosParaEvaluacion:0  
+		segundosParaEvaluacion:0,
+		completarEvaluacion:false  
     }),
     methods:{
 		calcularTiempoParaResponder(){
@@ -313,7 +321,7 @@ export default {
 				let respuestas = this.dataEvaluacion.preguntas[i].respuesta;
 
 				for (const respuesta of respuestas) {
-					console.log(respuesta)
+
 					this.puntajeTotal = this.puntajeTotal + parseFloat(respuesta.puntaje);
 					
 				}
@@ -474,24 +482,41 @@ export default {
 			}
 
 		},
-		corregirEvaluacion(){
-			this.respondio = true;
-			for (let i = 0; i < this.dataEvaluacion.preguntas.length; i++) {
-				const pregunta = this.dataEvaluacion.preguntas[i];
-				switch (pregunta.tipo_de_pregunta) {
-					case "Simple":
-						this.corregirSimple( pregunta.respuesta, this.form.respuestas[i], i);
-					break;
-					case "Texto Simple":
-						this.corregirTextoSimple( pregunta.respuesta, this.form.respuestas[i], i);
-					break;
-					case "Multiple":
-						this.corregirMultiple( pregunta.respuesta, this.form.respuestas[i], i);
-					break;
-				}
+		verificarCompletitudEvaluacion(){
+			
+			if( this.form.correctas.length <= this.form.respuestas.length){
+
+				return true;
+
+			}else{
+
+				return false;
+
 			}
-			this.calcularSiAproboElUsuario();
-			this.guardarResultadoLeccion();
+		},
+		corregirEvaluacion(){
+			if(this.verificarCompletitudEvaluacion()){
+				this.completarEvaluacion = false;
+				this.respondio = true;
+				for (let i = 0; i < this.dataEvaluacion.preguntas.length; i++) {
+					const pregunta = this.dataEvaluacion.preguntas[i];
+					switch (pregunta.tipo_de_pregunta) {
+						case "Simple":
+							this.corregirSimple( pregunta.respuesta, this.form.respuestas[i], i);
+						break;
+						case "Texto Simple":
+							this.corregirTextoSimple( pregunta.respuesta, this.form.respuestas[i], i);
+						break;
+						case "Multiple":
+							this.corregirMultiple( pregunta.respuesta, this.form.respuestas[i], i);
+						break;
+					}
+				}
+				this.calcularSiAproboElUsuario();
+				this.guardarResultadoLeccion();
+			}else{
+				this.completarEvaluacion = true;
+			}
       	},
 		corregirTextoSimple(  respuestas , respuestaUsuario, posicion){
 
@@ -557,7 +582,7 @@ export default {
 						id_lesson: leccion
 					})
 					.then(request => {
-						console.log(request.data);
+						
 						this.loading=false;
 					})
 					.catch(error => (console.log(error)));
