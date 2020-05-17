@@ -34,6 +34,16 @@
                 </div>
               </section>
 
+
+              <section>
+                <h1 class="title">Foro</h1>
+                <v-divider color="#34B3E1"></v-divider>
+                <p class="mt-4">¿Tienes dudas? En el foro podrán ayudarte</p>
+                <div class="my-2" align="center" >
+                  	<v-btn large color="success" @click="irAlForo()">Ir al foro</v-btn>
+                </div>
+              </section>
+
           </v-col>
 
           <v-col
@@ -661,6 +671,10 @@ export default {
 				}
 		  });
 
+	  },
+	  irAlForo(){
+		this.$router.push("/cursos/"+this.curso.id+"/foro");
+		this.$router.go();
 	  }
     },
     components:{
