@@ -1,45 +1,45 @@
 <template>
-    <v-container fill-height>
+    <v-container>
         <toolbar-principal></toolbar-principal>
         <v-row v-if="!loading">
             
-                <v-col 
+            <v-col 
                 sm="12"
                 lg="12"
                 cols="12"
                 
-                >
+            >
                 <h1>Mis Medallas</h1>
-                 </v-col>
-        <section v-if="noHayMedallas == false">
-                <v-col              
-                sm="4"
-                lg="4"
-                cols="4"
-                v-for="medallas in medallasAdquiridas"
-                :key="medallas.data.id"
-                >
-
-                <v-card
-                    :loading="loading"
-                    class="mx-auto"
-                    max-width="auto"
-                >
-                    <v-img
-                        height="385"
-                        width="350"
-                        :src="medallas.data.imagen.guid"
-                    ></v-img>
-
-                    <v-card-title>{{medallas.data.nombre}}</v-card-title>
-                    <v-card-subtitle>x{{medallas.repeat}}</v-card-subtitle>
-                    <v-card-text>
-                        <strong>{{medallas.data.texto}}</strong>
-                    </v-card-text>
-                
-                </v-card>
             </v-col>
-            </section>
+            <v-row v-if="noHayMedallas == false">
+                <v-col              
+                    sm="4"
+                    lg="4"
+                    cols="4"
+                    v-for="medallas in medallasAdquiridas"
+                    :key="medallas.data.id"
+                >
+
+                    <v-card
+                        :loading="loading"
+                        class="mx-auto"
+                        max-width="auto"
+                    >
+                        <v-img
+                            height="385"
+                            width="350"
+                            :src="medallas.data.imagen.guid"
+                        ></v-img>
+
+                        <v-card-title>{{medallas.data.nombre}}</v-card-title>
+                        <v-card-subtitle>x{{medallas.repeat}}</v-card-subtitle>
+                        <v-card-text>
+                            <strong>{{medallas.data.texto}}</strong>
+                        </v-card-text>
+                    
+                    </v-card>
+                </v-col>
+            </v-row>
             <section  v-if="noHayMedallas == true">
                 
                 <v-col

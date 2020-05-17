@@ -193,6 +193,13 @@
 					No ha aprobado esta evaluación, deberá esperar {{ 600 - segundosParaEvaluacion }} segundos para volverla a presentar
 				</h4>
 			</section>
+
+			<section v-if="respondio && aprobo">
+				<h4 
+					class="font-italic font-weight-medium green--text">
+					Ud ha aprobado esta evaluación con {{puntajeFinal}} puntos, felicitaciones
+				</h4>
+			</section>
             <!--Botones de enviar evaluacion y atras-->
             <v-row>
               <v-col
