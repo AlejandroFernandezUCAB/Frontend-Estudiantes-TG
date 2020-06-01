@@ -219,8 +219,10 @@ export default {
 		  this.categorias = request.data;
 		
         })
-        .catch(() => {
-
+        .catch((error) => {
+			if (error.response.status === 403) {
+				this.cerrarSesion();
+			}
          });
 	},
 	cerrarSesion(){

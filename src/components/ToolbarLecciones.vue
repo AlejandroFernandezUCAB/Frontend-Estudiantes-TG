@@ -284,6 +284,7 @@ import { mapGetters } from "vuex";
     },
     created(){
         this.idLeccion = this.$route.params.idLeccion;
+        this.obtenerCategorias();
         this.cargarModulos();
         this.cargarLeccionActual();
         this.checkShowGenerate();
@@ -291,6 +292,19 @@ import { mapGetters } from "vuex";
         this.checkGenerateCertificatePhysical();
     },
     methods:{
+         obtenerCategorias(){
+      this.$http
+        .get("wp/v2/categories/")
+        .then(request => {
+		  this.categorias = request.data;
+		
+        })
+        .catch((error) => {
+			if (error.response.status === 403) {
+				this.cerrarSesion();
+			}
+         });
+	},
         generarCertificadoFisico (idCurso) {
             this.$router.push("/generar-fisico/"+idCurso);
         },
