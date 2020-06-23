@@ -23,8 +23,9 @@
                 <v-card-text>
                     <iframe 
                         class="embed-container"
-                        width="560" height="315"
-                        src="https://www.youtube.com/embed/6OeHFRrfiG0" 
+                        width="560" 
+                        style="height:44vh"
+                        :src="curso.video_embed"
                         frameborder="0" 
                         allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                         allowfullscreen>
