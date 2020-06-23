@@ -91,7 +91,7 @@
                     </v-btn>
                     <v-btn
                         v-else
-                        color="success"
+                        color="verde"
                         text
                         @click="verCurso(curso.id)"                            
                     >

@@ -61,7 +61,14 @@
             </section>
 
             <v-divider color="#34B3E1"></v-divider>
-            
+
+			<!--Intruscciones-->
+            <section 
+				class="my-5"
+			>
+				<h2 class="subtitle-1">Instrucciones:</h2>
+				<p>{{dataEvaluacion.instrucciones}}</p>
+            </section>
             <!-- Evaluacion -->
             <section 
 				class="mt-5"
