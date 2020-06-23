@@ -74,7 +74,7 @@
 					v-if="pregunta.tipo_de_pregunta == 'Texto Simple'"
 					>
 								
-					<h2 class="subtitle-1"><strong>{{index + 1}}</strong> - {{pregunta.post_title}}</h2>
+					<h2 class="subtitle-1"><strong>{{index + 1}}</strong> - {{pregunta.post_title}} - <strong>Pregunta de texto simple</strong></h2>
 								
 					<v-text-field
 						v-model="form.respuestas[index]"
@@ -104,7 +104,7 @@
 					v-if="pregunta.tipo_de_pregunta == 'Multiple'"
 					>
 								
-					<h2 class="subtitle-1"><strong>{{index + 1}}</strong> - {{pregunta.post_title}}</h2>
+					<h2 class="subtitle-1"><strong>{{index + 1}}</strong> - {{pregunta.post_title}} - <strong>Pregunta de selección multiple</strong></h2>
 
 						<v-checkbox
 							v-for="respuesta in pregunta.respuesta"
@@ -136,7 +136,7 @@
 					v-if="pregunta.tipo_de_pregunta == 'Simple'"
 					>
 					
-					<h2 class="subtitle-1"><strong>{{index + 1}}</strong> - {{pregunta.post_title}}</h2>
+					<h2 class="subtitle-1"><strong>{{index + 1}}</strong> - {{pregunta.post_title}} - <strong>Pregunta de selección simple</strong></h2>
 
 					<v-radio-group v-model="form.respuestas[index]" :disabled="respondio">
 						<v-radio

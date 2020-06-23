@@ -94,7 +94,7 @@
 
                 <v-text-field 
                     color="success"
-                    label="Compañia/Universidad" 
+                    label="Organización/Universidad" 
                     v-model="companiaUniversidad" 
                     :rules="campoRequerido" 
                     required>

@@ -67,10 +67,9 @@
 									Ver Detalle
 								</v-btn>
 								<v-btn
-									color="success"
+									color="verde"
 									text
 									@click="verContenido(curso.data.id)"
-									
 								>
 									Continuar
 								</v-btn>

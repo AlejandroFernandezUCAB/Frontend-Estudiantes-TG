@@ -21,7 +21,16 @@
                 <v-card-title class="headline">{{curso.nombre}}</v-card-title>
 
                 <v-card-text>
-
+                    <iframe 
+                        class="embed-container"
+                        width="560" height="315"
+                        src="https://www.youtube.com/embed/6OeHFRrfiG0" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                    </iframe>
+                    <br>
+                    <br>
                     {{curso.informacion_del_curso.replace(/<[^>]*>/g, '')}}
                     <br>
                     <br>
@@ -358,4 +367,5 @@ export default {
     .background-img{
         background-image: url("../assets/fondo.jpg")
     }
+    iframe { display:block; width:100%; border:none;}
 </style>

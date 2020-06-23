@@ -2,8 +2,8 @@
 	<div>
 		<v-rating
 		v-model="valoracion"
-		background-color="yellow"
-		color="yellow"
+		background-color="#ffcd00"
+		color="#ffcd00"
 		hover
 		@input="calificarUnCurso()"
 		></v-rating>
