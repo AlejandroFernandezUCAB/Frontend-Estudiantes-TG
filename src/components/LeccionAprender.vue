@@ -8,10 +8,30 @@
             lg="12"
             xl="12"
             >
-              <section align="center" width="100%" height="auto">
-                <video width="89%"  @contextmenu="handler($event)" controls autoplay controlsList="nodownload" :src="leccion.video.guid">
-      
-                </video>
+			  <!-- Video -->
+              <section v-if="tipoVideo" align="center" width="100%" height="auto">
+                    <iframe 
+                        class="embed-container"
+                        width="100%" 
+                        style="height:80vh"
+                        :src="leccion.link_contenido"
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                    </iframe>
+              </section>
+			  <!-- Imagen -->
+              <section v-if="tipoImagen" align="center" width="100%" height="auto">
+				<v-img class="mx-auto" width="89%" :src="this.leccion.link_contenido"></v-img>
+              </section>
+
+			  <!-- Archivo -->
+              <section v-if="tipoArchivo" align="center" width="100%" height="auto">
+				<h1 class="title">Archivo</h1>
+				<h2 class="subtitle-2">Para continuar deberá descargar el siguiente archivo: </h2>
+				<div class="my-2" align="center">
+					<v-btn x-large color="success" dark><a :href="this.leccion.link_contenido" target="_blank">Descargar</a></v-btn>
+				</div>
               </section>
 
               <section>
@@ -274,10 +294,10 @@ export default {
 	
     props:["leccion", "curso"],
     created(){
-		this.video = this.leccion.video.guid;
+		console.log(this.leccion);
+		this.tipoDeArchivo();
 		this.idCurso = this.$route.params.idCurso;
 		this.idLeccion = this.$route.params.idLeccion;
-		this.checkLessonEvaluation =
 		this.checkBadgesActive("Primera Lección Vista");
 		this.guardarNuevaLeccion(this.idCurso, this.idLeccion);
 		//alert("Aqui")
@@ -286,6 +306,9 @@ export default {
     	...mapGetters({ currentUser: "currentUser" })
     },
     data:() => ({
+		tipoVideo:false,
+		tipoImagen:false,
+		tipoArchivo:false,
 		loading:true,
 		idCurso:"",
 		idLeccion:"",
@@ -310,10 +333,33 @@ export default {
 		completarEvaluacion:false  
     }),
     methods:{
+		tipoDeArchivo(){
+			//Valido que tipo me estan enviando
+			switch ( this.leccion.seleccion_contenido[0] ) {
+				case "Imagen":
+					this.tipoVideo = false;
+					this.tipoImagen = true;
+					this.tipoArchivo = false;
+					console.log("imagen");
+					break;
+				case "Vídeo":
+					this.tipoVideo = true;
+					this.tipoImagen = false;
+					this.tipoArchivo = false;
+					console.log("Video");
+					break;
+				case "Archivo":
+					this.tipoVideo = false;
+					this.tipoImagen = false;
+					this.tipoArchivo = true;
+					console.log("archivo");
+					break;
+			} 
+		},
 		calcularTiempoParaResponder(){
 
 			this.resultadoUsuario.forEach(respuesta => {
-					console.log("test");
+
 					let inicioTiempo = new Date(respuesta.reg_date);
 				  	let endTime = new Date();
 					var timeDiff = endTime - inicioTiempo; //in ms
@@ -353,15 +399,13 @@ export default {
 			
 		},
 		calcularSiAproboElUsuario(){
-			console.log(this.puntajeTotal)
+
 			let puntajeAprobar = 0;
 			puntajeAprobar=this.puntajeTotal/2;
-			console.log( this.puntajeFinal , puntajeAprobar);
+
 
 			if( this.puntajeFinal >= puntajeAprobar && puntajeAprobar != 0 ){
 				
-				console.log("entre en aprobo evaluacion")
-				console.log(puntajeAprobar)
 				this.aprobo = true;
 				this.checkBadgesActive("Primera Evaluación Aprobada")
 				this.volverResponder = false;
@@ -391,23 +435,22 @@ export default {
 			for (let i = 0; i < this.medallas.length; i++) {
 				const element = this.medallas[i];
 				if( element.condicion[0].includes(condition)){
-					console.log(condition);
+					
 					if(condition==="Primera Lección Vista"){
 						this.$http
 						.post("my_rest_server/v1/badges/getAll", {
 							username: this.currentUser.username
 						})
 						.then(request => { 
-							console.log(request.data)
+							
 							this.medallasAdquiridasResponse = request.data;
 							 this.medallasAdquiridasResponse.forEach(medalla => {
 								if(medalla.id_badge == element.id){
-									console.log("entre en repetida")
 									this.medallaRepetida=true;
 								}
 							});
 							if(!this.medallaRepetida){
-							console.log(this.medallaRepetida)
+							
 							this.idMedallaPrimeraLeccion=element.id;
 							this.checkFirstLessonBadge(this.idCurso,condition);
 						}
@@ -434,11 +477,11 @@ export default {
 				id_course: this.idCurso
             })
             .then(request => { 
-				console.log(request.data[0].Cantidad);
+				
 				if(request.data[0].Cantidad==="1"){
 					this.addBadgeFirstEvaluation(condition);
 				}
-                  console.log(request.data)
+                  
 				 
             })
             .catch((error) => { console.log(error)});
@@ -451,7 +494,7 @@ export default {
                 id_course: curso,
             })
             .then(request => { 
-				console.log(request.data)
+			
 				if(request.data.length==1){
 					this.addBadgeFirstLesson(condition);
 				}
@@ -468,7 +511,7 @@ export default {
             })
             .then(request => { 
 				alert("Obtuvo la medalla "+condition)
-                console.log(request.data)
+                
                 })
             .catch((error) => { console.log(error)});
 	  },
@@ -480,7 +523,7 @@ export default {
             })
             .then(request => { 
 				alert("Obtuvo la medalla "+condition)
-                console.log(request.data)
+               
                 })
             .catch((error) => { console.log(error)});
 	  },
@@ -698,7 +741,12 @@ export default {
 </script>
 
 <style>
-video {    
-    object-fit: cover;
-}
+	
+	video {    
+		object-fit: cover;
+	}
+
+    iframe { display:block; width:100%; border:none;}
+
+	a{text-decoration: none;}
 </style>
