@@ -101,8 +101,14 @@
 					v-if="pregunta.tipo_de_pregunta == 'Texto Simple'"
 					>
 								
-					<h2 class="subtitle-1"><strong>{{index + 1}}</strong> - {{pregunta.post_title}} - <strong>Pregunta de texto simple</strong></h2>
-								
+					<h2 class="subtitle-1"><strong>{{index + 1}}</strong> - {{pregunta.post_title}} - <strong>Pregunta de texto simple</strong>
+						<strong v-if="pregunta.imagen != false"> (Ver imagen)</strong>
+					</h2>
+
+					<div align="center" >
+						<v-img width="50%" :src="pregunta.imagen.guid"> </v-img>
+					</div>
+				
 					<v-text-field
 						v-model="form.respuestas[index]"
 						:counter="10"
@@ -128,10 +134,18 @@
 				</section>
 
               	<section 
-					v-if="pregunta.tipo_de_pregunta == 'Multiple'"
+					v-if="pregunta.tipo_de_pregunta == 'Selección  Multiple'"
 					>
 								
-					<h2 class="subtitle-1"><strong>{{index + 1}}</strong> - {{pregunta.post_title}} - <strong>Pregunta de selección multiple</strong></h2>
+					<h2 class="subtitle-1"><strong>{{index + 1}}</strong> - {{pregunta.post_title}} - <strong>Pregunta de selección multiple</strong>
+						<strong v-if="pregunta.imagen != false"> (Ver imagen)</strong>
+					</h2>
+
+					<div align="center" >
+						<v-img width="50%" :src="pregunta.imagen.guid"> </v-img>
+					</div>
+					
+					<div>
 
 						<v-checkbox
 							v-for="respuesta in pregunta.respuesta"
@@ -141,9 +155,14 @@
 							:key="respuesta.id"
 							:disabled="respondio"
 							color="success"
-        			          multiple
-						></v-checkbox>
-
+        			        multiple
+						>
+							<template v-slot:label v-if="respuesta.imagen != null">
+								<v-label>{{respuesta.respuesta}}</v-label>
+								<img class="px-2" width="50%" :src="respuesta.imagen"/>
+							</template>
+						</v-checkbox>
+					</div>
 					<h4 	
 						class="font-italic font-weight-medium verde--text"
 						v-if="respondio && form.correctas[index]"
@@ -160,10 +179,16 @@
 				</section>
 
               	<section 
-					v-if="pregunta.tipo_de_pregunta == 'Simple'"
+					v-if="pregunta.tipo_de_pregunta == 'Selección Simple'"
 					>
 					
-					<h2 class="subtitle-1"><strong>{{index + 1}}</strong> - {{pregunta.post_title}} - <strong>Pregunta de selección simple</strong></h2>
+					<h2 class="subtitle-1"><strong>{{index + 1}}</strong> - {{pregunta.post_title}} - <strong>Pregunta de selección simple</strong>						
+						<strong v-if="pregunta.imagen != false"> (Ver imagen)</strong>
+					</h2>
+
+					<div align="center" >
+						<v-img width="50%" :src="pregunta.imagen.guid"> </v-img>
+					</div>
 
 					<v-radio-group v-model="form.respuestas[index]" :disabled="respondio">
 						<v-radio
@@ -172,7 +197,12 @@
                 			:value="respuesta.respuesta"
 							:key="respuesta.id"
 							color="success"
-						></v-radio>
+						>
+							<template v-slot:label v-if="respuesta.imagen != null">
+								<v-label>{{respuesta.respuesta}}</v-label>
+								<img class="px-2" width="50%" :src="respuesta.imagen"/>
+							</template>
+						</v-radio>
 					</v-radio-group>
 
 					<h4 
@@ -294,7 +324,7 @@ export default {
 	
     props:["leccion", "curso"],
     created(){
-		console.log(this.leccion);
+		
 		this.tipoDeArchivo();
 		this.idCurso = this.$route.params.idCurso;
 		this.idLeccion = this.$route.params.idLeccion;
@@ -528,20 +558,47 @@ export default {
             .catch((error) => { console.log(error)});
 	  },
       	cargarEvaluacion(){
+
 			this.puntajeTotal = 0;
 			this.puntajeFinal = 0;
 			this.obtenerEvaluacionUsuario();
+
 			this.$http
 			.get("/wp/v2/evaluacion/" + this.leccion.evaluacion[0].ID)
 			.then(request => {
 				this.dataEvaluacion = request.data;
+				this.setearDocumentosMultimedia();
+				console.log(this.dataEvaluacion);	
 				this.calcularPuntuacionTotal();
 				this.setearCorrectasForm();
 				this.evaluacion = true;
 			})
 			.catch(error => (console.log(error)));
 					
-      },
+	  },
+	  setearDocumentosMultimedia(){
+		  
+		  for (let i = 0; i < this.dataEvaluacion.preguntas.length; i++) {
+
+			  const preguntas = this.dataEvaluacion.preguntas[i];
+			  
+			  for (let j = 0; j < preguntas.respuesta.length; j++) {
+				  const respuesta = preguntas.respuesta[j];
+				  
+				  if (respuesta.imagen != null ) {
+					  
+					  	this.$http
+						.get("wp/v2/media/"+respuesta.imagen)
+						.then(request => { 
+							this.dataEvaluacion.preguntas[i].respuesta[j].imagen = request.data.source_url;
+						})
+						.catch((error) => { console.log(error)});
+
+				  }
+			  }
+
+		  }
+	  },
 		setearCorrectasForm(){
 
 			for (let i = 0; i < this.dataEvaluacion.preguntas.length; i++) {
@@ -672,7 +729,7 @@ export default {
             .catch((error) => { console.log(error)});
 	  },
 	  obtenerEvaluacionUsuario(){
-		  console.log(this.leccion)
+		  
 		  this.$http
             .post("my_rest_server/v1/user-evaluation", {
 				user: this.currentUser.username,
@@ -689,7 +746,14 @@ export default {
             })
             .catch((error) => { console.log(error)});
 	  },
-	 
+	 obtenerMultimedia(id){
+		  this.$http
+            .get("wp/v2/media/"+id)
+            .then(request => { 
+				return request.data.link;
+            })
+            .catch((error) => { console.log(error)});
+	 },
 	  siguienteLeccion(){
 
 			let modulos = this.curso.modulo;
