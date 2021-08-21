@@ -15,7 +15,7 @@
                     class="shrink mt-1 hidden-sm-and-down"
                     contain
                     min-width="200"
-                    src="https://du.ucab.edu.ve/images/LogoUCAB600x123.png"
+                    src="https://upload.wikimedia.org/wikipedia/commons/6/6c/LogoUCAB600x123.png"
                     width="255"
                 />
             </router-link>
