@@ -11,7 +11,7 @@
                 <h1>Mis Cursos</h1>
             </v-col>
 
-            <section v-if="noHayCursos == false" >
+            <section class="full-width" v-if="noHayCursos == false" >
 				<v-row>
 					<v-col
 									
@@ -224,5 +224,9 @@ import Valoracion from "../components/Valoracion";
 <style>
 [v-cloak] {
   display: none;
+}
+
+.full-width{
+    width: 100%;
 }
 </style>
