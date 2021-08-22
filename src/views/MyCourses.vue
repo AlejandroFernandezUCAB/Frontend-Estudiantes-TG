@@ -173,30 +173,31 @@ import Valoracion from "../components/Valoracion";
                 id_course: curso.id_curso
             })
             .then(request => { 
-                console.log(request.data)
-                if(request.data!==""){
-                    leccionesVistas=request.data.length;
-                }
+                //console.log(request.data)
+                    if(request.data!==""){
+                        leccionesVistas=request.data.length;
+                    }
+                            //obtengo informacion del curso
+                    this.$http
+                    .get("wp/v2/curso/"+curso.id_curso)
+                    .then(request => { 
+                        this.modulos= request.data.modulo;
+
+                        this.modulos.forEach(modulo => {
+                        totalLeccionesCurso= totalLeccionesCurso + Object.keys(modulo.leccion).length;
+                        });
+                        var promedioLecciones=(leccionesVistas*100)/totalLeccionesCurso;
+                        var cursoObject ={
+                            data:request.data,
+                            porcentaje:this.round(promedioLecciones,0)
+                        }
+                        this.cursosAdquiridos.push(cursoObject);
+                    })
+                    .catch((error) => { console.log(error)})
                 })
             .catch((error) => { console.log(error)});
         
-            //obtengo informacion del curso
-            this.$http
-            .get("wp/v2/curso/"+curso.id_curso)
-            .then(request => { 
-                this.modulos= request.data.modulo;
 
-                this.modulos.forEach(modulo => {
-                totalLeccionesCurso= totalLeccionesCurso + Object.keys(modulo.leccion).length;
-                });
-                var promedioLecciones=(leccionesVistas*100)/totalLeccionesCurso;
-                var cursoObject ={
-                    data:request.data,
-                    porcentaje:this.round(promedioLecciones,0)
-                }
-                this.cursosAdquiridos.push(cursoObject);
-            })
-            .catch((error) => { console.log(error)})
           });
            this.loading = false;
 
