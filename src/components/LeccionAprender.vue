@@ -190,7 +190,7 @@
 			<section v-if="respondio && !aprobo && segundosParaEvaluacion > 0">
 				<h4 
 					class="font-italic font-weight-medium red--text">
-					No ha aprobado esta evaluación, deberá esperar {{ 600 - segundosParaEvaluacion }} segundos para volverla a presentar
+					No ha aprobado esta evaluación, deberá esperar 10 minutos para volver a presentar la evaluación
 				</h4>
 			</section>
 
